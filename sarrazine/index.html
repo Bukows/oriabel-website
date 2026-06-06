@@ -255,6 +255,17 @@
     }
 
     /* ── GRID ── */
+    .plants-notice {
+      max-width: 900px;
+      margin: 0.6rem auto 0;
+      padding: 0.55rem 1.2rem;
+      background: #eef3ef;
+      border: 1px solid #c3d4c7;
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      color: #3d5c45;
+    }
+
     .section-title {
       font-size: 0.72rem;
       font-weight: 700;
@@ -526,6 +537,9 @@
     </div>
   </div>
 
+  <!-- PLANTS -->
+  <div class="plants-notice" id="plants-notice" style="display:none"><span id="s-plants"></span></div>
+
   <!-- APARTMENT -->
   <div class="section-title" id="sec-apt"></div>
   <div class="tile-grid" id="grid-apt"></div>
@@ -571,6 +585,7 @@ const T = {
     sResto: "Restaurants",
     police: "Polizei", fire: "Feuerwehr", eu: "Alle Notfälle", copyAddr: "Kopieren",
     mapLabel: "Restaurants (Empfehlungen)",
+    sPlants: "Bitte daran denken, die Pflanzen auf den Balkonen und dem Küchensims zu giessen.",
     footer: "Tour Sarrazin — Nice · Für Notfälle: 112",
 
     emergRows: [
@@ -676,13 +691,13 @@ const T = {
     ],
 
     restos: [
-      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651 },
-      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758 },
-      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636 },
-      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652 },
-      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648 },
-      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697 },
-      { name:"Plage des Canailles", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440 }
+      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651, url:"https://pizzerialachamade.fr/fr" },
+      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758, url:"https://www.facebook.com/renesocca/", vegan:true },
+      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636, url:"https://indian-curry-tandoori.wheree.com/menu", vegan:true },
+      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652, url:"https://en.lalchimie-restaurant.com/" },
+      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648, url:"https://pin-pin.fr/", vegan:true },
+      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
+      { name:"Plage des Canailles", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
     ]
   },
 
@@ -694,6 +709,7 @@ const T = {
     sResto: "Restaurants",
     police: "Police", fire: "Fire Brigade", eu: "All emergencies", copyAddr: "Copy",
     mapLabel: "Restaurants (recommendations)",
+    sPlants: "Please remember to water the plants on the balconies and the kitchen windowsill.",
     footer: "Tour Sarrazin — Nice · Emergency: 112",
 
     emergRows: [
@@ -799,13 +815,13 @@ const T = {
     ],
 
     restos: [
-      { name:"La Chamade (Neapolitan pizza)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651 },
-      { name:"René Socca (socca & Niçois cuisine)", addr:"2 Rue Miralhéti (Old Nice)", lat:43.6958, lng:7.2758 },
-      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636 },
-      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652 },
-      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648 },
-      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697 },
-      { name:"Plage des Canailles (beach restaurant)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440 }
+      { name:"La Chamade (Neapolitan pizza)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651, url:"https://pizzerialachamade.fr/fr" },
+      { name:"René Socca (socca & Niçois cuisine)", addr:"2 Rue Miralhéti (Old Nice)", lat:43.6958, lng:7.2758, url:"https://www.facebook.com/renesocca/", vegan:true },
+      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636, url:"https://indian-curry-tandoori.wheree.com/menu", vegan:true },
+      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652, url:"https://en.lalchimie-restaurant.com/" },
+      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648, url:"https://pin-pin.fr/", vegan:true },
+      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
+      { name:"Plage des Canailles (beach restaurant)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
     ]
   },
 
@@ -922,13 +938,13 @@ const T = {
     ],
 
     restos: [
-      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651 },
-      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758 },
-      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636 },
-      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652 },
-      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648 },
-      { name:"Popotte d'Ondine (style café NY)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697 },
-      { name:"Plage des Canailles (restaurant de plage)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440 }
+      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651, url:"https://pizzerialachamade.fr/fr" },
+      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758, url:"https://www.facebook.com/renesocca/", vegan:true },
+      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636, url:"https://indian-curry-tandoori.wheree.com/menu", vegan:true },
+      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652, url:"https://en.lalchimie-restaurant.com/" },
+      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648, url:"https://pin-pin.fr/", vegan:true },
+      { name:"Popotte d'Ondine (style café NY)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
+      { name:"Plage des Canailles (restaurant de plage)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
     ]
   }
 };
@@ -1190,6 +1206,8 @@ function setLang(lang) {
   document.getElementById('lbl-fire').textContent = t.fire;
   document.getElementById('lbl-eu').textContent = t.eu;
   document.getElementById('addr-copy-btn').textContent = t.copyAddr;
+  document.getElementById('s-plants').textContent = t.sPlants;
+  document.getElementById('plants-notice').style.display = '';
   document.getElementById('sec-apt').textContent = t.sApt;
   document.getElementById('sec-ext').textContent = t.sExt;
   document.getElementById('sec-resto').textContent = t.sResto;
@@ -1218,9 +1236,11 @@ function setLang(lang) {
   const rl = document.getElementById('resto-list');
   rl.innerHTML = t.restos.map((r, i) => {
     const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(r.addr + ', Nice, France')}`;
-    return `<div style="display:flex;gap:0.6rem;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">
-      <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">${i+1}</span>
-      <div><strong>${escHtml(r.name)}</strong><br><a href="${mapsUrl}" class="maps-link" target="_blank">${escHtml(r.addr)}</a></div>
+    const veganBadge = r.vegan ? `<span style="background:#3d7a52;color:#fff;font-size:0.6rem;font-weight:700;padding:0.08rem 0.32rem;border-radius:3px;margin-left:0.35rem;text-transform:uppercase;letter-spacing:0.04em;vertical-align:middle">vegan</span>` : '';
+    const webLink = r.url ? ` <a href="${r.url}" class="ext-link" target="_blank" style="font-size:0.74rem;font-weight:600">Web</a>` : '';
+    return `<div style="display:flex;gap:0.6rem;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">
+      <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">${i+1}</span>
+      <div><strong>${escHtml(r.name)}</strong>${veganBadge}${webLink}<br><a href="${mapsUrl}" class="maps-link" target="_blank">${escHtml(r.addr)}</a></div>
     </div>`;
   }).join('');
 
