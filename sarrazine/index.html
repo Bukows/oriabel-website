@@ -13,8 +13,8 @@
       --red-bg: #fdf0ef;
       --blue:   #2E75B6;
       --dark:   #1a1a1a;
-      --taupe:  #6b5c52;
-      --taupe-light: #8a7a70;
+      --sage:   #7d9182;
+      --sage-light: #a0b0a5;
       --mid:    #555;
       --muted:  #888;
       --light:  #f5f7fa;
@@ -34,8 +34,8 @@
 
     /* ── HEADER ── */
     header {
-      background: var(--taupe);
-      padding: 0.85rem 1rem;
+      background: var(--light);
+      padding: 0.6rem 1rem;
       position: sticky;
       top: 0;
       z-index: 200;
@@ -48,6 +48,9 @@
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       gap: 0.75rem;
+      background: var(--sage);
+      padding: 0.75rem 1.2rem;
+      border-radius: var(--radius);
     }
 
     .header-title-wrap {
@@ -108,18 +111,18 @@
 
     /* ── ADDRESS BAR ── */
     .address-bar {
-      background: #f0ece8;
-      border-bottom: 1px solid #ddd5cc;
+      background: #edf0ed;
+      border-bottom: 1px solid #d5ddd6;
       padding: 0.5rem 1.2rem;
       font-size: 0.8rem;
-      color: var(--taupe-light);
+      color: var(--sage-light);
       display: flex;
       align-items: center;
       gap: 0.5rem;
       justify-content: center;
     }
 
-    .address-bar strong { color: var(--taupe); }
+    .address-bar strong { color: #4a6352; }
 
     /* ── MAIN ── */
     main {
