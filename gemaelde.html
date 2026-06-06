@@ -38,11 +38,15 @@
     }
 
     .logo {
-      font-size: 1.6rem;
-      letter-spacing: 0.15em;
-      color: var(--gold);
+      display: flex;
+      align-items: center;
       text-decoration: none;
-      font-style: italic;
+    }
+
+    .logo img {
+      height: 36px;
+      width: auto;
+      display: block;
     }
 
     nav a {
@@ -289,7 +293,7 @@
 <body>
 
 <header>
-  <a class="logo" href="index.html">Oriabel</a>
+  <a class="logo" href="index.html"><img src="uploads/oriabel_logo.png" alt="Oriabel — Nice, France"></a>
   <nav>
     <a href="index.html">Bijoux</a>
     <a href="gemaelde.html" class="active">Peintures</a>
