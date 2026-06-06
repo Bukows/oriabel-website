@@ -392,6 +392,14 @@
 
     .emerg-value a.tel-link { color: var(--red); border-bottom-color: var(--red); }
 
+    a.ext-link {
+      color: var(--blue);
+      text-decoration: none;
+      border-bottom: 1px solid var(--blue);
+      font-weight: 600;
+    }
+    a.ext-link:hover { opacity: 0.75; }
+
     /* ── WIFI BLOCK ── */
     .wifi-block {
       padding: 1rem 1.1rem;
@@ -636,7 +644,7 @@ const T = {
       { icon:"🚌", label:"Öffentliche Verkehrsmittel", rows:[
         ["Tickets","Einheitsticket Tram + Bus (Magnetkarte kaufen & aufladen)"],
         ["Fahrrad/Roller","Lime oder Poney vor der Copro (ca. 3–5 € ins Zentrum)"],
-        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2"],
+        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2 · [Fahrplan](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214)"],
         ["Tram","Haltestellen «Fabron» oder «Magnan» → Linie 2"],
         ["Flughafen","Tram L2 Richtung «aéroport» (NICHT «cadam») → T1 dann T2. Ca. 40 Min."],
         ["Zentrum","Haltestelle Jean Médecin, ca. 25 Min. (Tram L2)"],
@@ -760,7 +768,7 @@ const T = {
       { icon:"🚌", label:"Public Transport", rows:[
         ["Tickets","Combined ticket for tram + bus (buy magnetic card & top up)"],
         ["Bike/Scooter","Lime or Poney at the Copro (approx. €3–5 to centre)"],
-        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2"],
+        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2 · [Timetable](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214)"],
         ["Tram","Stops «Fabron» or «Magnan» → Line 2"],
         ["Airport","Tram L2 towards «aéroport» (NOT «cadam») → T1 then T2. Approx. 40 min."],
         ["City centre","Stop Jean Médecin, approx. 25 min. (Tram L2)"],
@@ -884,7 +892,7 @@ const T = {
       { icon:"🚌", label:"Transports en commun", rows:[
         ["Tickets","Ticket unique tram + bus (acheter carte magnétique et recharger)"],
         ["Vélo/Trottinette","Lime ou Poney devant la Copro (env. 3–5 € jusqu'au centre)"],
-        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2"],
+        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2 · [Horaires](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214)"],
         ["Tram","Arrêts «Fabron» ou «Magnan» → Ligne 2"],
         ["Aéroport","Tram L2 direction «aéroport» (PAS «cadam») → T1 puis T2. Env. 40 min."],
         ["Centre-ville","Arrêt Jean Médecin, env. 25 min. (Tram L2)"],
@@ -982,7 +990,20 @@ function escHtml(s) {
 
 function renderVal(val) {
   if (!val) return '';
-  let s = escHtml(val).replace(/\n/g, '<br>');
+
+  // Extract [text](url) markdown links before escaping
+  const links = [];
+  const withPlaceholders = val.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, (m, text, url) => {
+    links.push({ text, url });
+    return `\x00LINK${links.length - 1}\x00`;
+  });
+
+  let s = escHtml(withPlaceholders).replace(/\n/g, '<br>');
+
+  // Restore markdown links
+  links.forEach((l, i) => {
+    s = s.replace(`\x00LINK${i}\x00`, `<a href="${l.url}" class="ext-link" target="_blank">${escHtml(l.text)}</a>`);
+  });
 
   // Phone numbers: +33 X XX XX XX XX  or  0X XX XX XX XX  or  04 XX XX XX XX
   s = s.replace(/(\+33[\s]?\d(?:[\s]?\d{2}){4}|\b0[1-9](?:[\s.]?\d{2}){4})/g, function(m) {
