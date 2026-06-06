@@ -564,6 +564,21 @@
     </div>
   </div>
 
+  <!-- VESSELS -->
+  <div class="section-title" id="sec-vessels"></div>
+  <div class="tile-grid single">
+    <div class="card" id="vessel-card">
+      <div class="card-toggle" onclick="toggleVessel(this)">
+        <div class="card-icon">⚓</div>
+        <div class="card-label" id="vessel-label">Hafen Nice – Live Schiffsverkehr</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body" id="vessel-body" style="padding:0.75rem">
+        <div id="vessel-map-wrap" style="border-radius:8px;overflow:hidden;min-height:300px"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- LEISURE -->
   <div class="tile-grid" id="grid-leisure"></div>
 
@@ -585,6 +600,7 @@ const T = {
     sResto: "Restaurants",
     police: "Polizei", fire: "Feuerwehr", eu: "Alle Notfälle", copyAddr: "Kopieren",
     mapLabel: "Restaurants (Empfehlungen)",
+    sVessels: "Hafen Nice – Live Schiffsverkehr",
     sPlants: "Bitte daran denken, die Pflanzen auf den Balkonen und dem Küchensims zu giessen.",
     footer: "Tour Sarrazin — Nice · Für Notfälle: 112",
 
@@ -709,6 +725,7 @@ const T = {
     sResto: "Restaurants",
     police: "Police", fire: "Fire Brigade", eu: "All emergencies", copyAddr: "Copy",
     mapLabel: "Restaurants (recommendations)",
+    sVessels: "Port Nice – Live Vessel Traffic",
     sPlants: "Please remember to water the plants on the balconies and the kitchen windowsill.",
     footer: "Tour Sarrazin — Nice · Emergency: 112",
 
@@ -833,6 +850,8 @@ const T = {
     sResto: "Restaurants",
     police: "Police", fire: "Pompiers", eu: "Toutes urgences", copyAddr: "Copier",
     mapLabel: "Restaurants (recommandations)",
+    sVessels: "Port de Nice – Trafic maritime en direct",
+    sPlants: "Pensez à arroser les plantes sur les balcons et le rebord de la fenêtre de la cuisine.",
     footer: "Tour Sarrazin — Nice · Urgences: 112",
 
     emergRows: [
@@ -1188,6 +1207,25 @@ function copyText(text, btn) {
 let currentLang = 'de';
 let restoMapRendered = false;
 
+let vesselLoaded = false;
+
+function toggleVessel(toggleEl) {
+  const card = toggleEl.closest('.card');
+  card.classList.toggle('open');
+  if (card.classList.contains('open') && !vesselLoaded) {
+    vesselLoaded = true;
+    const wrap = document.getElementById('vessel-map-wrap');
+    // Inject VesselFinder widget via iframe (HTTPS-safe)
+    wrap.innerHTML = `<iframe
+      src="https://www.vesselfinder.com/aismap?zoom=13&lat=43.695&lon=7.278&width=100%25&height=320&names=true&mmsi=&show_names=true&fleet=&fleet_hide_old_positions=false&clickable=true"
+      width="100%" height="320"
+      style="border:none;border-radius:8px"
+      loading="lazy"
+      title="VesselFinder – Port de Nice">
+    </iframe>`;
+  }
+}
+
 function setLang(lang) {
   currentLang = lang;
   const t = T[lang];
@@ -1207,6 +1245,8 @@ function setLang(lang) {
   document.getElementById('lbl-eu').textContent = t.eu;
   document.getElementById('addr-copy-btn').textContent = t.copyAddr;
   document.getElementById('s-plants').textContent = t.sPlants;
+  document.getElementById('vessel-label').textContent = t.sVessels;
+  document.getElementById('sec-vessels').textContent = t.sVessels;
   document.getElementById('plants-notice').style.display = '';
   document.getElementById('sec-apt').textContent = t.sApt;
   document.getElementById('sec-ext').textContent = t.sExt;
