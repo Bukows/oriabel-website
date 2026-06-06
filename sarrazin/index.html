@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tour Sarrazin — Gästeinfo</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #c0392b;
+      --red-bg: #fdf0ef;
+      --blue:   #2E75B6;
+      --dark:   #1a1a1a;
+      --mid:    #555;
+      --muted:  #888;
+      --light:  #f5f7fa;
+      --card:   #ffffff;
+      --border: #e0e4e8;
+      --gold:   #c8a96e;
+      --radius: 10px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--dark);
+      padding: 0.9rem 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .header-title {
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      line-height: 1.2;
+    }
+
+    .header-sub {
+      color: var(--gold);
+      font-size: 0.75rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+    }
+
+    .lang-switcher {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+
+    .lang-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #ccc;
+      padding: 0.3rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.04em;
+    }
+
+    .lang-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .lang-btn.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: #1a1a1a;
+    }
+
+    /* ── ADDRESS BAR ── */
+    .address-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1.2rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .address-bar strong { color: var(--dark); }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    /* ── EMERGENCY ── */
+    .emergency-tile {
+      background: var(--red);
+      border-radius: var(--radius);
+      margin-bottom: 1rem;
+      overflow: hidden;
+    }
+
+    .emergency-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 1.1rem;
+    }
+
+    .emergency-header h2 {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .emerg-badge {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.15rem 0.5rem;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .emergency-body {
+      background: var(--red-bg);
+      padding: 0.8rem 1.1rem 1rem;
+    }
+
+    .emerg-row {
+      display: flex;
+      gap: 0.8rem;
+      padding: 0.55rem 0;
+      border-bottom: 1px solid rgba(192,57,43,0.12);
+      align-items: flex-start;
+    }
+
+    .emerg-row:last-child { border-bottom: none; }
+
+    .emerg-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--red);
+      min-width: 130px;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+
+    .emerg-value {
+      font-size: 0.85rem;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+
+    .emerg-value a {
+      color: var(--red);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .emerg-number {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--red);
+      letter-spacing: 0.02em;
+    }
+
+    .emerg-numbers {
+      display: flex;
+      gap: 1.2rem;
+      flex-wrap: wrap;
+      padding: 0.5rem 0 0.7rem;
+    }
+
+    .emerg-num-item {
+      text-align: center;
+    }
+
+    .emerg-num-item .num { font-size: 2rem; font-weight: 900; color: var(--red); line-height: 1; }
+    .emerg-num-item .lbl { font-size: 0.7rem; color: #666; margin-top: 0.1rem; }
+
+    /* ── GRID ── */
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin: 1.2rem 0 0.5rem 0.2rem;
+    }
+
+    .tile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tile-grid.single { grid-template-columns: 1fr; }
+
+    /* ── CARD / TILE ── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.85rem 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .card-toggle:hover { background: #fafafa; }
+
+    .card-icon {
+      font-size: 1.15rem;
+      flex-shrink: 0;
+      width: 28px;
+      text-align: center;
+    }
+
+    .card-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--dark);
+      flex: 1;
+    }
+
+    .card-chevron {
+      color: var(--muted);
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+
+    .card.open .card-chevron { transform: rotate(180deg); }
+
+    .card-body {
+      display: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .card.open .card-body { display: block; }
+
+    /* ── INFO TABLE ── */
+    .info-table {
+      width: 100%;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-row:last-child { border-bottom: none; }
+
+    .info-key {
+      background: #f0f4f8;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--mid);
+      padding: 0.55rem 0.8rem;
+      min-width: 38%;
+      max-width: 38%;
+      flex-shrink: 0;
+      line-height: 1.4;
+    }
+
+    .info-val {
+      font-size: 0.82rem;
+      color: var(--dark);
+      padding: 0.55rem 0.85rem;
+      line-height: 1.5;
+      flex: 1;
+    }
+
+    .info-val a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .info-val.full {
+      min-width: 100%;
+      background: #fafbfc;
+    }
+
+    .warn { color: #b85c00; font-weight: 600; }
+
+    /* ── WIFI BLOCK ── */
+    .wifi-block {
+      padding: 1rem 1.1rem;
+      display: flex;
+      gap: 1.2rem;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .wifi-info { flex: 1; min-width: 180px; }
+
+    .wifi-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+      font-size: 0.84rem;
+    }
+
+    .wifi-key { color: var(--muted); min-width: 80px; }
+    .wifi-val { font-weight: 600; color: var(--dark); word-break: break-all; }
+
+    .wifi-qr { flex-shrink: 0; }
+    .wifi-qr canvas, .wifi-qr img { width: 90px; height: 90px; }
+
+    /* ── MAP ── */
+    #map {
+      height: 340px;
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    @media (max-width: 500px) { #map { height: 260px; } }
+
+    .map-header {
+      padding: 0.85rem 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 520px) {
+      .tile-grid { grid-template-columns: 1fr; }
+      .emerg-label { min-width: 110px; font-size: 0.76rem; }
+      header { padding: 0.8rem 0.9rem; }
+      main { padding: 0.75rem; }
+      .emerg-num-item .num { font-size: 1.6rem; }
+    }
+
+    @media (min-width: 600px) {
+      .tile-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-title">Tour Sarrazin</div>
+    <div class="header-sub" id="hdr-sub">Gästeinfo · Nice</div>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('de')">DE</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+  </div>
+</header>
+
+<div class="address-bar">
+  <strong>Bât. D, 93 Bd Édouard Herriot, 06200 Nice</strong>
+  <span id="floor-info">· 6. Stock · Aufzug rechts (Nord)</span>
+</div>
+
+<main>
+
+  <!-- EMERGENCY -->
+  <div class="emergency-tile">
+    <div class="emergency-header">
+      <h2 id="s-emerg"></h2>
+    </div>
+    <div class="emergency-body">
+      <div class="emerg-numbers">
+        <div class="emerg-num-item"><div class="num">15</div><div class="lbl">SAMU</div></div>
+        <div class="emerg-num-item"><div class="num">17</div><div class="lbl" id="lbl-police">Polizei</div></div>
+        <div class="emerg-num-item"><div class="num">18</div><div class="lbl" id="lbl-fire">Feuerwehr</div></div>
+        <div class="emerg-num-item"><div class="num">112</div><div class="lbl" id="lbl-eu">Alle Notfälle</div></div>
+      </div>
+      <div id="emerg-rows"></div>
+    </div>
+  </div>
+
+  <!-- APARTMENT -->
+  <div class="section-title" id="sec-apt"></div>
+  <div class="tile-grid" id="grid-apt"></div>
+
+  <!-- EXTERNAL -->
+  <div class="section-title" id="sec-ext"></div>
+  <div class="tile-grid" id="grid-ext"></div>
+
+  <!-- RESTAURANTS MAP -->
+  <div class="section-title" id="sec-resto"></div>
+  <div class="tile-grid single">
+    <div class="card open">
+      <div class="card-toggle" onclick="toggleCard(this)">
+        <div class="card-icon">🗺️</div>
+        <div class="card-label" id="map-label">Restaurants (Empfehlungen)</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body">
+        <div id="resto-list" style="padding:0.6rem 1.1rem 0.5rem; border-bottom:1px solid var(--border)"></div>
+        <div id="map"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEISURE -->
+  <div class="tile-grid" id="grid-leisure"></div>
+
+</main>
+
+<footer id="footer-text"></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+
+// ─── CONTENT ───────────────────────────────────────────────────────────────
+
+const T = {
+  de: {
+    floorInfo: "6. Stockwerk · Aufzug rechts (Nord)",
+    sEmerg: "Notfälle",
+    sApt: "Wohnung",
+    sExt: "Umgebung",
+    sResto: "Restaurants",
+    police: "Polizei", fire: "Feuerwehr", eu: "Alle Notfälle",
+    mapLabel: "Restaurants (Empfehlungen)",
+    footer: "Tour Sarrazin — Nice · Für Notfälle: 112",
+
+    emergRows: [
+      ["Krankenhaus Erwachsene", "Hôpital Pasteur · 30 Voie Romaine, 06001 Nice → Urgences"],
+      ["Krankenhaus Kinder", "Hôpital Lenval · 57 Av. de la Californie, 06200 Nice → Urgences Enfants"],
+      ["Hausarzt-Notdienst", "SOS Médecin: +33 4 93 85 01 01"],
+      ["Wasser abstellen", "Hähne kalt + warm im Vorraum zwischen Wohnungstür und Aufzug\n⚠ Richtige Wohnung prüfen!"],
+      ["Strom abstellen", "Option 1: Sicherungskasten in der Wohnung, Durchgang zur Küche rechts → alle 4 Reihen OFF\nOption 2: Vorraum zwischen Wohnungstür und Aufzug, linke Seite → grüner Linky-Kasten → Hauptschalter\n⚠ Richtige Wohnung prüfen!"]
+    ],
+
+    apt: [
+      { icon:"📞", label:"Kontakte", rows:[
+        ["Oriabel","+33 6 08 82 43 83"],
+        ["Peter","+33 7 55 63 38 43"],
+        ["Eltern Parisis (Bât. B)","+33 6 66 35 09 98"],
+        ["Hausverwaltung Luc Perrier","+33 6 21 69 53 84"]
+      ]},
+      { icon:"🔑", label:"Zugang & Codes", rows:[
+        ["Ausgang Copro","Code: 272A"],
+        ["Eingang","VIGIK-Karte (blau) oder Fernbedienung"],
+        ["Fußweg zum Meer","Kleines Törchen → Av. Mont Rabeau → Tram Fabron"],
+        ["Parkplätze","Nicht fest zugeteilt – gelegentlich umstellen"]
+      ]},
+      { icon:"📶", label:"WLAN", wifi: true, rows:[
+        ["Netzwerk","Freebox-C7C7DD"],
+        ["Passwort","4drmkq9dt2qw95r6qfkr95"],
+        ["Tipp","QR-Code scannen → direkt verbinden"]
+      ]},
+      { icon:"🛏️", label:"Bettwäsche & Handtücher", rows:[
+        ["Einzelbetten","Schrank im Gästezimmer"],
+        ["Doppelbett","Schwarzer chinesischer Schrank"],
+        ["Graue Handtücher","Schrank am Waschtisch im Eltern-Bad (hinter Schubladen)"],
+        ["Blaue Handtücher","Schrank im Gästezimmer"],
+        ["Strandhandtücher","Schrank Harry-Potter-Zimmer"]
+      ]},
+      { icon:"❄️", label:"Klimaanlage", rows:[
+        ["Empfehlung","Lange Laufzeiten bei 24–25°C bevorzugen"],
+        ["Lüftung","Auf Minimum stellen"],
+        ["Fenster","Schließen, wenn Klimaanlage läuft"],
+        ["Nachts","AC aus, Fenster öffnen (Achtung Zugluft)"],
+        ["Heiße Nächte","SCHLAF-Modus (Mond), 25°C"]
+      ]},
+      { icon:"☀️", label:"Markisen (Balkone)", rows:[
+        ["⚠ Wichtig","Nachts und bei Abwesenheit immer einfahren (plötzliche Winde in Nice!)"],
+        ["Südbalkon","Schalter außen am Balkon"],
+        ["Nordbalkon","Schalter im Eltern-Schlafzimmer"],
+        ["⚠ Fenster","Fenster beidseitig offen → Türen können zuschlagen"]
+      ]},
+      { icon:"💡", label:"Beleuchtung (Alexa)", rows:[
+        ["Wohnzimmer","Beleuchtung über Alexa gesteuert"],
+        ["Einschalten","«Alexa, allume salon»"],
+        ["Ausschalten","«Alexa, éteint salon»"],
+        ["Manuell","Lichtschalter zweimal drücken → Alexa trennt sich, manuelle Bedienung möglich"]
+      ]},
+      { icon:"🫧", label:"Waschmaschine", rows:[
+        ["Tür schließen","Gleichmäßig auf unteren Griffteil drücken – Icon geschlossene Tür muss erscheinen, sonst startet Maschine nicht!"],
+        ["Programme","Synthétique (1h56) · Rapide (1h01)"],
+        ["Trocknen","2 Wäscheständer im Putzschrank oder Trockner (Menü Mix)"]
+      ]},
+      { icon:"♻️", label:"Müll & Abfall", rows:[
+        ["Verpackungen","Separat im großen Küchen-Mülleimer → gelbe Tonne im Müllraum Keller (-1)"],
+        ["Restmüll","Kleine Tüten → Müllschlucker im Vorraum zw. Wohnungstür und Aufzug, ODER dunkle Tonne Müllraum (-1)"],
+        ["Glas","Container auf der Straße"]
+      ]},
+      { icon:"🔥", label:"Barbecue", rows:[
+        [null,"Theoretisch verboten, aber toleriert – nicht zu oft, kurze Grillzeiten."]
+      ]}
+    ],
+
+    ext: [
+      { icon:"🚌", label:"Öffentliche Verkehrsmittel", rows:[
+        ["Tickets","Einheitsticket Tram + Bus (Magnetkarte kaufen & aufladen)"],
+        ["Fahrrad/Roller","Lime oder Poney vor der Copro (ca. 3–5 € ins Zentrum)"],
+        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2"],
+        ["Tram","Haltestellen «Fabron» oder «Magnan» → Linie 2"],
+        ["Flughafen","Tram L2 Richtung «aéroport» (NICHT «cadam») → T1 dann T2. Ca. 40 Min."],
+        ["Zentrum","Haltestelle Jean Médecin, ca. 25 Min. (Tram L2)"],
+        ["Hafen","Haltestelle Port Lympia, ca. 35 Min. (Tram L2 → L3)"]
+      ]},
+      { icon:"🏥", label:"Ärzte & Apotheken", rows:[
+        ["Hausarzt","Dr. Le Barzic, Tel. 04 93 96 45 86 (15 Min. zu Fuß)"],
+        ["Zahnarzt","Tsipora Amsellem, Tel. 04 93 87 94 81"],
+        ["Apotheke","CAP3000 (9h–20h, außer So.) · Flughafen T2 (So. 8h–20h30)"],
+        ["Online Termine","doctolib.fr"]
+      ]},
+      { icon:"🛒", label:"Einkaufen & Märkte", rows:[
+        ["Via Mont Rabeau","Bäckerei «Moulin de Flore» · Carrefour Market (bei Tram Fabron)"],
+        ["Via Av. de Magnan","Konditorei «Le Passage» · Brathähnchen «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
+        ["Märkte","Cours Saleya: Mo Antiquitäten, Di–So Blumen/Gemüse\nLibération: täglich\nVentimiglia (IT): freitags (Zug empfohlen)"]
+      ]},
+      { icon:"🏬", label:"Shopping-Center", rows:[
+        ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMo–Sa 10h–20h / So 11h–19h\nBus 10 oder Tram L2 Richtung Aéroport"],
+        ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(früher: Polygone)"]
+      ]},
+      { icon:"🚲", label:"Fahrradverleih & Ausflüge", rows:[
+        ["Fahrrad","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"],
+        ["Wanderungen","Tour St-Jean-Cap-Ferrat · Presqu'île d'Antibes + La Garoupe · Chemin de Nietzsche à Èze · Hinterland"]
+      ]},
+      { icon:"🍦", label:"Eis & Massage", rows:[
+        ["Eis","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieille Ville)"],
+        ["Massage","Le Banthai, Rue de France"]
+      ]}
+    ],
+
+    restos: [
+      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651 },
+      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758 },
+      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636 },
+      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652 },
+      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648 },
+      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697 },
+      { name:"Plage des Canailles", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440 }
+    ]
+  },
+
+  en: {
+    floorInfo: "6th floor · Lift on the right (north)",
+    sEmerg: "Emergencies",
+    sApt: "Apartment",
+    sExt: "Area",
+    sResto: "Restaurants",
+    police: "Police", fire: "Fire Brigade", eu: "All emergencies",
+    mapLabel: "Restaurants (recommendations)",
+    footer: "Tour Sarrazin — Nice · Emergency: 112",
+
+    emergRows: [
+      ["Hospital (adults)", "Hôpital Pasteur · 30 Voie Romaine, 06001 Nice → Urgences (A&E)"],
+      ["Hospital (children)", "Hôpital Lenval · 57 Av. de la Californie, 06200 Nice → Urgences Enfants"],
+      ["Home doctor", "SOS Médecin: +33 4 93 85 01 01"],
+      ["Shut off water", "Cold + hot water taps in the hallway between apartment door and lift\n⚠ Check you are using the correct apartment's valves!"],
+      ["Shut off electricity", "Option 1: Fuse box inside the apartment, right side of passage to kitchen → all 4 rows OFF\nOption 2: Hallway between apartment door and lift, left side → green Linky box → main switch\n⚠ Check you are using the correct apartment's switch!"]
+    ],
+
+    apt: [
+      { icon:"📞", label:"Contacts", rows:[
+        ["Oriabel","+33 6 08 82 43 83"],
+        ["Peter","+33 7 55 63 38 43"],
+        ["Parents Parisis (Bât. B)","+33 6 66 35 09 98"],
+        ["Property mgmt. Luc Perrier","+33 6 21 69 53 84"]
+      ]},
+      { icon:"🔑", label:"Access & Codes", rows:[
+        ["Exit Copro","Code: 272A"],
+        ["Entry","Blue VIGIK card or remote control"],
+        ["Pedestrian path to sea","Small gate → Av. Mont Rabeau → tram stop Fabron"],
+        ["Parking","Not assigned – move car occasionally"]
+      ]},
+      { icon:"📶", label:"Wi-Fi", wifi: true, rows:[
+        ["Network","Freebox-C7C7DD"],
+        ["Password","4drmkq9dt2qw95r6qfkr95"],
+        ["Tip","Scan QR code → connect instantly"]
+      ]},
+      { icon:"🛏️", label:"Bedding & Towels", rows:[
+        ["Single beds","Guest room wardrobe"],
+        ["Double bed","Black Chinese wardrobe"],
+        ["Large grey towels","Cabinet at washbasin in parents' bathroom (behind drawers)"],
+        ["Blue towels","Guest room wardrobe"],
+        ["Beach towels","Harry Potter room wardrobe"]
+      ]},
+      { icon:"❄️", label:"Air Conditioning", rows:[
+        ["Recommendation","Prefer long runs at moderate temperature (24–25°C)"],
+        ["Fan","Set to minimum"],
+        ["Windows","Always close when AC is running"],
+        ["At night","Switch off AC and open windows (watch out for draughts)"],
+        ["Hot nights","SLEEP mode (moon symbol), 25°C"]
+      ]},
+      { icon:"☀️", label:"Awnings (Balconies)", rows:[
+        ["⚠ Important","Always retract at night and when away (sudden strong winds in Nice!)"],
+        ["South balcony","Switch on the balcony outside"],
+        ["North balcony","Switch in parents' bedroom"],
+        ["⚠ Windows","Both windows open → doors can slam and get damaged"]
+      ]},
+      { icon:"💡", label:"Lighting (Alexa)", rows:[
+        ["Living/dining room","Lighting controlled via Alexa"],
+        ["Switch on","«Alexa, allume salon»"],
+        ["Switch off","«Alexa, éteint salon»"],
+        ["Manual","Press light switch twice → disconnects from Alexa; manual operation possible"]
+      ]},
+      { icon:"🫧", label:"Washing Machine", rows:[
+        ["Closing door","Press steadily on the bottom of the handle – closed-door icon must appear, otherwise machine won't start!"],
+        ["Cycles","Synthetic (1h56) · Quick (1h01)"],
+        ["Drying","2 clothes horses in cleaning cupboard or electric dryer (Mix cycle)"]
+      ]},
+      { icon:"♻️", label:"Waste & Recycling", rows:[
+        ["Packaging","Collect separately in large kitchen bin → yellow bin in basement bin room (-1)"],
+        ["Residual waste","Small bags → waste chute in hallway between apt door and lift, OR dark bin in basement (-1)"],
+        ["Glass","Roadside container"]
+      ]},
+      { icon:"🔥", label:"Barbecue", rows:[
+        [null,"Technically prohibited but tolerated – not too often, short sessions."]
+      ]}
+    ],
+
+    ext: [
+      { icon:"🚌", label:"Public Transport", rows:[
+        ["Tickets","Combined ticket for tram + bus (buy magnetic card & top up)"],
+        ["Bike/Scooter","Lime or Poney at the Copro (approx. €3–5 to centre)"],
+        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2"],
+        ["Tram","Stops «Fabron» or «Magnan» → Line 2"],
+        ["Airport","Tram L2 towards «aéroport» (NOT «cadam») → T1 then T2. Approx. 40 min."],
+        ["City centre","Stop Jean Médecin, approx. 25 min. (Tram L2)"],
+        ["Harbour","Stop Port Lympia, approx. 35 min. (Tram L2 → L3)"]
+      ]},
+      { icon:"🏥", label:"Medical", rows:[
+        ["GP","Dr. Le Barzic, Tel. 04 93 96 45 86 (15 min. walk)"],
+        ["Dentist","Tsipora Amsellem, Tel. 04 93 87 94 81"],
+        ["Pharmacy","CAP3000 (9am–8pm, not Sun.) · Airport T2 (Sun. 8am–8:30pm)"],
+        ["Online appointments","doctolib.fr"]
+      ]},
+      { icon:"🛒", label:"Shopping & Markets", rows:[
+        ["Via Mont Rabeau","Bakery «Moulin de Flore» · Carrefour Market (near tram Fabron)"],
+        ["Via Av. de Magnan","Pâtisserie «Le Passage» · Rotisserie «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
+        ["Markets","Cours Saleya: Mon antiques, Tue–Sun flowers/veg/fruit\nLibération: daily\nVentimiglia (IT): Fridays (train recommended)"]
+      ]},
+      { icon:"🏬", label:"Shopping Centres", rows:[
+        ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMon–Sat 10am–8pm / Sun 11am–7pm\nBus 10 or Tram L2 towards Airport"],
+        ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(formerly: Polygone)"]
+      ]},
+      { icon:"🚲", label:"Cycling & Hikes", rows:[
+        ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"],
+        ["Hiking","Tour de St-Jean-Cap-Ferrat · Presqu'île d'Antibes + La Garoupe · Chemin de Nietzsche à Èze · Hinterland"]
+      ]},
+      { icon:"🍦", label:"Ice Cream & Massage", rows:[
+        ["Ice cream","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Old Town)"],
+        ["Massage","Le Banthai, Rue de France"]
+      ]}
+    ],
+
+    restos: [
+      { name:"La Chamade (Neapolitan pizza)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651 },
+      { name:"René Socca (socca & Niçois cuisine)", addr:"2 Rue Miralhéti (Old Nice)", lat:43.6958, lng:7.2758 },
+      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636 },
+      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652 },
+      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648 },
+      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697 },
+      { name:"Plage des Canailles (beach restaurant)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440 }
+    ]
+  },
+
+  fr: {
+    floorInfo: "6e étage · Ascenseur à droite (nord)",
+    sEmerg: "Urgences",
+    sApt: "Appartement",
+    sExt: "Quartier",
+    sResto: "Restaurants",
+    police: "Police", fire: "Pompiers", eu: "Toutes urgences",
+    mapLabel: "Restaurants (recommandations)",
+    footer: "Tour Sarrazin — Nice · Urgences: 112",
+
+    emergRows: [
+      ["Hôpital (adultes)", "Hôpital Pasteur · 30 Voie Romaine, 06001 Nice → Urgences"],
+      ["Hôpital (enfants)", "Hôpital Lenval · 57 Av. de la Californie, 06200 Nice → Urgences Enfants"],
+      ["Médecin à domicile", "SOS Médecin: +33 4 93 85 01 01"],
+      ["Couper l'eau", "Robinets froid + chaud dans le couloir entre la porte de l'appartement et l'ascenseur\n⚠ Vérifier qu'il s'agit du bon appartement !"],
+      ["Couper l'électricité", "Option 1: Tableau électrique dans l'appartement, couloir cuisine côté droit → toutes les 4 rangées sur OFF\nOption 2: Couloir entre la porte de l'appartement et l'ascenseur, côté gauche → boîtier Linky vert → disjoncteur principal\n⚠ Vérifier qu'il s'agit du bon appartement !"]
+    ],
+
+    apt: [
+      { icon:"📞", label:"Contacts", rows:[
+        ["Oriabel","+33 6 08 82 43 83"],
+        ["Peter","+33 7 55 63 38 43"],
+        ["Parents Parisis (Bât. B)","+33 6 66 35 09 98"],
+        ["Syndic – Luc Perrier","+33 6 21 69 53 84"]
+      ]},
+      { icon:"🔑", label:"Accès & Codes", rows:[
+        ["Sortie Copro","Code: 272A"],
+        ["Entrée","Carte VIGIK (bleue) ou télécommande"],
+        ["Accès piéton à la mer","Petit portail → Av. Mont Rabeau → arrêt tram Fabron"],
+        ["Stationnement","Places non attribuées – déplacer le véhicule occasionnellement"]
+      ]},
+      { icon:"📶", label:"Wi-Fi", wifi: true, rows:[
+        ["Réseau","Freebox-C7C7DD"],
+        ["Mot de passe","4drmkq9dt2qw95r6qfkr95"],
+        ["Astuce","Scanner le QR code → connexion instantanée"]
+      ]},
+      { icon:"🛏️", label:"Linge & Serviettes", rows:[
+        ["Lits simples","Armoire dans la chambre d'amis"],
+        ["Lit double","Armoire chinoise noire"],
+        ["Grandes serviettes grises","Meuble à vasque dans la salle de bains parentale (derrière les tiroirs)"],
+        ["Serviettes bleues","Armoire chambre d'amis"],
+        ["Serviettes de plage","Armoire chambre Harry Potter"]
+      ]},
+      { icon:"❄️", label:"Climatisation", rows:[
+        ["Recommandation","Privilégier de longues durées à température modérée (24–25°C)"],
+        ["Ventilation","Régler au minimum"],
+        ["Fenêtres","Fermer quand la clim est en marche"],
+        ["La nuit","Éteindre la clim et ouvrir les fenêtres (attention aux courants d'air)"],
+        ["Nuits chaudes","Mode SLEEP (lune), 25°C"]
+      ]},
+      { icon:"☀️", label:"Stores (Balcons)", rows:[
+        ["⚠ Important","Toujours rentrer les stores la nuit et en cas d'absence (vents soudains à Nice !)"],
+        ["Balcon sud","Interrupteur à l'extérieur sur le balcon"],
+        ["Balcon nord","Interrupteur dans la chambre parentale"],
+        ["⚠ Fenêtres","Fenêtres ouvertes des deux côtés → les portes peuvent claquer et s'endommager"]
+      ]},
+      { icon:"💡", label:"Éclairage (Alexa)", rows:[
+        ["Salon & salle à manger","Éclairage commandé par Alexa"],
+        ["Allumer","«Alexa, allume salon»"],
+        ["Éteindre","«Alexa, éteint salon»"],
+        ["Manuel","Appuyer deux fois sur l'interrupteur → déconnexion d'Alexa, commande manuelle possible"]
+      ]},
+      { icon:"🫧", label:"Machine à laver", rows:[
+        ["Fermeture porte","Appuyer de façon régulière sur la partie basse de la poignée – l'icône porte fermée doit apparaître, sinon la machine ne démarre pas !"],
+        ["Programmes","Synthétique (1h56) · Rapide (1h01)"],
+        ["Séchage","2 étendoirs dans le placard ménage ou sèche-linge électrique (programme Mix)"]
+      ]},
+      { icon:"♻️", label:"Déchets & Tri", rows:[
+        ["Emballages","Collecte séparée dans la grande poubelle cuisine → bac jaune dans le local poubelles cave (-1)"],
+        ["Déchets ménagers","Petits sacs → vide-ordures dans le couloir entre la porte et l'ascenseur OU bac sombre cave (-1)"],
+        ["Verre","Conteneur sur la voie publique"]
+      ]},
+      { icon:"🔥", label:"Barbecue", rows:[
+        [null,"Techniquement interdit mais toléré – pas trop souvent et en sessions courtes."]
+      ]}
+    ],
+
+    ext: [
+      { icon:"🚌", label:"Transports en commun", rows:[
+        ["Tickets","Ticket unique tram + bus (acheter carte magnétique et recharger)"],
+        ["Vélo/Trottinette","Lime ou Poney devant la Copro (env. 3–5 € jusqu'au centre)"],
+        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2"],
+        ["Tram","Arrêts «Fabron» ou «Magnan» → Ligne 2"],
+        ["Aéroport","Tram L2 direction «aéroport» (PAS «cadam») → T1 puis T2. Env. 40 min."],
+        ["Centre-ville","Arrêt Jean Médecin, env. 25 min. (Tram L2)"],
+        ["Port","Arrêt Port Lympia, env. 35 min. (Tram L2 → L3)"]
+      ]},
+      { icon:"🏥", label:"Médecins & Pharmacies", rows:[
+        ["Médecin généraliste","Dr. Le Barzic, Tél. 04 93 96 45 86 (15 min. à pied)"],
+        ["Dentiste","Tsipora Amsellem, Tél. 04 93 87 94 81"],
+        ["Pharmacie","CAP3000 (9h–20h sf dim.) · Aéroport T2 (dim. 8h–20h30)"],
+        ["Rendez-vous en ligne","doctolib.fr"]
+      ]},
+      { icon:"🛒", label:"Courses & Marchés", rows:[
+        ["Via Mont Rabeau","Boulangerie «Moulin de Flore» · Carrefour Market (près tram Fabron)"],
+        ["Via Av. de Magnan","Pâtisserie «Le Passage» · Rôtisserie «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
+        ["Marchés","Cours Saleya: lun. antiquités, mar–dim fleurs/légumes\nLibération: tous les jours\nVentimiglia (IT): vendredi (train conseillé)"]
+      ]},
+      { icon:"🏬", label:"Centres commerciaux", rows:[
+        ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nLun–Sam 10h–20h / Dim 11h–19h\nBus 10 ou Tram L2 direction Aéroport"],
+        ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(ex-Polygone)"]
+      ]},
+      { icon:"🚲", label:"Vélos & Randonnées", rows:[
+        ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"],
+        ["Randonnées","Tour de St-Jean-Cap-Ferrat · Presqu'île d'Antibes + La Garoupe · Chemin de Nietzsche à Èze · Arrière-pays"]
+      ]},
+      { icon:"🍦", label:"Glaces & Massage", rows:[
+        ["Glaces","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieux Nice)"],
+        ["Massage","Le Banthai, Rue de France"]
+      ]}
+    ],
+
+    restos: [
+      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651 },
+      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758 },
+      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636 },
+      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652 },
+      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648 },
+      { name:"Popotte d'Ondine (style café NY)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697 },
+      { name:"Plage des Canailles (restaurant de plage)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440 }
+    ]
+  }
+};
+
+// ─── MAP SETUP ──────────────────────────────────────────────────────────────
+
+let map = null;
+
+function initMap(lang) {
+  const restos = T[lang].restos;
+
+  if (!map) {
+    map = L.map('map').setView([43.7, 7.265], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Apartment marker
+    const aptIcon = L.divIcon({
+      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3)">🏠</div>',
+      className: '', iconSize:[32,32], iconAnchor:[16,16]
+    });
+    L.marker([43.7102, 7.2175], {icon: aptIcon})
+      .addTo(map)
+      .bindPopup('<strong>Tour Sarrazin</strong><br>93 Bd Édouard Herriot');
+  } else {
+    map.eachLayer(l => { if (l instanceof L.Marker) map.removeLayer(l); });
+    // Re-add apartment
+    const aptIcon = L.divIcon({
+      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3)">🏠</div>',
+      className: '', iconSize:[32,32], iconAnchor:[16,16]
+    });
+    L.marker([43.7102, 7.2175], {icon: aptIcon})
+      .addTo(map)
+      .bindPopup('<strong>Tour Sarrazin</strong><br>93 Bd Édouard Herriot');
+  }
+
+  restos.forEach((r, i) => {
+    const icon = L.divIcon({
+      html: `<div style="background:#c0392b;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">${i+1}</div>`,
+      className: '', iconSize:[28,28], iconAnchor:[14,14]
+    });
+    L.marker([r.lat, r.lng], {icon})
+      .addTo(map)
+      .bindPopup(`<strong>${i+1}. ${r.name}</strong><br>${r.addr}`);
+  });
+
+  setTimeout(() => map.invalidateSize(), 100);
+}
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+
+function escHtml(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function rowsToHtml(rows) {
+  return rows.map(r => {
+    if (r[0] === null) {
+      return `<div class="info-row"><div class="info-val full" style="min-width:100%;padding:0.6rem 0.85rem">${escHtml(r[1]).replace(/\n/g,'<br>')}</div></div>`;
+    }
+    const warn = r[0].includes('⚠') ? ' class="warn"' : '';
+    return `<div class="info-row">
+      <div class="info-key"${warn}>${escHtml(r[0]).replace(/⚠/g,'⚠')}</div>
+      <div class="info-val">${escHtml(r[1]).replace(/\n/g,'<br>')}</div>
+    </div>`;
+  }).join('');
+}
+
+function buildCard(item, open) {
+  const openClass = open ? ' open' : '';
+  if (item.wifi) {
+    return `<div class="card${openClass}">
+      <div class="card-toggle" onclick="toggleCard(this)">
+        <div class="card-icon">${item.icon}</div>
+        <div class="card-label">${escHtml(item.label)}</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="wifi-block">
+          <div class="wifi-info">
+            ${item.rows.map(r => `<div class="wifi-row"><span class="wifi-key">${escHtml(r[0])}</span><span class="wifi-val">${escHtml(r[1])}</span></div>`).join('')}
+          </div>
+          <div class="wifi-qr" id="wifi-qr-${item.label.replace(/\s/g,'')}"></div>
+        </div>
+      </div>
+    </div>`;
+  }
+  return `<div class="card${openClass}">
+    <div class="card-toggle" onclick="toggleCard(this)">
+      <div class="card-icon">${item.icon}</div>
+      <div class="card-label">${escHtml(item.label)}</div>
+      <div class="card-chevron">▼</div>
+    </div>
+    <div class="card-body">
+      <div class="info-table">${rowsToHtml(item.rows)}</div>
+    </div>
+  </div>`;
+}
+
+function renderWifiQR() {
+  const qrTargets = document.querySelectorAll('[id^="wifi-qr-"]');
+  qrTargets.forEach(el => {
+    if (el.children.length === 0) {
+      const canvas = document.createElement('canvas');
+      el.appendChild(canvas);
+      // Simple QR using a lightweight approach — generate data URI
+      const ssid = 'Freebox-C7C7DD';
+      const pw = '4drmkq9dt2qw95r6qfkr95';
+      // Use a free QR API as fallback
+      const img = document.createElement('img');
+      img.src = `https://api.qrserver.com/v1/create-qr-code/?data=WIFI:T:WPA;S:${encodeURIComponent(ssid)};P:${encodeURIComponent(pw)};;&size=90x90&margin=2`;
+      img.alt = 'QR Code Wi-Fi';
+      img.style.borderRadius = '6px';
+      el.replaceChildren(img);
+    }
+  });
+}
+
+let currentLang = 'de';
+let restoMapRendered = false;
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = T[lang];
+  document.documentElement.lang = lang;
+
+  // Lang buttons
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
+
+  // Header
+  document.getElementById('floor-info').textContent = '· ' + t.floorInfo;
+  document.getElementById('s-emerg').textContent = t.sEmerg;
+  document.getElementById('lbl-police').textContent = t.police;
+  document.getElementById('lbl-fire').textContent = t.fire;
+  document.getElementById('lbl-eu').textContent = t.eu;
+  document.getElementById('sec-apt').textContent = t.sApt;
+  document.getElementById('sec-ext').textContent = t.sExt;
+  document.getElementById('sec-resto').textContent = t.sResto;
+  document.getElementById('map-label').textContent = t.mapLabel;
+  document.getElementById('footer-text').textContent = t.footer;
+
+  // Emergency rows
+  const er = document.getElementById('emerg-rows');
+  er.innerHTML = t.emergRows.map(([lbl, val]) => {
+    const warn = lbl.includes('⚠') || lbl.toLowerCase().includes('wasser') || lbl.toLowerCase().includes('strom') || lbl.toLowerCase().includes('water') || lbl.toLowerCase().includes('electr') || lbl.toLowerCase().includes('eau') || lbl.toLowerCase().includes('électr') || lbl.toLowerCase().includes('couper') ? ' class="warn"' : '';
+    return `<div class="emerg-row">
+      <div class="emerg-label"${warn}>${escHtml(lbl)}</div>
+      <div class="emerg-value">${escHtml(val).replace(/\n/g,'<br>')}</div>
+    </div>`;
+  }).join('');
+
+  // Apt grid
+  const gApt = document.getElementById('grid-apt');
+  gApt.innerHTML = t.apt.map((item, i) => buildCard(item, i < 2)).join('');
+
+  // Ext grid
+  const gExt = document.getElementById('grid-ext');
+  gExt.innerHTML = t.ext.map((item, i) => buildCard(item, i === 0)).join('');
+
+  // Restaurant list
+  const rl = document.getElementById('resto-list');
+  rl.innerHTML = t.restos.map((r, i) =>
+    `<div style="display:flex;gap:0.6rem;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">
+      <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">${i+1}</span>
+      <div><strong>${escHtml(r.name)}</strong><br><span style="color:var(--muted)">${escHtml(r.addr)}</span></div>
+    </div>`
+  ).join('');
+
+  renderWifiQR();
+  initMap(lang);
+}
+
+function toggleCard(toggleEl) {
+  const card = toggleEl.closest('.card');
+  card.classList.toggle('open');
+  if (card.classList.contains('open') && map) {
+    setTimeout(() => map.invalidateSize(), 50);
+  }
+}
+
+// Init
+setLang('de');
+</script>
+</body>
+</html>
