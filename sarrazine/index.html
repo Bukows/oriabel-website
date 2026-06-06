@@ -207,19 +207,52 @@
       letter-spacing: 0.02em;
     }
 
+    /* ── KPI TILES ── */
     .emerg-numbers {
-      display: flex;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-      padding: 0.5rem 0 0.7rem;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.6rem;
+      padding: 0.75rem;
     }
 
-    .emerg-num-item {
+    @media (max-width: 380px) {
+      .emerg-numbers { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    a.emerg-kpi {
+      background: #fff;
+      border: 2px solid var(--red);
+      border-radius: 8px;
+      padding: 1rem 0.5rem 0.85rem;
       text-align: center;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+      transition: background 0.15s;
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .emerg-num-item .num { font-size: 2rem; font-weight: 900; color: var(--red); line-height: 1; }
-    .emerg-num-item .lbl { font-size: 0.7rem; color: #666; margin-top: 0.1rem; }
+    a.emerg-kpi:hover, a.emerg-kpi:active { background: var(--red); }
+    a.emerg-kpi:hover .kpi-num, a.emerg-kpi:active .kpi-num { color: #fff; }
+    a.emerg-kpi:hover .kpi-lbl, a.emerg-kpi:active .kpi-lbl { color: rgba(255,255,255,0.85); }
+
+    .kpi-num {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: var(--red);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi-lbl {
+      font-size: 0.68rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 700;
+    }
 
     /* ── GRID ── */
     .section-title {
@@ -436,7 +469,7 @@
       .emerg-label { min-width: 110px; font-size: 0.76rem; }
       header { padding: 0.8rem 0.9rem; }
       main { padding: 0.75rem; }
-      .emerg-num-item .num { font-size: 1.6rem; }
+      .kpi-num { font-size: 1.9rem; }
     }
 
     @media (min-width: 600px) {
@@ -475,10 +508,10 @@
     </div>
     <div class="emergency-body">
       <div class="emerg-numbers">
-        <div class="emerg-num-item"><a href="tel:15" class="num-call"><div class="num">15</div></a><div class="lbl">SAMU</div></div>
-        <div class="emerg-num-item"><a href="tel:17" class="num-call"><div class="num">17</div></a><div class="lbl" id="lbl-police">Polizei</div></div>
-        <div class="emerg-num-item"><a href="tel:18" class="num-call"><div class="num">18</div></a><div class="lbl" id="lbl-fire">Feuerwehr</div></div>
-        <div class="emerg-num-item"><a href="tel:112" class="num-call"><div class="num">112</div></a><div class="lbl" id="lbl-eu">Alle Notfälle</div></div>
+        <a href="tel:15" class="emerg-kpi"><div class="kpi-num">15</div><div class="kpi-lbl">SAMU</div></a>
+        <a href="tel:17" class="emerg-kpi"><div class="kpi-num">17</div><div class="kpi-lbl" id="lbl-police">Polizei</div></a>
+        <a href="tel:18" class="emerg-kpi"><div class="kpi-num">18</div><div class="kpi-lbl" id="lbl-fire">Feuerwehr</div></a>
+        <a href="tel:112" class="emerg-kpi"><div class="kpi-num">112</div><div class="kpi-lbl" id="lbl-eu">Alle Notfälle</div></a>
       </div>
       <div id="emerg-rows"></div>
     </div>
@@ -610,8 +643,8 @@ const T = {
         ["Hafen","Haltestelle Port Lympia, ca. 35 Min. (Tram L2 → L3)"]
       ]},
       { icon:"🏥", label:"Ärzte & Apotheken", rows:[
-        ["Hausarzt","Dr. Le Barzic, Tel. 04 93 96 45 86 (15 Min. zu Fuß)"],
-        ["Zahnarzt","Tsipora Amsellem, Tel. 04 93 87 94 81"],
+        ["Hausarzt","Dr. Le Barzic, Tel. 04 93 96 45 86\n6 Bd Virgile Barel, 06300 Nice (15 Min. zu Fuß)"],
+        ["Zahnarzt","Tsipora Amsellem, Tel. 04 93 87 94 81\n5 Rue Alphonse Karr, 06000 Nice"],
         ["Apotheke","CAP3000 (9h–20h, außer So.) · Flughafen T2 (So. 8h–20h30)"],
         ["Online Termine","doctolib.fr"]
       ]},
@@ -734,8 +767,8 @@ const T = {
         ["Harbour","Stop Port Lympia, approx. 35 min. (Tram L2 → L3)"]
       ]},
       { icon:"🏥", label:"Medical", rows:[
-        ["GP","Dr. Le Barzic, Tel. 04 93 96 45 86 (15 min. walk)"],
-        ["Dentist","Tsipora Amsellem, Tel. 04 93 87 94 81"],
+        ["GP","Dr. Le Barzic, Tel. 04 93 96 45 86\n6 Bd Virgile Barel, 06300 Nice (15 min. walk)"],
+        ["Dentist","Tsipora Amsellem, Tel. 04 93 87 94 81\n5 Rue Alphonse Karr, 06000 Nice"],
         ["Pharmacy","CAP3000 (9am–8pm, not Sun.) · Airport T2 (Sun. 8am–8:30pm)"],
         ["Online appointments","doctolib.fr"]
       ]},
@@ -858,8 +891,8 @@ const T = {
         ["Port","Arrêt Port Lympia, env. 35 min. (Tram L2 → L3)"]
       ]},
       { icon:"🏥", label:"Médecins & Pharmacies", rows:[
-        ["Médecin généraliste","Dr. Le Barzic, Tél. 04 93 96 45 86 (15 min. à pied)"],
-        ["Dentiste","Tsipora Amsellem, Tél. 04 93 87 94 81"],
+        ["Médecin généraliste","Dr. Le Barzic, Tél. 04 93 96 45 86\n6 Bd Virgile Barel, 06300 Nice (15 min. à pied)"],
+        ["Dentiste","Tsipora Amsellem, Tél. 04 93 87 94 81\n5 Rue Alphonse Karr, 06000 Nice"],
         ["Pharmacie","CAP3000 (9h–20h sf dim.) · Aéroport T2 (dim. 8h–20h30)"],
         ["Rendez-vous en ligne","doctolib.fr"]
       ]},
