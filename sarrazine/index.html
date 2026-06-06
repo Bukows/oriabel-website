@@ -335,6 +335,30 @@
 
     .warn { color: #b85c00; font-weight: 600; }
 
+    /* ── LINKS: TEL & MAPS ── */
+    a.tel-link {
+      color: inherit;
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 1px dotted currentColor;
+    }
+    a.tel-link:hover { opacity: 0.75; }
+
+    a.maps-link {
+      color: #2563a8;
+      text-decoration: none;
+      border-bottom: 1px dotted #2563a8;
+    }
+    a.maps-link:hover { opacity: 0.75; }
+
+    a.num-call {
+      text-decoration: none;
+      color: inherit;
+    }
+    a.num-call:hover .num { opacity: 0.75; }
+
+    .emerg-value a.tel-link { color: var(--red); border-bottom-color: var(--red); }
+
     /* ── WIFI BLOCK ── */
     .wifi-block {
       padding: 1rem 1.1rem;
@@ -406,9 +430,9 @@
       <div class="header-sub" id="hdr-sub">Gästeinfo · Nice</div>
     </div>
     <div class="lang-switcher">
+      <button class="lang-btn" onclick="setLang('fr')"><span class="flag">🇫🇷</span><span class="code">FR</span></button>
       <button class="lang-btn active" onclick="setLang('de')"><span class="flag">🇩🇪</span><span class="code">DE</span></button>
       <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span><span class="code">EN</span></button>
-      <button class="lang-btn" onclick="setLang('fr')"><span class="flag">🇫🇷</span><span class="code">FR</span></button>
     </div>
   </div>
 </header>
@@ -427,10 +451,10 @@
     </div>
     <div class="emergency-body">
       <div class="emerg-numbers">
-        <div class="emerg-num-item"><div class="num">15</div><div class="lbl">SAMU</div></div>
-        <div class="emerg-num-item"><div class="num">17</div><div class="lbl" id="lbl-police">Polizei</div></div>
-        <div class="emerg-num-item"><div class="num">18</div><div class="lbl" id="lbl-fire">Feuerwehr</div></div>
-        <div class="emerg-num-item"><div class="num">112</div><div class="lbl" id="lbl-eu">Alle Notfälle</div></div>
+        <div class="emerg-num-item"><a href="tel:15" class="num-call"><div class="num">15</div></a><div class="lbl">SAMU</div></div>
+        <div class="emerg-num-item"><a href="tel:17" class="num-call"><div class="num">17</div></a><div class="lbl" id="lbl-police">Polizei</div></div>
+        <div class="emerg-num-item"><a href="tel:18" class="num-call"><div class="num">18</div></a><div class="lbl" id="lbl-fire">Feuerwehr</div></div>
+        <div class="emerg-num-item"><a href="tel:112" class="num-call"><div class="num">112</div></a><div class="lbl" id="lbl-eu">Alle Notfälle</div></div>
       </div>
       <div id="emerg-rows"></div>
     </div>
@@ -896,15 +920,35 @@ function escHtml(s) {
   return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
+function renderVal(val) {
+  if (!val) return '';
+  let s = escHtml(val).replace(/\n/g, '<br>');
+
+  // Phone numbers: +33 X XX XX XX XX  or  0X XX XX XX XX  or  04 XX XX XX XX
+  s = s.replace(/(\+33[\s]?\d(?:[\s]?\d{2}){4}|\b0[1-9](?:[\s.]?\d{2}){4})/g, function(m) {
+    const digits = m.replace(/[^\d]/g, '');
+    const tel = digits.startsWith('0') ? '+33' + digits.slice(1) : '+' + digits;
+    return `<a href="tel:${tel}" class="tel-link">${m}</a>`;
+  });
+
+  // Street addresses (French patterns)
+  s = s.replace(/((?:\d+\s+)?(?:Rue|Av\.|Avenue|Bd\b|Boulevard|Promenade|Voie|Chemin|Place|Allée|Impasse|Passage)[^<]{4,80})/gi, function(m) {
+    const clean = m.replace(/<br>/g, ' ').replace(/\s+/g, ' ').trim();
+    return `<a href="https://maps.google.com/?q=${encodeURIComponent(clean)}" class="maps-link" target="_blank">${m}</a>`;
+  });
+
+  return s;
+}
+
 function rowsToHtml(rows) {
   return rows.map(r => {
     if (r[0] === null) {
-      return `<div class="info-row"><div class="info-val full" style="min-width:100%;padding:0.6rem 0.85rem">${escHtml(r[1]).replace(/\n/g,'<br>')}</div></div>`;
+      return `<div class="info-row"><div class="info-val full" style="min-width:100%;padding:0.6rem 0.85rem">${renderVal(r[1])}</div></div>`;
     }
     const warn = r[0].includes('⚠') ? ' class="warn"' : '';
     return `<div class="info-row">
       <div class="info-key"${warn}>${escHtml(r[0]).replace(/⚠/g,'⚠')}</div>
-      <div class="info-val">${escHtml(r[1]).replace(/\n/g,'<br>')}</div>
+      <div class="info-val">${renderVal(r[1])}</div>
     </div>`;
   }).join('');
 }
@@ -991,7 +1035,7 @@ function setLang(lang) {
     const warn = lbl.includes('⚠') || lbl.toLowerCase().includes('wasser') || lbl.toLowerCase().includes('strom') || lbl.toLowerCase().includes('water') || lbl.toLowerCase().includes('electr') || lbl.toLowerCase().includes('eau') || lbl.toLowerCase().includes('électr') || lbl.toLowerCase().includes('couper') ? ' class="warn"' : '';
     return `<div class="emerg-row">
       <div class="emerg-label"${warn}>${escHtml(lbl)}</div>
-      <div class="emerg-value">${escHtml(val).replace(/\n/g,'<br>')}</div>
+      <div class="emerg-value">${renderVal(val)}</div>
     </div>`;
   }).join('');
 
@@ -1005,12 +1049,13 @@ function setLang(lang) {
 
   // Restaurant list
   const rl = document.getElementById('resto-list');
-  rl.innerHTML = t.restos.map((r, i) =>
-    `<div style="display:flex;gap:0.6rem;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">
+  rl.innerHTML = t.restos.map((r, i) => {
+    const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(r.addr + ', Nice, France')}`;
+    return `<div style="display:flex;gap:0.6rem;padding:0.3rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">
       <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px">${i+1}</span>
-      <div><strong>${escHtml(r.name)}</strong><br><span style="color:var(--muted)">${escHtml(r.addr)}</span></div>
-    </div>`
-  ).join('');
+      <div><strong>${escHtml(r.name)}</strong><br><a href="${mapsUrl}" class="maps-link" target="_blank">${escHtml(r.addr)}</a></div>
+    </div>`;
+  }).join('');
 
   renderWifiQR();
   initMap(lang);
