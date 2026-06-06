@@ -13,6 +13,8 @@
       --red-bg: #fdf0ef;
       --blue:   #2E75B6;
       --dark:   #1a1a1a;
+      --taupe:  #6b5c52;
+      --taupe-light: #8a7a70;
       --mid:    #555;
       --muted:  #888;
       --light:  #f5f7fa;
@@ -32,71 +34,87 @@
 
     /* ── HEADER ── */
     header {
-      background: var(--dark);
-      padding: 0.9rem 1.2rem;
-      display: flex;
+      background: var(--taupe);
+      padding: 0.85rem 1.2rem;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
       align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
+      gap: 0.75rem;
       position: sticky;
       top: 0;
       z-index: 200;
+    }
+
+    .header-title-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
     }
 
     .header-title {
       color: #fff;
       font-size: 1.05rem;
       font-weight: 600;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.03em;
       line-height: 1.2;
+      white-space: nowrap;
     }
 
     .header-sub {
-      color: var(--gold);
-      font-size: 0.75rem;
+      color: rgba(255,255,255,0.65);
+      font-size: 0.72rem;
       font-weight: 400;
       letter-spacing: 0.04em;
+      white-space: nowrap;
     }
 
     .lang-switcher {
       display: flex;
       gap: 0.3rem;
       flex-shrink: 0;
+      justify-content: flex-end;
     }
 
     .lang-btn {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #ccc;
-      padding: 0.3rem 0.55rem;
-      border-radius: 4px;
-      font-size: 0.78rem;
-      font-weight: 600;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.8);
+      padding: 0.28rem 0.5rem;
+      border-radius: 5px;
+      font-size: 1rem;
       cursor: pointer;
       transition: all 0.15s;
-      letter-spacing: 0.04em;
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
     }
 
-    .lang-btn:hover { background: rgba(255,255,255,0.2); color: #fff; }
+    .lang-btn .flag { font-size: 1.1rem; }
+    .lang-btn .code { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; }
+
+    .lang-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
     .lang-btn.active {
-      background: var(--gold);
-      border-color: var(--gold);
-      color: #1a1a1a;
+      background: rgba(255,255,255,0.28);
+      border-color: rgba(255,255,255,0.5);
+      color: #fff;
     }
 
     /* ── ADDRESS BAR ── */
     .address-bar {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
-      padding: 0.6rem 1.2rem;
-      font-size: 0.82rem;
-      color: var(--muted);
+      background: #f0ece8;
+      border-bottom: 1px solid #ddd5cc;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.8rem;
+      color: var(--taupe-light);
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      justify-content: center;
     }
 
-    .address-bar strong { color: var(--dark); }
+    .address-bar strong { color: var(--taupe); }
 
     /* ── MAIN ── */
     main {
@@ -373,14 +391,15 @@
 <body>
 
 <header>
-  <div>
+  <div></div>
+  <div class="header-title-wrap">
     <div class="header-title">Tour Sarrazin</div>
     <div class="header-sub" id="hdr-sub">Gästeinfo · Nice</div>
   </div>
   <div class="lang-switcher">
-    <button class="lang-btn active" onclick="setLang('de')">DE</button>
-    <button class="lang-btn" onclick="setLang('en')">EN</button>
-    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+    <button class="lang-btn active" onclick="setLang('de')"><span class="flag">🇩🇪</span><span class="code">DE</span></button>
+    <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span><span class="code">EN</span></button>
+    <button class="lang-btn" onclick="setLang('fr')"><span class="flag">🇫🇷</span><span class="code">FR</span></button>
   </div>
 </header>
 
@@ -939,7 +958,10 @@ function setLang(lang) {
   document.documentElement.lang = lang;
 
   // Lang buttons
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.textContent === lang.toUpperCase()));
+  document.querySelectorAll('.lang-btn').forEach(b => {
+    const code = b.querySelector('.code');
+    b.classList.toggle('active', code && code.textContent === lang.toUpperCase());
+  });
 
   // Header
   document.getElementById('floor-info').textContent = '· ' + t.floorInfo;
