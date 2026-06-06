@@ -658,8 +658,6 @@ const T = {
         ["Online Termine","doctolib.fr"]
       ]},
       { icon:"🛒", label:"Einkaufen & Märkte", shopmap:true, rows:[
-        ["Via Mont Rabeau","Bäckerei «Moulin de Flore» · Carrefour Market (bei Tram Fabron)"],
-        ["Via Av. de Magnan","Konditorei «Le Passage» · Brathähnchen «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
         ["Märkte","Cours Saleya: Mo Antiquitäten, Di–So Blumen/Gemüse\nLibération: täglich\nVentimiglia (IT): freitags (Zug empfohlen)"]
       ]},
       { icon:"🏬", label:"Shopping-Center", rows:[
@@ -783,8 +781,6 @@ const T = {
         ["Online appointments","doctolib.fr"]
       ]},
       { icon:"🛒", label:"Shopping & Markets", shopmap:true, rows:[
-        ["Via Mont Rabeau","Bakery «Moulin de Flore» · Carrefour Market (near tram Fabron)"],
-        ["Via Av. de Magnan","Pâtisserie «Le Passage» · Rotisserie «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
         ["Markets","Cours Saleya: Mon antiques, Tue–Sun flowers/veg/fruit\nLibération: daily\nVentimiglia (IT): Fridays (train recommended)"]
       ]},
       { icon:"🏬", label:"Shopping Centres", rows:[
@@ -908,8 +904,6 @@ const T = {
         ["Rendez-vous en ligne","doctolib.fr"]
       ]},
       { icon:"🛒", label:"Courses & Marchés", shopmap:true, rows:[
-        ["Via Mont Rabeau","Boulangerie «Moulin de Flore» · Carrefour Market (près tram Fabron)"],
-        ["Via Av. de Magnan","Pâtisserie «Le Passage» · Rôtisserie «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
         ["Marchés","Cours Saleya: lun. antiquités, mar–dim fleurs/légumes\nLibération: tous les jours\nVentimiglia (IT): vendredi (train conseillé)"]
       ]},
       { icon:"🏬", label:"Centres commerciaux", rows:[
@@ -944,16 +938,18 @@ const T = {
 let shopMap = null;
 
 const SHOP_PINS = [
-  { n:"Moulin de Flor",       a:"108 Av. de la Californie", lat:43.6871, lng:7.2371 },
-  { n:"Carrefour Market",     a:"Av. de la Californie, Fabron", lat:43.6873, lng:7.2368 },
-  { n:"Le Passage",           a:"3 Bd Carlone",             lat:43.6934, lng:7.2428 },
-  { n:"La Ferme Niçoise",     a:"1 Bd Carlone",             lat:43.6936, lng:7.2430 },
-  { n:"ALDI",                 a:"1 Bd de la Madeleine",     lat:43.6939, lng:7.2432 },
-  { n:"Carlone Primeurs",     a:"6 Bd Carlone",             lat:43.6938, lng:7.2428 },
-  { n:"Intermarché",          a:"2 Av. Gloria",             lat:43.6918, lng:7.2441 },
+  { n:"Moulin de Flor",    t:{de:"Bäckerei",       en:"Bakery",       fr:"Boulangerie"}, a:"108 Av. de la Californie", lat:43.6871, lng:7.2371 },
+  { n:"Carrefour Market",  t:{de:"Supermarkt",     en:"Supermarket",  fr:"Supermarché"}, a:"Av. de la Californie",     lat:43.6873, lng:7.2368 },
+  { n:"Le Passage",        t:{de:"Konditorei",     en:"Pâtisserie",   fr:"Pâtisserie"},  a:"3 Bd Carlone",             lat:43.6934, lng:7.2428 },
+  { n:"La Ferme Niçoise",  t:{de:"Brathähnchen",   en:"Rotisserie",   fr:"Rôtisserie"},  a:"1 Bd Carlone",             lat:43.6936, lng:7.2430 },
+  { n:"ALDI",              t:{de:"Discounter",     en:"Discount",     fr:"Discount"},    a:"1 Bd de la Madeleine",     lat:43.6939, lng:7.2432 },
+  { n:"Carlone Primeurs",  t:{de:"Obst & Gemüse",  en:"Greengrocer",  fr:"Primeur"},     a:"6 Bd Carlone",             lat:43.6938, lng:7.2428 },
+  { n:"Intermarché",       t:{de:"Supermarkt",     en:"Supermarket",  fr:"Supermarché"}, a:"2 Av. Gloria",             lat:43.6918, lng:7.2441 },
 ];
 
-function initShopMap() {
+let shopLang = "de";
+function initShopMap(lang) {
+  if (lang) shopLang = lang;
   const el = document.getElementById('shop-map');
   if (!el) return;
   if (!shopMap) {
@@ -976,7 +972,7 @@ function initShopMap() {
       });
       L.marker([p.lat, p.lng], {icon})
         .addTo(shopMap)
-        .bindPopup(`<strong>${i+1}. ${p.n}</strong><br>${p.a}`);
+        .bindPopup(`<strong>${i+1}. ${p.n}</strong><br><em>${p.t[shopLang]||p.t.de}</em><br>${p.a}`);
     });
   }
   setTimeout(() => shopMap.invalidateSize(), 100);
@@ -1115,9 +1111,30 @@ function buildCard(item, open) {
       </div>
     </div>`;
   }
-  const mapDiv = item.shopmap
-    ? `<div id="shop-map" style="height:260px;margin:0 0.75rem 0.75rem;border-radius:8px;overflow:hidden;"></div>`
-    : '';
+  if (item.shopmap) {
+    const lang = document.documentElement.lang || 'de';
+    const shopList = SHOP_PINS.map((p, i) => `
+      <div style="display:flex;gap:0.65rem;padding:0.4rem 0.85rem;border-bottom:1px solid var(--border);align-items:flex-start;font-size:0.84rem">
+        <span style="background:var(--sage);color:#fff;border-radius:50%;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">${i+1}</span>
+        <div>
+          <strong>${p.n}</strong>
+          <span style="color:var(--muted);font-size:0.76rem;margin-left:0.3rem">${p.t[lang]||p.t.de}</span><br>
+          <span style="color:#2563a8;font-size:0.78rem">${p.a}</span>
+        </div>
+      </div>`).join('');
+    return `<div class="card${openClass}">
+      <div class="card-toggle" onclick="toggleCard(this)">
+        <div class="card-icon">${item.icon}</div>
+        <div class="card-label">${escHtml(item.label)}</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="info-table">${rowsToHtml(item.rows)}</div>
+        <div style="border-top:2px solid var(--border)">${shopList}</div>
+        <div id="shop-map" style="height:260px;margin:0.5rem 0.75rem 0.75rem;border-radius:8px;overflow:hidden;"></div>
+      </div>
+    </div>`;
+  }
   return `<div class="card${openClass}">
     <div class="card-toggle" onclick="toggleCard(this)">
       <div class="card-icon">${item.icon}</div>
@@ -1126,7 +1143,6 @@ function buildCard(item, open) {
     </div>
     <div class="card-body">
       <div class="info-table">${rowsToHtml(item.rows)}</div>
-      ${mapDiv}
     </div>
   </div>`;
 }
@@ -1217,7 +1233,7 @@ function toggleCard(toggleEl) {
   card.classList.toggle('open');
   if (card.classList.contains('open')) {
     if (map) setTimeout(() => map.invalidateSize(), 50);
-    if (card.querySelector('#shop-map')) initShopMap();
+    if (card.querySelector('#shop-map')) initShopMap(document.documentElement.lang);
   }
 }
 
