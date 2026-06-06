@@ -504,6 +504,7 @@
 
 <div class="address-bar">
   <strong>Bât. D, 93 Bd Édouard Herriot, 06200 Nice</strong>
+  <button class="copy-btn" id="addr-copy-btn" style="font-size:0.72rem;padding:0.15rem 0.5rem" onclick="copyText('93 Bd Édouard Herriot, 06200 Nice', this)">Kopieren</button>
   <span id="floor-info">· 6. Stock · Aufzug rechts (Nord)</span>
 </div>
 
@@ -516,10 +517,10 @@
     </div>
     <div class="emergency-body">
       <div class="emerg-numbers">
-        <a href="tel:15" class="emerg-kpi"><div class="kpi-num">15</div><div class="kpi-lbl">SAMU</div></a>
-        <a href="tel:17" class="emerg-kpi"><div class="kpi-num">17</div><div class="kpi-lbl" id="lbl-police">Polizei</div></a>
-        <a href="tel:18" class="emerg-kpi"><div class="kpi-num">18</div><div class="kpi-lbl" id="lbl-fire">Feuerwehr</div></a>
         <a href="tel:112" class="emerg-kpi"><div class="kpi-num">112</div><div class="kpi-lbl" id="lbl-eu">Alle Notfälle</div></a>
+        <a href="tel:17" class="emerg-kpi"><div class="kpi-num">17</div><div class="kpi-lbl" id="lbl-police">Polizei</div></a>
+        <a href="tel:15" class="emerg-kpi"><div class="kpi-num">15</div><div class="kpi-lbl">SAMU</div></a>
+        <a href="tel:18" class="emerg-kpi"><div class="kpi-num">18</div><div class="kpi-lbl" id="lbl-fire">Feuerwehr</div></a>
       </div>
       <div id="emerg-rows"></div>
     </div>
@@ -568,7 +569,7 @@ const T = {
     sApt: "Wohnung",
     sExt: "Umgebung",
     sResto: "Restaurants",
-    police: "Polizei", fire: "Feuerwehr", eu: "Alle Notfälle",
+    police: "Polizei", fire: "Feuerwehr", eu: "Alle Notfälle", copyAddr: "Kopieren",
     mapLabel: "Restaurants (Empfehlungen)",
     footer: "Tour Sarrazin — Nice · Für Notfälle: 112",
 
@@ -633,7 +634,7 @@ const T = {
       { icon:"♻️", label:"Müll & Abfall", rows:[
         ["Verpackungen","Separat im großen Küchen-Mülleimer → gelbe Tonne im Müllraum Keller (-1)"],
         ["Restmüll","Kleine Tüten → Müllschlucker im Vorraum zw. Wohnungstür und Aufzug, ODER dunkle Tonne Müllraum (-1)"],
-        ["Glas","Container auf der Straße"]
+        ["Glas","Container an der Bushaltestelle"]
       ]},
       { icon:"🔥", label:"Barbecue", rows:[
         [null,"Theoretisch verboten, aber toleriert – nicht zu oft, kurze Grillzeiten."]
@@ -644,7 +645,7 @@ const T = {
       { icon:"🚌", label:"Öffentliche Verkehrsmittel", rows:[
         ["Tickets","Einheitsticket Tram + Bus (Magnetkarte kaufen & aufladen)"],
         ["Fahrrad/Roller","Lime oder Poney vor der Copro (ca. 3–5 € ins Zentrum)"],
-        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2 · [Fahrplan](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214)"],
+        ["Bus","[«Faculté de lettres»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214) → Bus 10 → Magnan → Tram L2"],
         ["Tram","Haltestellen «Fabron» oder «Magnan» → Linie 2"],
         ["Flughafen","Tram L2 Richtung «aéroport» (NICHT «cadam») → T1 dann T2. Ca. 40 Min."],
         ["Zentrum","Haltestelle Jean Médecin, ca. 25 Min. (Tram L2)"],
@@ -656,12 +657,13 @@ const T = {
         ["Apotheke","CAP3000 (9h–20h, außer So.) · Flughafen T2 (So. 8h–20h30)"],
         ["Online Termine","doctolib.fr"]
       ]},
-      { icon:"🛒", label:"Einkaufen & Märkte", rows:[
+      { icon:"🛒", label:"Einkaufen & Märkte", shopmap:true, rows:[
         ["Via Mont Rabeau","Bäckerei «Moulin de Flore» · Carrefour Market (bei Tram Fabron)"],
         ["Via Av. de Magnan","Konditorei «Le Passage» · Brathähnchen «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
         ["Märkte","Cours Saleya: Mo Antiquitäten, Di–So Blumen/Gemüse\nLibération: täglich\nVentimiglia (IT): freitags (Zug empfohlen)"]
       ]},
       { icon:"🏬", label:"Shopping-Center", rows:[
+        ["Nice Étoile","30 Av. Jean Médecin, 06000 Nice\nTram L2 → Jean Médecin, ca. 25 Min."],
         ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMo–Sa 10h–20h / So 11h–19h\nBus 10 oder Tram L2 Richtung Aéroport"],
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(früher: Polygone)"]
       ]},
@@ -692,7 +694,7 @@ const T = {
     sApt: "Apartment",
     sExt: "Area",
     sResto: "Restaurants",
-    police: "Police", fire: "Fire Brigade", eu: "All emergencies",
+    police: "Police", fire: "Fire Brigade", eu: "All emergencies", copyAddr: "Copy",
     mapLabel: "Restaurants (recommendations)",
     footer: "Tour Sarrazin — Nice · Emergency: 112",
 
@@ -757,7 +759,7 @@ const T = {
       { icon:"♻️", label:"Waste & Recycling", rows:[
         ["Packaging","Collect separately in large kitchen bin → yellow bin in basement bin room (-1)"],
         ["Residual waste","Small bags → waste chute in hallway between apt door and lift, OR dark bin in basement (-1)"],
-        ["Glass","Roadside container"]
+        ["Glass","Container at the bus stop"]
       ]},
       { icon:"🔥", label:"Barbecue", rows:[
         [null,"Technically prohibited but tolerated – not too often, short sessions."]
@@ -768,24 +770,25 @@ const T = {
       { icon:"🚌", label:"Public Transport", rows:[
         ["Tickets","Combined ticket for tram + bus (buy magnetic card & top up)"],
         ["Bike/Scooter","Lime or Poney at the Copro (approx. €3–5 to centre)"],
-        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2 · [Timetable](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214)"],
+        ["Bus","[«Faculté de lettres»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214) → Bus 10 → Magnan → Tram L2"],
         ["Tram","Stops «Fabron» or «Magnan» → Line 2"],
         ["Airport","Tram L2 towards «aéroport» (NOT «cadam») → T1 then T2. Approx. 40 min."],
         ["City centre","Stop Jean Médecin, approx. 25 min. (Tram L2)"],
         ["Harbour","Stop Port Lympia, approx. 35 min. (Tram L2 → L3)"]
       ]},
       { icon:"🏥", label:"Medical", rows:[
-        ["GP","Dr. Le Barzic, Tel. 04 93 96 45 86\n6 Bd Virgile Barel, 06300 Nice (15 min. walk)"],
+        ["GP","Dr. Le Barzic, Tel. 04 93 96 45 86\n1 Avenue du Petit Fabron, 06200 Nice (15 min. walk)"],
         ["Dentist","Tsipora Amsellem, Tel. 04 93 87 94 81\n11 Avenue Jean Médecin, 06000 Nice"],
         ["Pharmacy","CAP3000 (9am–8pm, not Sun.) · Airport T2 (Sun. 8am–8:30pm)"],
         ["Online appointments","doctolib.fr"]
       ]},
-      { icon:"🛒", label:"Shopping & Markets", rows:[
+      { icon:"🛒", label:"Shopping & Markets", shopmap:true, rows:[
         ["Via Mont Rabeau","Bakery «Moulin de Flore» · Carrefour Market (near tram Fabron)"],
         ["Via Av. de Magnan","Pâtisserie «Le Passage» · Rotisserie «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
         ["Markets","Cours Saleya: Mon antiques, Tue–Sun flowers/veg/fruit\nLibération: daily\nVentimiglia (IT): Fridays (train recommended)"]
       ]},
       { icon:"🏬", label:"Shopping Centres", rows:[
+        ["Nice Étoile","30 Av. Jean Médecin, 06000 Nice\nTram L2 → Jean Médecin, approx. 25 min."],
         ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMon–Sat 10am–8pm / Sun 11am–7pm\nBus 10 or Tram L2 towards Airport"],
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(formerly: Polygone)"]
       ]},
@@ -816,7 +819,7 @@ const T = {
     sApt: "Appartement",
     sExt: "Quartier",
     sResto: "Restaurants",
-    police: "Police", fire: "Pompiers", eu: "Toutes urgences",
+    police: "Police", fire: "Pompiers", eu: "Toutes urgences", copyAddr: "Copier",
     mapLabel: "Restaurants (recommandations)",
     footer: "Tour Sarrazin — Nice · Urgences: 112",
 
@@ -881,7 +884,7 @@ const T = {
       { icon:"♻️", label:"Déchets & Tri", rows:[
         ["Emballages","Collecte séparée dans la grande poubelle cuisine → bac jaune dans le local poubelles cave (-1)"],
         ["Déchets ménagers","Petits sacs → vide-ordures dans le couloir entre la porte et l'ascenseur OU bac sombre cave (-1)"],
-        ["Verre","Conteneur sur la voie publique"]
+        ["Verre","Conteneur à l'arrêt de bus"]
       ]},
       { icon:"🔥", label:"Barbecue", rows:[
         [null,"Techniquement interdit mais toléré – pas trop souvent et en sessions courtes."]
@@ -892,24 +895,25 @@ const T = {
       { icon:"🚌", label:"Transports en commun", rows:[
         ["Tickets","Ticket unique tram + bus (acheter carte magnétique et recharger)"],
         ["Vélo/Trottinette","Lime ou Poney devant la Copro (env. 3–5 € jusqu'au centre)"],
-        ["Bus","«Faculté de lettres» (Bd Herriot) → Bus 10 → Magnan → Tram L2 · [Horaires](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214)"],
+        ["Bus","[«Faculté de lettres»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214) → Bus 10 → Magnan → Tram L2"],
         ["Tram","Arrêts «Fabron» ou «Magnan» → Ligne 2"],
         ["Aéroport","Tram L2 direction «aéroport» (PAS «cadam») → T1 puis T2. Env. 40 min."],
         ["Centre-ville","Arrêt Jean Médecin, env. 25 min. (Tram L2)"],
         ["Port","Arrêt Port Lympia, env. 35 min. (Tram L2 → L3)"]
       ]},
       { icon:"🏥", label:"Médecins & Pharmacies", rows:[
-        ["Médecin généraliste","Dr. Le Barzic, Tél. 04 93 96 45 86\n6 Bd Virgile Barel, 06300 Nice (15 min. à pied)"],
+        ["Médecin généraliste","Dr. Le Barzic, Tél. 04 93 96 45 86\n1 Avenue du Petit Fabron, 06200 Nice (15 min. à pied)"],
         ["Dentiste","Tsipora Amsellem, Tél. 04 93 87 94 81\n11 Avenue Jean Médecin, 06000 Nice"],
         ["Pharmacie","CAP3000 (9h–20h sf dim.) · Aéroport T2 (dim. 8h–20h30)"],
         ["Rendez-vous en ligne","doctolib.fr"]
       ]},
-      { icon:"🛒", label:"Courses & Marchés", rows:[
+      { icon:"🛒", label:"Courses & Marchés", shopmap:true, rows:[
         ["Via Mont Rabeau","Boulangerie «Moulin de Flore» · Carrefour Market (près tram Fabron)"],
         ["Via Av. de Magnan","Pâtisserie «Le Passage» · Rôtisserie «La Ferme Niçoise» · ALDI · «Carlone Primeurs» · Intermarché"],
         ["Marchés","Cours Saleya: lun. antiquités, mar–dim fleurs/légumes\nLibération: tous les jours\nVentimiglia (IT): vendredi (train conseillé)"]
       ]},
       { icon:"🏬", label:"Centres commerciaux", rows:[
+        ["Nice Étoile","30 Av. Jean Médecin, 06000 Nice\nTram L2 → Jean Médecin, env. 25 min."],
         ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nLun–Sam 10h–20h / Dim 11h–19h\nBus 10 ou Tram L2 direction Aéroport"],
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(ex-Polygone)"]
       ]},
@@ -936,6 +940,47 @@ const T = {
 };
 
 // ─── MAP SETUP ──────────────────────────────────────────────────────────────
+
+let shopMap = null;
+
+const SHOP_PINS = [
+  { n:"Moulin de Flor",       a:"108 Av. de la Californie", lat:43.6871, lng:7.2371 },
+  { n:"Carrefour Market",     a:"Av. de la Californie, Fabron", lat:43.6873, lng:7.2368 },
+  { n:"Le Passage",           a:"3 Bd Carlone",             lat:43.6934, lng:7.2428 },
+  { n:"La Ferme Niçoise",     a:"1 Bd Carlone",             lat:43.6936, lng:7.2430 },
+  { n:"ALDI",                 a:"1 Bd de la Madeleine",     lat:43.6939, lng:7.2432 },
+  { n:"Carlone Primeurs",     a:"6 Bd Carlone",             lat:43.6938, lng:7.2428 },
+  { n:"Intermarché",          a:"2 Av. Gloria",             lat:43.6918, lng:7.2441 },
+];
+
+function initShopMap() {
+  const el = document.getElementById('shop-map');
+  if (!el) return;
+  if (!shopMap) {
+    shopMap = L.map('shop-map').setView([43.691, 7.240], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(shopMap);
+    const aptIcon = L.divIcon({
+      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">H</div>',
+      className: '', iconSize:[28,28], iconAnchor:[14,14]
+    });
+    L.marker([43.6918, 7.2364], {icon: aptIcon})
+      .addTo(shopMap)
+      .bindPopup('<strong>Tour Sarrazine</strong><br>93 Bd Édouard Herriot');
+    SHOP_PINS.forEach((p, i) => {
+      const icon = L.divIcon({
+        html: `<div style="background:#7d9182;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">${i+1}</div>`,
+        className: '', iconSize:[26,26], iconAnchor:[13,13]
+      });
+      L.marker([p.lat, p.lng], {icon})
+        .addTo(shopMap)
+        .bindPopup(`<strong>${i+1}. ${p.n}</strong><br>${p.a}`);
+    });
+  }
+  setTimeout(() => shopMap.invalidateSize(), 100);
+}
 
 let map = null;
 
@@ -1013,7 +1058,7 @@ function renderVal(val) {
   });
 
   // Street addresses (French patterns)
-  s = s.replace(/((?:\d+\s+)?(?:Rue|Av\.|Avenue|Bd\b|Boulevard|Promenade|Voie|Chemin|Place|Allée|Impasse|Passage)[^<]{4,80})/gi, function(m) {
+  s = s.replace(/((?:\d+\s+)?(?:Rue|Av\.|Avenue|Bd\b|Boulevard|Promenade|Voie|Chemin|Place|Allée|Impasse)[^<]{4,80})/gi, function(m) {
     const clean = m.replace(/<br>/g, ' ').replace(/\s+/g, ' ').trim();
     return `<a href="https://maps.google.com/?q=${encodeURIComponent(clean)}" class="maps-link" target="_blank">${m}</a>`;
   });
@@ -1070,6 +1115,9 @@ function buildCard(item, open) {
       </div>
     </div>`;
   }
+  const mapDiv = item.shopmap
+    ? `<div id="shop-map" style="height:260px;margin:0 0.75rem 0.75rem;border-radius:8px;overflow:hidden;"></div>`
+    : '';
   return `<div class="card${openClass}">
     <div class="card-toggle" onclick="toggleCard(this)">
       <div class="card-icon">${item.icon}</div>
@@ -1078,6 +1126,7 @@ function buildCard(item, open) {
     </div>
     <div class="card-body">
       <div class="info-table">${rowsToHtml(item.rows)}</div>
+      ${mapDiv}
     </div>
   </div>`;
 }
@@ -1124,6 +1173,7 @@ function setLang(lang) {
   document.getElementById('lbl-police').textContent = t.police;
   document.getElementById('lbl-fire').textContent = t.fire;
   document.getElementById('lbl-eu').textContent = t.eu;
+  document.getElementById('addr-copy-btn').textContent = t.copyAddr;
   document.getElementById('sec-apt').textContent = t.sApt;
   document.getElementById('sec-ext').textContent = t.sExt;
   document.getElementById('sec-resto').textContent = t.sResto;
@@ -1165,8 +1215,9 @@ function setLang(lang) {
 function toggleCard(toggleEl) {
   const card = toggleEl.closest('.card');
   card.classList.toggle('open');
-  if (card.classList.contains('open') && map) {
-    setTimeout(() => map.invalidateSize(), 50);
+  if (card.classList.contains('open')) {
+    if (map) setTimeout(() => map.invalidateSize(), 50);
+    if (card.querySelector('#shop-map')) initShopMap();
   }
 }
 
