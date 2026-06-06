@@ -363,25 +363,49 @@
     .wifi-block {
       padding: 1rem 1.1rem;
       display: flex;
-      gap: 1.2rem;
+      gap: 1.4rem;
       align-items: flex-start;
       flex-wrap: wrap;
     }
 
-    .wifi-info { flex: 1; min-width: 180px; }
+    .wifi-info { flex: 1; min-width: 200px; }
 
     .wifi-row {
       display: flex;
+      align-items: center;
       gap: 0.5rem;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.55rem;
       font-size: 0.84rem;
     }
 
-    .wifi-key { color: var(--muted); min-width: 80px; }
-    .wifi-val { font-weight: 600; color: var(--dark); word-break: break-all; }
+    .wifi-key { color: var(--muted); min-width: 90px; flex-shrink: 0; }
+    .wifi-val { font-weight: 600; color: var(--dark); word-break: break-all; flex: 1; }
 
-    .wifi-qr { flex-shrink: 0; }
-    .wifi-qr canvas, .wifi-qr img { width: 90px; height: 90px; }
+    .copy-btn {
+      background: #f0f4f8;
+      border: 1px solid var(--border);
+      color: var(--mid);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: #e0e8f0; }
+    .copy-btn.copied { background: #d4edda; color: #2a6638; border-color: #b8dfc4; }
+
+    .wifi-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      line-height: 1.4;
+    }
+
+    .wifi-qr { flex-shrink: 0; text-align: center; }
+    .wifi-qr img { width: 120px; height: 120px; border-radius: 6px; display: block; }
+    .wifi-qr-label { font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; text-align: center; }
 
     /* ── MAP ── */
     #map {
@@ -525,13 +549,14 @@ const T = {
       { icon:"🔑", label:"Zugang & Codes", rows:[
         ["Ausgang Copro","Code: 272A"],
         ["Eingang","VIGIK-Karte (blau) oder Fernbedienung"],
-        ["Fußweg zum Meer","Kleines Törchen → Av. Mont Rabeau → Tram Fabron"],
+        ["Fußweg zum Meer","Kleines Tor → Av. Mont Rabeau → Tram Fabron"],
         ["Parkplätze","Nicht fest zugeteilt – gelegentlich umstellen"]
       ]},
       { icon:"📶", label:"WLAN", wifi: true, rows:[
         ["Netzwerk","Freebox-C7C7DD"],
         ["Passwort","4drmkq9dt2qw95r6qfkr95"],
-        ["Tipp","QR-Code scannen → direkt verbinden"]
+        ["Tipp","Tipp auf Netzwerk oder Passwort → in Zwischenablage kopieren · oder QR-Code mit Kamera scannen"],
+        ["_copy","Kopieren"], ["_scan","Mit Kamera scannen"]
       ]},
       { icon:"🛏️", label:"Bettwäsche & Handtücher", rows:[
         ["Einzelbetten","Schrank im Gästezimmer"],
@@ -654,7 +679,8 @@ const T = {
       { icon:"📶", label:"Wi-Fi", wifi: true, rows:[
         ["Network","Freebox-C7C7DD"],
         ["Password","4drmkq9dt2qw95r6qfkr95"],
-        ["Tip","Scan QR code → connect instantly"]
+        ["Tip","Tap network or password to copy · or scan QR code with camera"],
+        ["_copy","Copy"], ["_scan","Scan with camera"]
       ]},
       { icon:"🛏️", label:"Bedding & Towels", rows:[
         ["Single beds","Guest room wardrobe"],
@@ -777,7 +803,8 @@ const T = {
       { icon:"📶", label:"Wi-Fi", wifi: true, rows:[
         ["Réseau","Freebox-C7C7DD"],
         ["Mot de passe","4drmkq9dt2qw95r6qfkr95"],
-        ["Astuce","Scanner le QR code → connexion instantanée"]
+        ["Astuce","Appuyer sur le réseau ou le mot de passe pour copier · ou scanner le QR code avec l'appareil photo"],
+        ["_copy","Copier"], ["_scan","Scanner avec l'appareil photo"]
       ]},
       { icon:"🛏️", label:"Linge & Serviettes", rows:[
         ["Lits simples","Armoire dans la chambre d'amis"],
@@ -956,6 +983,10 @@ function rowsToHtml(rows) {
 function buildCard(item, open) {
   const openClass = open ? ' open' : '';
   if (item.wifi) {
+    const ssid = 'Freebox-C7C7DD';
+    const pw = '4drmkq9dt2qw95r6qfkr95';
+    const copyLbl = escHtml(item.rows[3][1]);
+    const scanLbl = escHtml(item.rows[4][1]);
     return `<div class="card${openClass}">
       <div class="card-toggle" onclick="toggleCard(this)">
         <div class="card-icon">${item.icon}</div>
@@ -965,9 +996,22 @@ function buildCard(item, open) {
       <div class="card-body">
         <div class="wifi-block">
           <div class="wifi-info">
-            ${item.rows.map(r => `<div class="wifi-row"><span class="wifi-key">${escHtml(r[0])}</span><span class="wifi-val">${escHtml(r[1])}</span></div>`).join('')}
+            <div class="wifi-row">
+              <span class="wifi-key">${escHtml(item.rows[0][0])}</span>
+              <span class="wifi-val">${escHtml(ssid)}</span>
+              <button class="copy-btn" onclick="copyText('${ssid}', this)">${copyLbl}</button>
+            </div>
+            <div class="wifi-row">
+              <span class="wifi-key">${escHtml(item.rows[1][0])}</span>
+              <span class="wifi-val">${escHtml(pw)}</span>
+              <button class="copy-btn" onclick="copyText('${pw}', this)">${copyLbl}</button>
+            </div>
+            <div class="wifi-hint">${escHtml(item.rows[2][1])}</div>
           </div>
-          <div class="wifi-qr" id="wifi-qr-${item.label.replace(/\s/g,'')}"></div>
+          <div class="wifi-qr">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?data=WIFI:T:WPA;S:${encodeURIComponent(ssid)};P:${encodeURIComponent(pw)};;&size=120x120&margin=4" alt="QR Code Wi-Fi" loading="lazy">
+            <div class="wifi-qr-label">${scanLbl}</div>
+          </div>
         </div>
       </div>
     </div>`;
@@ -984,22 +1028,25 @@ function buildCard(item, open) {
   </div>`;
 }
 
-function renderWifiQR() {
-  const qrTargets = document.querySelectorAll('[id^="wifi-qr-"]');
-  qrTargets.forEach(el => {
-    if (el.children.length === 0) {
-      const canvas = document.createElement('canvas');
-      el.appendChild(canvas);
-      // Simple QR using a lightweight approach — generate data URI
-      const ssid = 'Freebox-C7C7DD';
-      const pw = '4drmkq9dt2qw95r6qfkr95';
-      // Use a free QR API as fallback
-      const img = document.createElement('img');
-      img.src = `https://api.qrserver.com/v1/create-qr-code/?data=WIFI:T:WPA;S:${encodeURIComponent(ssid)};P:${encodeURIComponent(pw)};;&size=90x90&margin=2`;
-      img.alt = 'QR Code Wi-Fi';
-      img.style.borderRadius = '6px';
-      el.replaceChildren(img);
-    }
+function renderWifiQR() { /* handled inline in buildCard */ }
+
+function copyText(text, btn) {
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = '✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
+  }).catch(() => {
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = btn.textContent.includes('✓') ? (currentLang === 'fr' ? 'Copier' : currentLang === 'en' ? 'Copy' : 'Kopieren') : btn.textContent; btn.classList.remove('copied'); }, 1800);
   });
 }
 
