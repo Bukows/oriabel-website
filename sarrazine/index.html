@@ -494,6 +494,36 @@
     @media (min-width: 600px) {
       .tile-grid { grid-template-columns: repeat(2, 1fr); }
     }
+
+    /* ── MARKET PILLS ── */
+    .mt { display: flex; flex-direction: column; gap: 5px; padding: 0.6rem 0.85rem; }
+    .mr { background: #fff; border-radius: 8px; padding: 7px 10px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .mr.active-today { border-color: #fbbf24; background: linear-gradient(90deg,#fff 50%,#fffbeb); }
+    .mc { font-size: 0.83rem; font-weight: 600; color: var(--dark); min-width: 130px; }
+    .mc a { color: var(--dark); text-decoration: none; }
+    .mc a:hover { color: var(--blue); }
+    .mi { font-size: 0.75rem; color: var(--muted); flex: 1; min-width: 80px; }
+    .md { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
+    .dp { font-size: 0.7rem; padding: 2px 6px; border-radius: 9px; background: #f1f5f9; color: #64748b; font-weight: 700; border: 1px solid var(--border); }
+    .dp.today { background: #fbbf24; color: #1e293b; border-color: #f59e0b; }
+    .time-note { font-size: 0.7rem; color: var(--muted); margin-left: 2px; }
+
+    /* ── EVENTS ── */
+    .events-wrap { padding: 0.6rem 0.85rem; }
+    .events-links { display: flex; gap: 0.6rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
+    .events-link-btn { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--blue); color: #fff; text-decoration: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; transition: opacity 0.15s; }
+    .events-link-btn:hover { opacity: 0.85; }
+    .events-link-btn.secondary { background: var(--sage); }
+    .events-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .event-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 7px; padding: 0.55rem 0.75rem; font-size: 0.82rem; }
+    .event-date { font-size: 0.71rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.15rem; }
+    .event-title { font-weight: 600; color: var(--dark); }
+    .event-title a { color: var(--blue); text-decoration: none; }
+    .event-title a:hover { text-decoration: underline; }
+    .event-desc { color: var(--mid); font-size: 0.77rem; margin-top: 0.1rem; }
+    .events-status { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
+    .events-status .dot-live { color: #16a34a; }
+    .events-status .dot-fail { color: #f59e0b; }
   </style>
 </head>
 <body>
@@ -696,6 +726,12 @@ const T = {
         ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMo–Sa 10h–20h / So 11h–19h\nBus 10 oder Tram L2 Richtung Aéroport"],
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(früher: Polygone)"]
       ]},
+      { icon:"🧺", label:"Märkte", marketscard:true, markets:[
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Blumen & Gemüse", days:["Di","Mi","Do","Fr","Sa"], time:"6h–13h30" },
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Antiquités & Brocante", days:["Mo"], time:"7h30–18h" },
+        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · Lebensmittel, Käse, Charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" }
+      ]},
+      { icon:"📅", label:"Was läuft gerade", eventscard:true, eventsText:{ btnNice:"nice.fr/agenda", btnAzureva:"azureva.com" } },
       { icon:"🚲", label:"Fahrradverleih & Ausflüge", rows:[
         ["Fahrrad","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"],
         ["Tour du Cap-Ferrat","[Küstenrundweg (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · leicht · ~1,5 Std\nStartpunkt: Hafen Saint-Jean-Cap-Ferrat"],
@@ -824,6 +860,12 @@ const T = {
         ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMon–Sat 10am–8pm / Sun 11am–7pm\nBus 10 or Tram L2 towards Airport"],
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(formerly: Polygone)"]
       ]},
+      { icon:"🧺", label:"Markets", marketscard:true, markets:[
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Flowers & vegetables", days:["Di","Mi","Do","Fr","Sa"], time:"6h–13h30" },
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Antiques & Brocante", days:["Mo"], time:"7:30–18h" },
+        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · food, cheese, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" }
+      ]},
+      { icon:"📅", label:"Events in Nice", eventscard:true, eventsText:{ btnNice:"nice.fr/agenda", btnAzureva:"azureva.com" } },
       { icon:"🚲", label:"Cycling & Hikes", rows:[
         ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"],
         ["Tour du Cap-Ferrat","[Coastal loop trail (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4.8 km · easy · ~1.5h\nStart: Port of Saint-Jean-Cap-Ferrat"],
@@ -952,6 +994,12 @@ const T = {
         ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nLun–Sam 10h–20h / Dim 11h–19h\nBus 10 ou Tram L2 direction Aéroport"],
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(ex-Polygone)"]
       ]},
+      { icon:"🧺", label:"Marchés", marketscard:true, markets:[
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Fleurs & légumes", days:["Di","Mi","Do","Fr","Sa"], time:"6h–13h30" },
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Antiquités & Brocante", days:["Mo"], time:"7h30–18h" },
+        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · alimentation, fromages, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" }
+      ]},
+      { icon:"📅", label:"Événements à Nice", eventscard:true, eventsText:{ btnNice:"nice.fr/agenda", btnAzureva:"azureva.com" } },
       { icon:"🚲", label:"Vélos & Randonnées", rows:[
         ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"],
         ["Tour du Cap-Ferrat","[Sentier littoral (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · facile · ~1h30\nDépart : port de Saint-Jean-Cap-Ferrat"],
@@ -1179,6 +1227,54 @@ function buildCard(item, open) {
       </div>
     </div>`;
   }
+  if (item.marketscard) {
+    const dayMap = {0:'So',1:'Mo',2:'Di',3:'Mi',4:'Do',5:'Fr',6:'Sa'};
+    const todayKey = dayMap[new Date().getDay()];
+    function makePills(days, time) {
+      const all = ['Mo','Di','Mi','Do','Fr','Sa','So'];
+      return days.map(d => {
+        const cls = d === todayKey ? ' today' : '';
+        return `<span class="dp${cls}" data-day="${d}">${d}</span>`;
+      }).join('') + (time ? `<span class="time-note">${time}</span>` : '');
+    }
+    function makeRow(linkText, linkUrl, desc, days, time) {
+      const isTodayActive = days.includes(todayKey);
+      const rowCls = isTodayActive ? ' active-today' : '';
+      return `<div class="mr${rowCls}"><div class="mc"><a href="${linkUrl}" target="_blank" rel="noopener">${linkText}</a></div><div class="mi">${desc}</div><div class="md">${makePills(days, time)}</div></div>`;
+    }
+    const rows = item.markets.map(m => makeRow(m.name, m.url, m.desc, m.days, m.time)).join('');
+    return `<div class="card${openClass}">
+      <div class="card-toggle" onclick="toggleCard(this)">
+        <div class="card-icon">${item.icon}</div>
+        <div class="card-label">${escHtml(item.label)}</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="mt">${rows}</div>
+      </div>
+    </div>`;
+  }
+  if (item.eventscard) {
+    const lang = document.documentElement.lang || 'de';
+    const t = item.eventsText;
+    return `<div class="card${openClass}" id="events-card-wrap">
+      <div class="card-toggle" onclick="toggleCard(this);loadEvents()">
+        <div class="card-icon">${item.icon}</div>
+        <div class="card-label">${escHtml(item.label)}</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="events-wrap">
+          <div class="events-links">
+            <a href="https://www.nice.fr/agenda" target="_blank" rel="noopener" class="events-link-btn">${escHtml(t.btnNice)}</a>
+            <a href="https://www.azureva.com/agenda-nice" target="_blank" rel="noopener" class="events-link-btn secondary">${escHtml(t.btnAzureva)}</a>
+          </div>
+          <div id="events-status" class="events-status"></div>
+          <div id="events-list" class="events-list"></div>
+        </div>
+      </div>
+    </div>`;
+  }
   return `<div class="card${openClass}">
     <div class="card-toggle" onclick="toggleCard(this)">
       <div class="card-icon">${item.icon}</div>
@@ -1295,6 +1391,7 @@ function setLang(lang) {
 
   renderWifiQR();
   initMap(lang);
+  if (typeof highlightToday === 'function') highlightToday();
 }
 
 function toggleCard(toggleEl) {
@@ -1306,8 +1403,73 @@ function toggleCard(toggleEl) {
   }
 }
 
+
+function highlightToday() {
+  const map = {0:'So',1:'Mo',2:'Di',3:'Mi',4:'Do',5:'Fr',6:'Sa'};
+  const today = map[new Date().getDay()];
+  document.querySelectorAll('.dp[data-day]').forEach(pill => {
+    pill.classList.toggle('today', pill.getAttribute('data-day') === today);
+    const row = pill.closest('.mr');
+    if (row && pill.getAttribute('data-day') === today) row.classList.add('active-today');
+  });
+}
+
+function loadEvents() {
+  const card = document.getElementById('events-card-wrap');
+  if (!card || card.dataset.eventsLoaded) return;
+  card.dataset.eventsLoaded = '1';
+  const statusEl = document.getElementById('events-status');
+  const listEl = document.getElementById('events-list');
+  if (!statusEl || !listEl) return;
+  const lang = document.documentElement.lang || 'de';
+  const labels = {
+    de: { loading: 'Events werden geladen…', fail: 'Live-Laden nicht möglich. Bitte direkt auf nice.fr/agenda schauen.', found: 'Events gefunden' },
+    en: { loading: 'Loading events…', fail: 'Live loading not available. Please check nice.fr/agenda directly.', found: 'events found' },
+    fr: { loading: 'Chargement des événements…', fail: 'Chargement en direct non disponible. Consultez nice.fr/agenda directement.', found: 'événements trouvés' }
+  };
+  const lbl = labels[lang] || labels.de;
+  statusEl.innerHTML = `<span class="dot-live">●</span> ${lbl.loading}`;
+  const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.nice.fr/agenda');
+  fetch(proxyUrl, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined })
+    .then(r => r.json())
+    .then(data => {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(data.contents || '', 'text/html');
+      const items = [];
+      // Try common patterns for nice.fr agenda
+      doc.querySelectorAll('article, .agenda-item, .event-item, [class*="agenda"], [class*="event"]').forEach(el => {
+        if (items.length >= 7) return;
+        const titleEl = el.querySelector('h2, h3, h4, .title, .event-title, [class*="title"]');
+        const dateEl = el.querySelector('time, .date, [class*="date"]');
+        const descEl = el.querySelector('p, .desc, [class*="desc"], [class*="excerpt"]');
+        const linkEl = el.querySelector('a[href]');
+        const title = titleEl ? titleEl.textContent.trim() : '';
+        if (!title || title.length < 4) return;
+        const date = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
+        const desc = descEl ? descEl.textContent.trim().substring(0, 120) : '';
+        const href = linkEl ? linkEl.getAttribute('href') : '';
+        const url = href ? (href.startsWith('http') ? href : 'https://www.nice.fr' + href) : 'https://www.nice.fr/agenda';
+        items.push({ title, date, desc, url });
+      });
+      if (items.length === 0) {
+        statusEl.innerHTML = `<span class="dot-fail">●</span> ${lbl.fail}`;
+        return;
+      }
+      statusEl.innerHTML = `<span class="dot-live">●</span> ${items.length} ${lbl.found}`;
+      listEl.innerHTML = items.map(ev => `<div class="event-item">
+        ${ev.date ? `<div class="event-date">${escHtml(ev.date)}</div>` : ''}
+        <div class="event-title"><a href="${ev.url}" target="_blank" rel="noopener">${escHtml(ev.title)}</a></div>
+        ${ev.desc ? `<div class="event-desc">${escHtml(ev.desc)}…</div>` : ''}
+      </div>`).join('');
+    })
+    .catch(() => {
+      statusEl.innerHTML = `<span class="dot-fail">●</span> ${lbl.fail}`;
+    });
+}
+
 // Init
 setLang('de');
+highlightToday();
 </script>
 </body>
 </html>
