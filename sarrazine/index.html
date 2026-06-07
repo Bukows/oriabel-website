@@ -555,6 +555,12 @@
 
 <main>
 
+  <!-- WEATHER -->
+  <div id="weather-section" style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem;overflow:hidden;">
+    <div style="padding:0.6rem 1rem 0.3rem;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);border-bottom:1px solid var(--border)">Nice – Wetter</div>
+    <div id="weather-top" style="padding:0.6rem 1rem 0.75rem;font-size:0.84rem;color:var(--muted)">Wetterdaten werden geladen…</div>
+  </div>
+
   <!-- EMERGENCY -->
   <div class="emergency-tile">
     <div class="emergency-header">
@@ -769,8 +775,6 @@ const T = {
       { icon:"🍦", label:"Eis & Massage", rows:[
         ["Eis","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieille Ville)"],
         ["Massage","Le Banthai, Rue de France"]
-      ,
-      { icon:"🌤", label:"Wetter", weathercard:true }
       ]}
     ],
 
@@ -924,8 +928,6 @@ const T = {
       { icon:"🍦", label:"Ice Cream & Massage", rows:[
         ["Ice cream","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Old Town)"],
         ["Massage","Le Banthai, Rue de France"]
-      ,
-      { icon:"🌤", label:"Weather", weathercard:true }
       ]}
     ],
 
@@ -1079,8 +1081,6 @@ const T = {
       { icon:"🍦", label:"Glaces & Massage", rows:[
         ["Glaces","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieux Nice)"],
         ["Massage","Le Banthai, Rue de France"]
-      ,
-      { icon:"🌤", label:"Météo", weathercard:true }
       ]}
     ],
 
@@ -1274,7 +1274,7 @@ function initExcursionsMap(lang) {
 
 
 function initWeatherCard(lang) {
-  var el = document.getElementById('weather-content');
+  var el = document.getElementById('weather-top');
   if (!el || el.dataset.loaded === '1') return;
   var useLang = lang || document.documentElement.lang || 'de';
   var dayNames = {
@@ -1511,21 +1511,6 @@ function buildCard(item, open) {
   
   }
 
-  if (item.weathercard) {
-    var wLang = document.documentElement.lang || 'de';
-    var wHdr = wLang === 'en' ? 'Nice – 4-Day Forecast' : wLang === 'fr' ? 'Nice – Prévisions 4 jours' : 'Nice – 4-Tages-Vorhersage';
-    var wLoad = wLang === 'en' ? 'Loading weather…' : wLang === 'fr' ? 'Chargement météo…' : 'Wetterdaten werden geladen…';
-    return '<div class="card' + openClass + '">' +
-      '<div class="card-toggle" onclick="toggleCard(this)">' +
-        '<div class="card-icon">' + escHtml(item.icon) + '</div>' +
-        '<div class="card-label">' + escHtml(item.label) + '</div>' +
-        '<div class="card-chevron">▼</div>' +
-      '</div>' +
-      '<div class="card-body" style="padding:0.75rem 1rem 1rem">' +
-        '<div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem">' + wHdr + '</div>' +
-        '<div id="weather-content" style="font-size:0.84rem">' + wLoad + '</div>' +
-      '</div></div>';
-  }
 
   if (item.excursionscard) {
     var eLang = document.documentElement.lang || 'de';
@@ -1787,6 +1772,7 @@ const NICE_EVENTS = [
 // Init
 setLang('de');
 highlightToday();
+initWeatherCard(document.documentElement.lang);
 </script>
 </body>
 </html>
