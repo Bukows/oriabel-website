@@ -748,7 +748,7 @@ const T = {
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monatlich (3. Sa) · 30 Händler · Vieux Nice", days:["Sa"], time:"monatl." }
       ]},
       { icon:"📅", label:"Was läuft gerade", eventscard:true },
-      { icon:"🚲", label:"Fahrrad", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.wikiloc.com/trails/cycling/france/provence-alpes-cote-d-azur/alpes-maritimes", rows:[
+      { icon:"🚲", label:"Fahrrad", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", rows:[
         ["Verleih","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"]
       ]},
       { icon:"🥾", label:"Wanderungen", rows:[
@@ -766,6 +766,8 @@ const T = {
       { icon:"🍦", label:"Eis & Massage", rows:[
         ["Eis","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieille Ville)"],
         ["Massage","Le Banthai, Rue de France"]
+      ,
+      { icon:"🌤", label:"Wetter", weathercard:true }
       ]}
     ],
 
@@ -897,7 +899,7 @@ const T = {
         { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · near Vieux Menton · 45 min by train", days:["Fr"], time:"morning" },
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monthly (3rd Sat) · 30 vendors · Old Nice", days:["Sa"], time:"monthly" }
       ]},
-      { icon:"🚲", label:"Cycling", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.wikiloc.com/trails/cycling/france/provence-alpes-cote-d-azur/alpes-maritimes", rows:[
+      { icon:"🚲", label:"Cycling", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", rows:[
         ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"]
       ]},
       { icon:"🥾", label:"Hikes", rows:[
@@ -922,6 +924,8 @@ const T = {
       { icon:"🍦", label:"Ice Cream & Massage", rows:[
         ["Ice cream","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Old Town)"],
         ["Massage","Le Banthai, Rue de France"]
+      ,
+      { icon:"🌤", label:"Weather", weathercard:true }
       ]}
     ],
 
@@ -1053,7 +1057,7 @@ const T = {
         { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · près du Vieux Menton · 45 min en train", days:["Fr"], time:"matin" },
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~mensuel (3e sam.) · 30 marchands · Vieux Nice", days:["Sa"], time:"mensuel" }
       ]},
-      { icon:"🚲", label:"Vélos", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.wikiloc.com/trails/cycling/france/provence-alpes-cote-d-azur/alpes-maritimes", rows:[
+      { icon:"🚲", label:"Vélos", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", rows:[
         ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"]
       ]},
       { icon:"🥾", label:"Randonnées", rows:[
@@ -1078,6 +1082,8 @@ const T = {
       { icon:"🍦", label:"Glaces & Massage", rows:[
         ["Glaces","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieux Nice)"],
         ["Massage","Le Banthai, Rue de France"]
+      ,
+      { icon:"🌤", label:"Météo", weathercard:true }
       ]}
     ],
 
@@ -1270,6 +1276,59 @@ function initExcursionsMap(lang) {
 }
 
 
+function initWeatherCard(lang) {
+  var el = document.getElementById('weather-content');
+  if (!el || el.dataset.loaded === '1') return;
+  var useLang = lang || document.documentElement.lang || 'de';
+  var dayNames = {
+    de: ['So','Mo','Di','Mi','Do','Fr','Sa'],
+    en: ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
+    fr: ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
+  };
+  var todayLbl = { de:'Heute', en:'Today', fr:"Aujourd'hui" };
+  var wmoDesc = {
+    de: { 0:'Sonnig', 1:'Klar', 2:'Teils bewölkt', 3:'Bewölkt', 45:'Nebel', 48:'Nebel (Reif)', 51:'Leichter Nieselregen', 53:'Nieselregen', 55:'Starker Nieselregen', 61:'Leichter Regen', 63:'Regen', 65:'Starker Regen', 71:'Leichter Schneefall', 73:'Schneefall', 75:'Starker Schneefall', 77:'Schneekörner', 80:'Regenschauer', 81:'Schauer', 82:'Starke Schauer', 85:'Schneeschauer', 86:'Starke Schneeschauer', 95:'Gewitter', 96:'Gewitter m. Hagel', 99:'Heftiges Gewitter' },
+    en: { 0:'Sunny', 1:'Clear', 2:'Partly cloudy', 3:'Overcast', 45:'Fog', 48:'Rime fog', 51:'Light drizzle', 53:'Drizzle', 55:'Dense drizzle', 61:'Light rain', 63:'Rain', 65:'Heavy rain', 71:'Light snow', 73:'Snow', 75:'Heavy snow', 77:'Snow grains', 80:'Showers', 81:'Rain showers', 82:'Heavy showers', 85:'Snow showers', 86:'Heavy snow showers', 95:'Thunderstorm', 96:'Thunderstorm w/ hail', 99:'Severe thunderstorm' },
+    fr: { 0:'Ensoleillé', 1:'Dégagé', 2:'Partiellement nuageux', 3:'Couvert', 45:'Brouillard', 48:'Brouillard givrant', 51:'Bruine légère', 53:'Bruine', 55:'Bruine dense', 61:'Pluie légère', 63:'Pluie', 65:'Forte pluie', 71:'Neige légère', 73:'Neige', 75:'Forte neige', 77:'Granules de neige', 80:'Averses', 81:'Averses de pluie', 82:'Fortes averses', 85:'Averses de neige', 86:'Fortes averses de neige', 95:'Orage', 96:'Orage avec grêle', 99:'Orage violent' }
+  };
+  var rainLbl = { de:'Regen', en:'Rain', fr:'Pluie' };
+  var windLbl = { de:'Wind', en:'Wind', fr:'Vent' };
+  var srcLbl = { de:'Quelle: Open-Meteo · Nice', en:'Source: Open-Meteo · Nice', fr:'Source: Open-Meteo · Nice' };
+  el.textContent = useLang === 'en' ? 'Loading weather…' : useLang === 'fr' ? 'Chargement météo…' : 'Wetterdaten werden geladen…';
+  fetch('https://api.open-meteo.com/v1/forecast?latitude=43.6918&longitude=7.2364&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,wind_speed_10m_max&timezone=Europe%2FParis&forecast_days=4')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var d = data.daily;
+      var days = dayNames[useLang] || dayNames.de;
+      var desc = wmoDesc[useLang] || wmoDesc.de;
+      var today = new Date().toISOString().slice(0,10);
+      var html = '<table style="width:100%;border-collapse:collapse;font-size:0.84rem">';
+      for (var i = 0; i < d.time.length; i++) {
+        var dt = new Date(d.time[i] + 'T12:00:00');
+        var dayStr = d.time[i] === today ? todayLbl[useLang] : days[dt.getDay()];
+        var wdesc = desc[d.weather_code[i]] || ('WMO ' + d.weather_code[i]);
+        var tmax = Math.round(d.temperature_2m_max[i]);
+        var tmin = Math.round(d.temperature_2m_min[i]);
+        var rain = d.precipitation_sum[i] != null ? d.precipitation_sum[i].toFixed(1) : '0.0';
+        var wind = d.wind_speed_10m_max[i] != null ? Math.round(d.wind_speed_10m_max[i]) : '–';
+        var bg = i === 0 ? 'background:rgba(0,0,0,0.03);' : '';
+        html += '<tr style="' + bg + 'border-bottom:1px solid var(--border)">' +
+          '<td style="padding:0.45rem 0.5rem;font-weight:600;white-space:nowrap;width:4.5rem">' + dayStr + '</td>' +
+          '<td style="padding:0.45rem 0.5rem;color:var(--fg)">' + wdesc + '</td>' +
+          '<td style="padding:0.45rem 0.5rem;white-space:nowrap;text-align:right;font-weight:600">' + tmax + '° / <span style="color:var(--muted)">' + tmin + '°</span></td>' +
+          '<td style="padding:0.45rem 0.5rem;white-space:nowrap;text-align:right;color:var(--muted);font-size:0.78rem">' + rainLbl[useLang] + ' ' + rain + ' mm</td>' +
+          '</tr>';
+      }
+      html += '</table><div style="font-size:0.72rem;color:var(--muted);margin-top:0.4rem;text-align:right">' + srcLbl[useLang] + '</div>';
+      el.innerHTML = html;
+      el.dataset.loaded = '1';
+    })
+    .catch(function() {
+      el.textContent = useLang === 'fr' ? 'Météo indisponible.' : useLang === 'en' ? 'Weather unavailable.' : 'Wetterdaten nicht verfügbar.';
+    });
+}
+
+
 let map = null;
 
 function initMap(lang) {
@@ -1453,6 +1512,22 @@ function buildCard(item, open) {
       </div>
     </div>`;
   
+  }
+
+  if (item.weathercard) {
+    var wLang = document.documentElement.lang || 'de';
+    var wHdr = wLang === 'en' ? 'Nice – 4-Day Forecast' : wLang === 'fr' ? 'Nice – Prévisions 4 jours' : 'Nice – 4-Tages-Vorhersage';
+    var wLoad = wLang === 'en' ? 'Loading weather…' : wLang === 'fr' ? 'Chargement météo…' : 'Wetterdaten werden geladen…';
+    return '<div class="card' + openClass + '">' +
+      '<div class="card-toggle" onclick="toggleCard(this)">' +
+        '<div class="card-icon">' + escHtml(item.icon) + '</div>' +
+        '<div class="card-label">' + escHtml(item.label) + '</div>' +
+        '<div class="card-chevron">▼</div>' +
+      '</div>' +
+      '<div class="card-body" style="padding:0.75rem 1rem 1rem">' +
+        '<div style="font-size:0.78rem;color:var(--muted);margin-bottom:0.5rem">' + wHdr + '</div>' +
+        '<div id="weather-content" style="font-size:0.84rem">' + wLoad + '</div>' +
+      '</div></div>';
   }
 
   if (item.excursionscard) {
@@ -1682,6 +1757,7 @@ function toggleCard(toggleEl) {
     if (card.querySelector('#shop-map')) initShopMap(document.documentElement.lang);
     if (card.querySelector('#sport-map')) initSportMap(document.documentElement.lang);
     if (card.querySelector('#excursions-map')) initExcursionsMap(document.documentElement.lang);
+    if (card.querySelector('#weather-content')) initWeatherCard(document.documentElement.lang);
   }
 }
 
