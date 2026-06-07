@@ -748,13 +748,19 @@ const T = {
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monatlich (3. Sa) · 30 Händler · Vieux Nice", days:["Sa"], time:"monatl." }
       ]},
       { icon:"📅", label:"Was läuft gerade", eventscard:true },
-      { icon:"🚲", label:"Fahrradverleih & Ausflüge", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.strava.com/maps/global-heatmap#13/7.2469/43.7102/hot/both", rows:[
-        ["Fahrrad","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"],
-        ["Tour du Cap-Ferrat","[Küstenrundweg (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · leicht · ~1,5 Std\nStartpunkt: Hafen Saint-Jean-Cap-Ferrat"],
-        ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Sentier du Littoral · 2,7 km · leicht\nStartpunkt: Plage de la Garoupe"],
-        ["Chemin de Nietzsche – Èze","[Eze-sur-Mer → Dorf Èze (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/sentier-nietzsche-eze-bord-de-mer-a-eze-village) – 2,1 km · 400 Hm · mittel\n~45 Min bergab · ~1,5 Std bergauf"],
+      { icon:"🚲", label:"Fahrrad", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.wikiloc.com/trails/cycling/france/provence-alpes-cote-d-azur/alpes-maritimes", rows:[
+        ["Verleih","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"]
+      ]},
+      { icon:"🥾", label:"Wanderungen", rows:[
+        ["Tour du Cap-Ferrat","[Küstenrundweg (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · leicht · ~1,5 Std
+Startpunkt: Hafen Saint-Jean-Cap-Ferrat"],
+        ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Sentier du Littoral · 2,7 km · leicht
+Startpunkt: Plage de la Garoupe"],
+        ["Chemin de Nietzsche – Èze","[Eze-sur-Mer → Dorf Èze (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/sentier-nietzsche-eze-bord-de-mer-a-eze-village) – 2,1 km · 400 Hm · mittel
+~45 Min bergab · ~1,5 Std bergauf"],
         ["Hinterland – Dörfer","[Randoxygène – alle Wanderwege](https://randoxygene.departement06.fr/pied) · Peille · Peillon · Gorbio · Sainte-Agnès"]
       ]},
+      { icon:"🚗", label:"Ausflüge (Auto)", excursionscard:true },
       { icon:"🏊", label:"Sport", sportmap:true },
       { icon:"🎭", label:"Kino & Theater", rows:[
         ["Kino – Programm","[Pathé Masséna](https://www.pathe.fr/cinemas/cinema-pathe-massena) · 31 Av. Jean Médecin · Tram L2 → Jean Médecin · ~25 Min.\n[Pathé Gare du Sud](https://www.pathe.fr/cinemas/cinema-pathe-gare-du-sud) · 9 Allée Charles Pasqua · Alternative\n→ [Alle Spielzeiten auf pathe.fr](https://www.pathe.fr/cinemas/ville/nice)"],
@@ -894,7 +900,19 @@ const T = {
         { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · near Vieux Menton · 45 min by train", days:["Fr"], time:"morning" },
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monthly (3rd Sat) · 30 vendors · Old Nice", days:["Sa"], time:"monthly" }
       ]},
-      { icon:"📅", label:"Events in Nice", eventscard:true },
+      { icon:"🚲", label:"Cycling", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.wikiloc.com/trails/cycling/france/provence-alpes-cote-d-azur/alpes-maritimes", rows:[
+        ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"]
+      ]},
+      { icon:"🥾", label:"Hikes", rows:[
+        ["Tour du Cap-Ferrat","[Coastal loop trail (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4.8 km · easy · ~1.5h
+Start: Port of Saint-Jean-Cap-Ferrat"],
+        ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Coastal footpath · 2.7 km · easy
+Start: Plage de la Garoupe"],
+        ["Chemin de Nietzsche – Èze","[Èze-sur-Mer → Èze village (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/sentier-nietzsche-eze-bord-de-mer-a-eze-village) – 2.1 km · 400m elevation · moderate
+~45 min down · ~1.5h up"],
+        ["Hinterland villages","[Randoxygène – all hiking trails](https://randoxygene.departement06.fr/pied) · Peille · Peillon · Gorbio · Sainte-Agnès"]
+      ]},
+      { icon:"🚗", label:"Day Trips (car)", excursionscard:true },
       { icon:"🚲", label:"Cycling & Hikes", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.strava.com/maps/global-heatmap#13/7.2469/43.7102/hot/both", rows:[
         ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"],
         ["Tour du Cap-Ferrat","[Coastal loop trail (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4.8 km · easy · ~1.5h\nStart: Port of Saint-Jean-Cap-Ferrat"],
@@ -1041,7 +1059,19 @@ const T = {
         { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · près du Vieux Menton · 45 min en train", days:["Fr"], time:"matin" },
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~mensuel (3e sam.) · 30 marchands · Vieux Nice", days:["Sa"], time:"mensuel" }
       ]},
-      { icon:"📅", label:"Événements à Nice", eventscard:true },
+      { icon:"🚲", label:"Vélos", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.wikiloc.com/trails/cycling/france/provence-alpes-cote-d-azur/alpes-maritimes", rows:[
+        ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"]
+      ]},
+      { icon:"🥾", label:"Randonnées", rows:[
+        ["Tour du Cap-Ferrat","[Sentier littoral (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · facile · ~1h30
+Départ : port de Saint-Jean-Cap-Ferrat"],
+        ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Sentier du Littoral · 2,7 km · facile
+Départ : Plage de la Garoupe"],
+        ["Chemin de Nietzsche – Èze","[Eze-sur-Mer → village d'Èze (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/sentier-nietzsche-eze-bord-de-mer-a-eze-village) – 2,1 km · 400m dénivelé · moyen
+~45 min descente · ~1h30 montée"],
+        ["Arrière-pays – villages","[Randoxygène – toutes les randonnées](https://randoxygene.departement06.fr/pied) · Peille · Peillon · Gorbio · Sainte-Agnès"]
+      ]},
+      { icon:"🚗", label:"Excursions (voiture)", excursionscard:true },
       { icon:"🚲", label:"Vélos & Randonnées", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://www.strava.com/maps/global-heatmap#13/7.2469/43.7102/hot/both", rows:[
         ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"],
         ["Tour du Cap-Ferrat","[Sentier littoral (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · facile · ~1h30\nDépart : port de Saint-Jean-Cap-Ferrat"],
@@ -1082,6 +1112,64 @@ const SPORT_PINS = [
   { n:"Piscine d'été des Combes", t:{de:"Freibad · Sommer · 4€ · tägl. 10–18h",                     en:"Outdoor pool · summer only · €4 · daily 10am–6pm",                      fr:"Piscine plein air · été · 4€ · tj. 10–18h"},                           a:"Bd du Mercantour, 06200",    lat:43.7015, lng:7.1869, url:"https://www.nice.fr/lieux/piscine-dete-des-combes/" },
   { n:"Fitness Park Californie",  t:{de:"Fitness · ab 19€/4 Wo. · Mo–So 6–23h",                     en:"Gym · from €19/4 weeks · Mon–Sun 6am–11pm",                             fr:"Fitness · dès 19€/4 sem. · Lun–Dim 6–23h"},                           a:"13-15 Av. de la Californie", lat:43.6892, lng:7.2243, url:"https://www.fitnesspark.fr/club/nice-californie/" },
   { n:"VitaClub Nice Ouest",      t:{de:"Fitness · Mo–Fr 6:30–22h, Sa–So 8–20h",                    en:"Gym · Mon–Fri 6:30am–10pm, Sat–Sun 8am–8pm",                            fr:"Fitness · Lun–Ven 6h30–22h, Sam–Dim 8–20h"},                          a:"56 Bd Carlone",               lat:43.6951, lng:7.2399, url:"https://salle-de-sports-nice.com/" },
+];
+
+const EXCURSION_PINS = [
+  { n:"Villefranche-sur-Mer", km:8,  color:"#1a6fa8",
+    t:{de:"Malerische Altstadt · bunte Fischerhäuser · Chapelle Cocteau · Zitadelle",
+       en:"Picturesque old town · colourful houses · Cocteau chapel · citadel",
+       fr:"Vieille ville pittoresque · maisons colorées · chapelle Cocteau · citadelle"},
+    lat:43.7053, lng:7.3104 },
+  { n:"Èze", km:12, color:"#1a6fa8",
+    t:{de:"Mittelalterl. Bergdorf · Jardin Exotique · Panoramablick · Parfumerie Fragonard",
+       en:"Medieval hilltop village · exotic garden · panoramic views · Fragonard perfumery",
+       fr:"Village perché médiéval · jardin exotique · panorama · parfumerie Fragonard"},
+    lat:43.7282, lng:7.3597 },
+  { n:"La Turbie", km:18, color:"#0d8a5e",
+    t:{de:"Trophée des Alpes (röm. Denkmal) · Bergdorf · Blick auf Monaco",
+       en:"Trophy of Augustus (Roman monument) · hilltop village · views over Monaco",
+       fr:"Trophée des Alpes (monument romain) · village perché · vue sur Monaco"},
+    lat:43.7502, lng:7.3989 },
+  { n:"Monaco", km:20, color:"#0d8a5e",
+    t:{de:"Fürstenpalast · Ozeanograph. Museum · Jardin Exotique · Casino Monte-Carlo",
+       en:"Prince's Palace · Oceanographic Museum · Exotic Garden · Casino Monte-Carlo",
+       fr:"Palais Princier · Musée Océanographique · Jardin Exotique · Casino Monte-Carlo"},
+    lat:43.7384, lng:7.4246 },
+  { n:"St-Paul-de-Vence", km:25, color:"#7b3fa0",
+    t:{de:"Mittelalterl. Dorf · Fondation Maeght (Moderne Kunst) · Galerien",
+       en:"Medieval village · Fondation Maeght (modern art) · galleries",
+       fr:"Village médiéval · Fondation Maeght (art moderne) · galeries"},
+    lat:43.6972, lng:7.1204 },
+  { n:"Antibes", km:28, color:"#7b3fa0",
+    t:{de:"Musée Picasso · Alter Hafen · Provenz. Markt · Altstadt-Rampen · Cap d'Antibes",
+       en:"Picasso Museum · old harbour · Provençal market · old town ramparts",
+       fr:"Musée Picasso · vieux port · marché provençal · remparts · Cap d'Antibes"},
+    lat:43.5809, lng:7.1281 },
+  { n:"Menton", km:32, color:"#c05020",
+    t:{de:"Italianische Altstadt · Musée Cocteau · Botanische Gärten · Grenzstadt",
+       en:"Italian-style old town · Cocteau Museum · botanical gardens · border town",
+       fr:"Vieille ville baroque · Musée Cocteau · jardins exotiques · ville frontalière"},
+    lat:43.7745, lng:7.4953 },
+  { n:"Cannes", km:38, color:"#c05020",
+    t:{de:"Croisette · Île Ste-Marguerite (Maskenmann) · Festival-Kulisse · Marché Forville",
+       en:"Croisette · île Sainte-Marguerite (Man in Iron Mask) · film festival setting",
+       fr:"Croisette · île Sainte-Marguerite (Masque de Fer) · décor du Festival"},
+    lat:43.5528, lng:7.0174 },
+  { n:"Grasse", km:42, color:"#6b6020",
+    t:{de:"Welthauptstadt des Parfüms · Musée Internat. de la Parfumerie · Fragonard · Molinard",
+       en:"World capital of perfume · International Perfume Museum · Fragonard · Molinard",
+       fr:"Capitale mondiale du parfum · Musée International de la Parfumerie · Fragonard"},
+    lat:43.6604, lng:6.9206 },
+  { n:"Ventimiglia", km:50, color:"#2a6820",
+    t:{de:"Großer Freitagsmarkt · Altstadt · erster Stopp in Italien",
+       en:"Large Friday market · old town · first stop in Italy",
+       fr:"Grand marché du vendredi · centro storico · première étape en Italie"},
+    lat:43.7914, lng:7.6088 },
+  { n:"Sanremo", km:75, color:"#2a6820",
+    t:{de:"Blumenstadt · Casino · Altstadt La Pigna · Basilika San Siro",
+       en:"City of flowers · casino · old town La Pigna · Basilica San Siro",
+       fr:"Ville des fleurs · casino · vieille ville La Pigna · Basilique San Siro"},
+    lat:43.8168, lng:7.7756 },
 ];
 SHOP_PINS = [
   { n:"Moulin de Flor",    t:{de:"Bäckerei",       en:"Bakery",       fr:"Boulangerie"}, a:"108 Av. de la Californie", lat:43.6871, lng:7.2371 },
@@ -1156,6 +1244,40 @@ function initShopMap(lang) {
       sportMap.invalidateSize();
     }
   }
+
+let excMap = null;
+let excMapEl = null;
+function initExcursionsMap(lang) {
+  var el = document.getElementById('excursions-map');
+  if (!el) return;
+  if (excMap && excMapEl !== el) { excMap.remove(); excMap = null; excMapEl = null; }
+  if (!excMap) {
+    excMapEl = el;
+    excMap = L.map(el).setView([43.68, 7.30], 9);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      maxZoom: 19
+    }).addTo(excMap);
+    var aptIcon = L.divIcon({
+      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">H</div>',
+      className: '', iconSize:[26,26], iconAnchor:[13,13]
+    });
+    L.marker([43.6918, 7.2364], {icon: aptIcon}).addTo(excMap)
+      .bindPopup('<strong>Tour Sarrazine</strong>');
+    var useLang = lang || 'de';
+    EXCURSION_PINS.forEach(function(p, i) {
+      var icon = L.divIcon({
+        html: '<div style="background:' + p.color + ';color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.3)">' + (i+1) + '</div>',
+        className: '', iconSize:[22,22], iconAnchor:[11,11]
+      });
+      L.marker([p.lat, p.lng], {icon: icon}).addTo(excMap)
+        .bindPopup('<strong>' + p.n + '</strong><br><span style="font-size:0.78rem">~' + p.km + ' km</span><br><span style="font-size:0.75rem;color:#555">' + (p.t[useLang]||p.t.de) + '</span>');
+    });
+  } else {
+    excMap.invalidateSize();
+  }
+}
+
 
 let map = null;
 
@@ -1342,6 +1464,36 @@ function buildCard(item, open) {
   
   }
 
+  if (item.excursionscard) {
+    var eLang = document.documentElement.lang || 'de';
+    var routeLbl = eLang === 'en' ? 'Directions →' : eLang === 'fr' ? 'Itinéraire →' : 'Route →';
+    var excList = '';
+    EXCURSION_PINS.forEach(function(p, i) {
+      var mapsUrl = 'https://www.google.com/maps/dir/43.6918,7.2364/' + p.lat + ',' + p.lng + '/';
+      var desc = p.t[eLang] || p.t.de;
+      excList += '<div style="display:flex;gap:0.6rem;padding:0.5rem 0.75rem;border-bottom:1px solid var(--border);align-items:flex-start;">'
+        + '<span style="background:' + p.color + ';color:#fff;border-radius:50%;width:22px;height:22px;min-width:22px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:2px;">' + (i+1) + '</span>'
+        + '<div style="flex:1;min-width:0;">'
+        + '<div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;">'
+        + '<strong style="font-size:0.88rem;">' + escHtml(p.n) + '</strong>'
+        + '<span style="font-size:0.75rem;color:var(--muted);background:var(--light);padding:1px 6px;border-radius:10px;">~' + p.km + ' km</span>'
+        + '</div>'
+        + '<span style="font-size:0.78rem;color:var(--mid);display:block;margin-top:1px;">' + escHtml(desc) + '</span>'
+        + '<a href="' + mapsUrl + '" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--blue);text-decoration:none;">' + routeLbl + '</a>'
+        + '</div></div>';
+    });
+    return '<div class="card' + openClass + '">'
+      + '<div class="card-toggle" onclick="toggleCard(this)">'
+      + '<div class="card-icon">' + item.icon + '</div>'
+      + '<div class="card-label">' + escHtml(item.label) + '</div>'
+      + '<div class="card-chevron">▼</div>'
+      + '</div>'
+      + '<div class="card-body">'
+      + '<div style="border-top:1px solid var(--border)">' + excList + '</div>'
+      + '<div id="excursions-map" style="height:300px;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;"></div>'
+      + '</div></div>';
+  }
+
   if (item.marketscard) {
     const dayMap = {0:'So',1:'Mo',2:'Di',3:'Mi',4:'Do',5:'Fr',6:'Sa'};
     const todayKey = dayMap[new Date().getDay()];
@@ -1418,7 +1570,7 @@ function buildCard(item, open) {
       <div class="info-table">${rowsToHtml(item.rows)}</div>
       ${item.komootlink || item.stravalink ? `<div style="padding:0.25rem 0.75rem 0.75rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
         ${item.komootlink ? `<a href="${item.komootlink}" target="_blank" rel="noopener" style="display:inline-block;padding:0.4rem 0.9rem;background:var(--sage);color:#fff;border-radius:20px;font-size:0.82rem;text-decoration:none;font-weight:600;">Touren auf Komoot</a>` : ''}
-        ${item.stravalink ? `<a href="${item.stravalink}" target="_blank" rel="noopener" style="display:inline-block;padding:0.4rem 0.9rem;background:#fc4c02;color:#fff;border-radius:20px;font-size:0.82rem;text-decoration:none;font-weight:600;">Heatmap auf Strava</a>` : ''}
+        ${item.stravalink ? `<a href="${item.stravalink}" target="_blank" rel="noopener" style="display:inline-block;padding:0.4rem 0.9rem;background:#68a837;color:#fff;border-radius:20px;font-size:0.82rem;text-decoration:none;font-weight:600;">Wikiloc</a>` : ''}
       </div>` : ''}
     </div>
   </div>`;
@@ -1538,6 +1690,7 @@ function toggleCard(toggleEl) {
     if (map) setTimeout(() => map.invalidateSize(), 50);
     if (card.querySelector('#shop-map')) initShopMap(document.documentElement.lang);
     if (card.querySelector('#sport-map')) initSportMap(document.documentElement.lang);
+    if (card.querySelector('#excursions-map')) initExcursionsMap(document.documentElement.lang);
   }
 }
 
