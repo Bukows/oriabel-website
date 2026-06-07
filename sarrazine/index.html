@@ -1276,20 +1276,15 @@ function initExcursionsMap(lang) {
 }
 
 
+var _wxData = null, _wxPollen = null;
 function initWeatherCard(lang) {
   var el = document.getElementById('weather-top');
-  if (!el || el.dataset.loaded === '1') return;
+  if (!el) return;
   var useLang = lang || document.documentElement.lang || 'de';
   var dNames = {de:['So','Mo','Di','Mi','Do','Fr','Sa'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']};
   var tod = {de:'Heute',en:'Today',fr:"Aujourd'hui"};
   var hdrTxt = {de:'Nizza · Wetter',en:'Nice · Weather',fr:'Nice · Météo'};
-  var pollenNames = {
-    grass_pollen:{de:'Gras',en:'Grass',fr:'Graminées'},
-    olive_pollen:{de:'Olive',en:'Olive',fr:'Olivier'},
-    birch_pollen:{de:'Birke',en:'Birch',fr:'Bouleau'},
-    alder_pollen:{de:'Erle',en:'Alder',fr:'Aulne'},
-    mugwort_pollen:{de:'Beifuss',en:'Mugwort',fr:'Armoise'}
-  };
+  var pollenNames = {grass_pollen:{de:'Gras',en:'Grass',fr:'Graminées'},olive_pollen:{de:'Olive',en:'Olive',fr:'Olivier'},birch_pollen:{de:'Birke',en:'Birch',fr:'Bouleau'},alder_pollen:{de:'Erle',en:'Alder',fr:'Aulne'},mugwort_pollen:{de:'Beifuss',en:'Mugwort',fr:'Armoise'}};
   var pollenLvlLbl = {de:['Gering','Mittel','Hoch','Sehr hoch'],en:['Low','Moderate','High','Very high'],fr:['Faible','Modéré','Élevé','Très élevé']};
   var pollenClr = ['#27ae60','#f39c12','#e74c3c','#8e1f1f'];
   var moonN = {de:['Neumond','Zunehmend','Erstes Viertel','Zunehmend','Vollmond','Abnehmend','Letztes Viertel','Abnehmend'],en:['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'],fr:['Nouvelle Lune','Croissant','Premier Quartier','Gibbeuse','Pleine Lune','Décroissante','Dernier Quartier','Décroissante']};
@@ -1311,31 +1306,21 @@ function initWeatherCard(lang) {
   };
   var hdrEl = document.getElementById('weather-hdr');
   if(hdrEl) hdrEl.textContent = hdrTxt[useLang] || hdrTxt.de;
-  el.textContent = '…';
 
   function moonEmoji(now) {
     var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var known = new Date(2000, 0, 6);
-    var diff = (d - known) / 86400000;
+    var diff = (d - new Date(2000,0,6)) / 86400000;
     var phase = ((diff % 29.53058867) + 29.53058867) % 29.53058867;
-    if(phase < 1.85) return '🌑';
-    if(phase < 5.54) return '🌒';
-    if(phase < 9.22) return '🌓';
-    if(phase < 12.91) return '🌔';
-    if(phase < 16.61) return '🌕';
-    if(phase < 20.30) return '🌖';
-    if(phase < 23.99) return '🌗';
-    if(phase < 27.68) return '🌘';
-    return '🌑';
+    var icons = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
+    var idx = Math.floor(phase / 29.53058867 * 8) % 8;
+    return icons[idx];
   }
   function moonName(now, lng) {
     var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var known = new Date(2000, 0, 6);
-    var diff = (d - known) / 86400000;
+    var diff = (d - new Date(2000,0,6)) / 86400000;
     var phase = ((diff % 29.53058867) + 29.53058867) % 29.53058867;
     var idx = Math.round(phase / 29.53058867 * 8) % 8;
-    var nm = moonN[lng] || moonN.de;
-    return nm[idx];
+    return (moonN[lng] || moonN.de)[idx];
   }
   function polLen(v, lng) {
     if(!v || v < 1) return null;
@@ -1348,25 +1333,12 @@ function initWeatherCard(lang) {
     return m ? m[1] : iso.slice(11,16);
   }
 
-  var today = new Date().toISOString().slice(0,10);
-  var weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=43.6918&longitude=7.2364' +
-    '&current=temperature_2m,weather_code,apparent_temperature' +
-    '&hourly=temperature_2m,weather_code' +
-    '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset' +
-    '&timezone=Europe%2FParis&forecast_days=10';
-  var pollenUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.6918&longitude=7.2364' +
-    '&hourly=grass_pollen,olive_pollen,birch_pollen,alder_pollen,mugwort_pollen' +
-    '&timezone=Europe%2FParis&forecast_days=1';
-
-  Promise.all([
-    fetch(weatherUrl).then(function(r){return r.json();}),
-    fetch(pollenUrl).then(function(r){return r.json();}).catch(function(){return null;})
-  ]).then(function(res) {
-    var data = res[0]; var pollen = res[1];
+  function renderWeather(data, pollen, lng) {
     var cur = data.current; var h = data.hourly; var d = data.daily;
-    var dN = dNames[useLang] || dNames.de;
-    var todTxt = tod[useLang] || tod.de;
-    var descs = wmoTxt[useLang] || wmoTxt.de;
+    var dN = dNames[lng] || dNames.de;
+    var todTxt = tod[lng] || tod.de;
+    var descs = wmoTxt[lng] || wmoTxt.de;
+    var today = new Date().toISOString().slice(0,10);
 
     var curIcon = wmoIcon(cur.weather_code);
     var curTemp = Math.round(cur.temperature_2m);
@@ -1390,11 +1362,10 @@ function initWeatherCard(lang) {
     var sr = parseTime(d.sunrise[0]);
     var ss = parseTime(d.sunset[0]);
     var mE = moonEmoji(now);
-    var mN = moonName(now, useLang);
+    var mNm = moonName(now, lng);
     html += '<div style="display:flex;gap:1.2rem;padding:0.25rem 1rem 0.3rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--muted)">' +
-      '<span>↑ ' + sr + '</span>' +
-      '<span>↓ ' + ss + '</span>' +
-      '<span style="margin-left:auto">' + mE + ' ' + mN + '</span>' +
+      '<span>↑ ' + sr + '</span><span>↓ ' + ss + '</span>' +
+      '<span style="margin-left:auto">' + mE + ' ' + mNm + '</span>' +
     '</div>';
 
     var hourSlots = [6,8,10,12,14,16,18,20];
@@ -1423,15 +1394,15 @@ function initWeatherCard(lang) {
         if(!vals.length) return;
         var mx = Math.max.apply(null, vals);
         if(mx < 1) return;
-        var lv = polLen(mx, useLang);
+        var lv = polLen(mx, lng);
         if(!lv) return;
-        var pn = (pollenNames[type] || {})[useLang] || type;
+        var pn = (pollenNames[type] || {})[lng] || type;
         polRow.push('<span style="white-space:nowrap;margin-right:0.8rem"><span style="color:var(--muted)">' + pn + ':</span> <b style="color:' + lv.color + '">' + lv.text + '</b></span>');
       });
       if(polRow.length) {
         var polHdr = {de:'Pollenflug',en:'Pollen',fr:'Pollen'};
         html += '<div style="padding:0.3rem 1rem;font-size:0.78rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:0.1rem 0">' +
-          '<span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-right:0.7rem;align-self:center">' + (polHdr[useLang]||polHdr.de) + '</span>' +
+          '<span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-right:0.7rem;align-self:center">' + (polHdr[lng]||polHdr.de) + '</span>' +
           polRow.join('') +
         '</div>';
       }
@@ -1454,9 +1425,31 @@ function initWeatherCard(lang) {
       '</div>';
     }
     html += '</div>';
-
     el.innerHTML = html;
-    el.dataset.loaded = '1';
+  }
+
+  // If data already cached, re-render immediately (language switch)
+  if (_wxData) {
+    renderWeather(_wxData, _wxPollen, useLang);
+    return;
+  }
+
+  el.textContent = '…';
+  var weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=43.6918&longitude=7.2364' +
+    '&current=temperature_2m,weather_code,apparent_temperature' +
+    '&hourly=temperature_2m,weather_code' +
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset' +
+    '&timezone=Europe%2FParis&forecast_days=10';
+  var pollenUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.6918&longitude=7.2364' +
+    '&hourly=grass_pollen,olive_pollen,birch_pollen,alder_pollen,mugwort_pollen' +
+    '&timezone=Europe%2FParis&forecast_days=1';
+
+  Promise.all([
+    fetch(weatherUrl).then(function(r){return r.json();}),
+    fetch(pollenUrl).then(function(r){return r.json();}).catch(function(){return null;})
+  ]).then(function(res) {
+    _wxData = res[0]; _wxPollen = res[1];
+    renderWeather(_wxData, _wxPollen, useLang);
   }).catch(function() {
     el.textContent = useLang === 'fr' ? 'Météo indisponible.' : useLang === 'en' ? 'Weather unavailable.' : 'Wetterdaten nicht verfügbar.';
   });
@@ -1866,6 +1859,8 @@ function setLang(lang) {
   renderWifiQR();
   initMap(lang);
   if (typeof highlightToday === 'function') highlightToday();
+  initWeatherCard(lang);
+  initWeatherCard(lang);
 }
 
 function toggleCard(toggleEl) {
