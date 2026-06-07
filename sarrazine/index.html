@@ -514,16 +514,20 @@
     .events-link-btn { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--blue); color: #fff; text-decoration: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; transition: opacity 0.15s; }
     .events-link-btn:hover { opacity: 0.85; }
     .events-link-btn.secondary { background: var(--sage); }
-    .events-list { display: flex; flex-direction: column; gap: 0.5rem; }
-    .event-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 7px; padding: 0.55rem 0.75rem; font-size: 0.82rem; }
-    .event-date { font-size: 0.71rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.15rem; }
-    .event-title { font-weight: 600; color: var(--dark); }
-    .event-title a { color: var(--blue); text-decoration: none; }
-    .event-title a:hover { text-decoration: underline; }
-    .event-desc { color: var(--mid); font-size: 0.77rem; margin-top: 0.1rem; }
-    .events-status { font-size: 0.78rem; color: var(--muted); margin-bottom: 0.5rem; }
-    .events-status .dot-live { color: #16a34a; }
-    .events-status .dot-fail { color: #f59e0b; }
+    .ev-list { display: flex; flex-direction: column; gap: 0.45rem; }
+    .ev-item { display: flex; gap: 0.65rem; align-items: flex-start; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; }
+    .ev-item.ev-now { border-color: var(--blue); background: #eff6ff; }
+    .ev-badge { flex-shrink: 0; min-width: 38px; text-align: center; padding-top: 0.1rem; }
+    .ev-badge .ev-dl { font-size: 0.65rem; color: var(--muted); line-height: 1.3; font-weight: 600; }
+    .ev-badge .ev-now-lbl { font-size: 0.65rem; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 0.03em; }
+    .ev-body { flex: 1; min-width: 0; }
+    .ev-title a { font-size: 0.85rem; font-weight: 600; color: var(--dark); text-decoration: none; line-height: 1.3; }
+    .ev-title a:hover { color: var(--blue); }
+    .ev-desc { font-size: 0.76rem; color: var(--muted); margin-top: 0.15rem; line-height: 1.4; }
+    .ev-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.28rem; }
+    .ev-tag { font-size: 0.63rem; padding: 0.08rem 0.4rem; border-radius: 8px; background: #f1f5f9; color: #64748b; border: 1px solid var(--border); }
+    .ev-tag.free { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
+    .ev-stand { font-size: 0.68rem; color: var(--muted); margin-top: 0.6rem; text-align: right; opacity: 0.65; }
   </style>
 </head>
 <body>
@@ -718,7 +722,7 @@ const T = {
         ["Apotheke","CAP3000 (9h–20h, außer So.) · Flughafen T2 (So. 8h–20h30)"],
         ["Online Termine","doctolib.fr"]
       ]},
-      { icon:"🛒", label:"Einkaufen & Märkte", shopmap:true, rows:[
+      { icon:"🛒", label:"Einkaufen", shopmap:true, rows:[
         ["Märkte","Cours Saleya: Mo Antiquitäten, Di–So Blumen/Gemüse\nLibération: täglich\nVentimiglia (IT): freitags (Zug empfohlen)"]
       ]},
       { icon:"🏬", label:"Shopping-Center", rows:[
@@ -727,11 +731,13 @@ const T = {
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(früher: Polygone)"]
       ]},
       { icon:"🧺", label:"Märkte", marketscard:true, markets:[
-        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Blumen & Gemüse", days:["Di","Mi","Do","Fr","Sa"], time:"6h–13h30" },
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Blumen & Gemüse", days:["Di","Mi","Do","Fr","Sa","So"], time:"6h–13h30" },
         { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Antiquités & Brocante", days:["Mo"], time:"7h30–18h" },
-        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · Lebensmittel, Käse, Charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" }
+        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · Lebensmittel, Käse, Charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
+        { name:"Marché Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Blumen, Lebensmittel, Südfrankreich-Produkte · 30 Min. Zug", days:["Mo","Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
+        { name:"Marché Provençal – Antibes", url:"https://maps.apple.com/?q=Marche+Provencal+Antibes+France", desc:"Rue Sade, Vieille Ville · Gemüse, Käse, Oliven · 40 Min. Zug", days:["Di","Do","Sa","So"], time:"6h–13h" }
       ]},
-      { icon:"📅", label:"Was läuft gerade", eventscard:true, eventsText:{ btnNice:"nice.fr/agenda", btnAzureva:"azureva.com" } },
+      { icon:"📅", label:"Was läuft gerade", eventscard:true },
       { icon:"🚲", label:"Fahrradverleih & Ausflüge", rows:[
         ["Fahrrad","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"],
         ["Tour du Cap-Ferrat","[Küstenrundweg (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · leicht · ~1,5 Std\nStartpunkt: Hafen Saint-Jean-Cap-Ferrat"],
@@ -852,7 +858,7 @@ const T = {
         ["Pharmacy","CAP3000 (9am–8pm, not Sun.) · Airport T2 (Sun. 8am–8:30pm)"],
         ["Online appointments","doctolib.fr"]
       ]},
-      { icon:"🛒", label:"Shopping & Markets", shopmap:true, rows:[
+      { icon:"🛒", label:"Shopping", shopmap:true, rows:[
         ["Markets","Cours Saleya: Mon antiques, Tue–Sun flowers/veg/fruit\nLibération: daily\nVentimiglia (IT): Fridays (train recommended)"]
       ]},
       { icon:"🏬", label:"Shopping Centres", rows:[
@@ -861,11 +867,13 @@ const T = {
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(formerly: Polygone)"]
       ]},
       { icon:"🧺", label:"Markets", marketscard:true, markets:[
-        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Flowers & vegetables", days:["Di","Mi","Do","Fr","Sa"], time:"6h–13h30" },
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Flowers & vegetables", days:["Di","Mi","Do","Fr","Sa","So"], time:"6h–13h30" },
         { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Antiques & Brocante", days:["Mo"], time:"7:30–18h" },
-        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · food, cheese, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" }
+        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · food, cheese, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
+        { name:"Marché Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Flowers, food, regional produce · 30 min by train", days:["Mo","Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
+        { name:"Marché Provençal – Antibes", url:"https://maps.apple.com/?q=Marche+Provencal+Antibes+France", desc:"Rue Sade, Old Town · vegetables, cheese, olives · 40 min by train", days:["Di","Do","Sa","So"], time:"6h–13h" }
       ]},
-      { icon:"📅", label:"Events in Nice", eventscard:true, eventsText:{ btnNice:"nice.fr/agenda", btnAzureva:"azureva.com" } },
+      { icon:"📅", label:"Events in Nice", eventscard:true },
       { icon:"🚲", label:"Cycling & Hikes", rows:[
         ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"],
         ["Tour du Cap-Ferrat","[Coastal loop trail (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4.8 km · easy · ~1.5h\nStart: Port of Saint-Jean-Cap-Ferrat"],
@@ -986,7 +994,7 @@ const T = {
         ["Pharmacie","CAP3000 (9h–20h sf dim.) · Aéroport T2 (dim. 8h–20h30)"],
         ["Rendez-vous en ligne","doctolib.fr"]
       ]},
-      { icon:"🛒", label:"Courses & Marchés", shopmap:true, rows:[
+      { icon:"🛒", label:"Courses", shopmap:true, rows:[
         ["Marchés","Cours Saleya: lun. antiquités, mar–dim fleurs/légumes\nLibération: tous les jours\nVentimiglia (IT): vendredi (train conseillé)"]
       ]},
       { icon:"🏬", label:"Centres commerciaux", rows:[
@@ -995,11 +1003,13 @@ const T = {
         ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(ex-Polygone)"]
       ]},
       { icon:"🧺", label:"Marchés", marketscard:true, markets:[
-        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Fleurs & légumes", days:["Di","Mi","Do","Fr","Sa"], time:"6h–13h30" },
+        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Fleurs & légumes", days:["Di","Mi","Do","Fr","Sa","So"], time:"6h–13h30" },
         { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Antiquités & Brocante", days:["Mo"], time:"7h30–18h" },
-        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · alimentation, fromages, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" }
+        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · alimentation, fromages, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
+        { name:"Marché Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Fleurs, alimentation, produits régionaux · 30 min en train", days:["Mo","Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
+        { name:"Marché Provençal – Antibes", url:"https://maps.apple.com/?q=Marche+Provencal+Antibes+France", desc:"Rue Sade, Vieille Ville · légumes, fromages, olives · 40 min en train", days:["Di","Do","Sa","So"], time:"6h–13h" }
       ]},
-      { icon:"📅", label:"Événements à Nice", eventscard:true, eventsText:{ btnNice:"nice.fr/agenda", btnAzureva:"azureva.com" } },
+      { icon:"📅", label:"Événements à Nice", eventscard:true },
       { icon:"🚲", label:"Vélos & Randonnées", rows:[
         ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"],
         ["Tour du Cap-Ferrat","[Sentier littoral (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · facile · ~1h30\nDépart : port de Saint-Jean-Cap-Ferrat"],
@@ -1256,9 +1266,27 @@ function buildCard(item, open) {
   }
   if (item.eventscard) {
     const lang = document.documentElement.lang || 'de';
-    const t = item.eventsText;
-    return `<div class="card${openClass}" id="events-card-wrap">
-      <div class="card-toggle" onclick="toggleCard(this);loadEvents()">
+    const today = new Date(); today.setHours(0,0,0,0);
+    const lbl = { de:{now:'Heute',agenda:'Mehr auf nice.fr/agenda',opera:'Opéra Nice',stand:'Stand:'},
+                  en:{now:'Today',agenda:'More on nice.fr/agenda',opera:'Opéra Nice',stand:'Updated:'},
+                  fr:{now:"Aujourd'hui",agenda:'Voir nice.fr/agenda',opera:'Opéra Nice',stand:'Mis à jour:'} }[lang] || {};
+    const visible = NICE_EVENTS.filter(e => { const d = new Date(e.to); d.setHours(23,59,59); return d >= today; });
+    const rows = visible.map(e => {
+      const from = new Date(e.from); from.setHours(0,0,0,0);
+      const to   = new Date(e.to);   to.setHours(23,59,59);
+      const isNow = from <= today && today <= to;
+      const tagsHtml = (e.tags||[]).map(t => `<span class="ev-tag${t==='Gratis'||t==='Free'||t==='Entrée libre'?' free':''}">${escHtml(t)}</span>`).join('');
+      return `<div class="ev-item${isNow?' ev-now':''}">
+        <div class="ev-badge">${isNow ? `<div class="ev-now-lbl">${lbl.now}</div>` : `<div class="ev-dl">${escHtml(e.dateLabel)}</div>`}</div>
+        <div class="ev-body">
+          <div class="ev-title"><a href="${e.url}" target="_blank" rel="noopener">${escHtml(e.title)}</a></div>
+          <div class="ev-desc">${escHtml(e.desc)}</div>
+          ${tagsHtml ? `<div class="ev-tags">${tagsHtml}</div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="card${openClass}">
+      <div class="card-toggle" onclick="toggleCard(this)">
         <div class="card-icon">${item.icon}</div>
         <div class="card-label">${escHtml(item.label)}</div>
         <div class="card-chevron">▼</div>
@@ -1266,11 +1294,11 @@ function buildCard(item, open) {
       <div class="card-body">
         <div class="events-wrap">
           <div class="events-links">
-            <a href="https://www.nice.fr/agenda" target="_blank" rel="noopener" class="events-link-btn">${escHtml(t.btnNice)}</a>
-            <a href="https://www.azureva.com/agenda-nice" target="_blank" rel="noopener" class="events-link-btn secondary">${escHtml(t.btnAzureva)}</a>
+            <a href="https://www.nice.fr/agenda" target="_blank" rel="noopener" class="events-link-btn">${lbl.agenda}</a>
+            <a href="https://www.opera-nice.org/agenda/" target="_blank" rel="noopener" class="events-link-btn secondary">${lbl.opera}</a>
           </div>
-          <div id="events-status" class="events-status"></div>
-          <div id="events-list" class="events-list"></div>
+          <div class="ev-list">${rows || '<div style="font-size:0.82rem;color:var(--muted);padding:0.5rem 0">Keine aktuellen Events verfügbar</div>'}</div>
+          <div class="ev-stand">${lbl.stand} ${NICE_EVENTS_STAND}</div>
         </div>
       </div>
     </div>`;
@@ -1414,58 +1442,19 @@ function highlightToday() {
   });
 }
 
-function loadEvents() {
-  const card = document.getElementById('events-card-wrap');
-  if (!card || card.dataset.eventsLoaded) return;
-  card.dataset.eventsLoaded = '1';
-  const statusEl = document.getElementById('events-status');
-  const listEl = document.getElementById('events-list');
-  if (!statusEl || !listEl) return;
-  const lang = document.documentElement.lang || 'de';
-  const labels = {
-    de: { loading: 'Events werden geladen…', fail: 'Live-Laden nicht möglich. Bitte direkt auf nice.fr/agenda schauen.', found: 'Events gefunden' },
-    en: { loading: 'Loading events…', fail: 'Live loading not available. Please check nice.fr/agenda directly.', found: 'events found' },
-    fr: { loading: 'Chargement des événements…', fail: 'Chargement en direct non disponible. Consultez nice.fr/agenda directement.', found: 'événements trouvés' }
-  };
-  const lbl = labels[lang] || labels.de;
-  statusEl.innerHTML = `<span class="dot-live">●</span> ${lbl.loading}`;
-  const proxyUrl = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.nice.fr/agenda');
-  fetch(proxyUrl, { signal: AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined })
-    .then(r => r.json())
-    .then(data => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(data.contents || '', 'text/html');
-      const items = [];
-      // Try common patterns for nice.fr agenda
-      doc.querySelectorAll('article, .agenda-item, .event-item, [class*="agenda"], [class*="event"]').forEach(el => {
-        if (items.length >= 7) return;
-        const titleEl = el.querySelector('h2, h3, h4, .title, .event-title, [class*="title"]');
-        const dateEl = el.querySelector('time, .date, [class*="date"]');
-        const descEl = el.querySelector('p, .desc, [class*="desc"], [class*="excerpt"]');
-        const linkEl = el.querySelector('a[href]');
-        const title = titleEl ? titleEl.textContent.trim() : '';
-        if (!title || title.length < 4) return;
-        const date = dateEl ? (dateEl.getAttribute('datetime') || dateEl.textContent.trim()) : '';
-        const desc = descEl ? descEl.textContent.trim().substring(0, 120) : '';
-        const href = linkEl ? linkEl.getAttribute('href') : '';
-        const url = href ? (href.startsWith('http') ? href : 'https://www.nice.fr' + href) : 'https://www.nice.fr/agenda';
-        items.push({ title, date, desc, url });
-      });
-      if (items.length === 0) {
-        statusEl.innerHTML = `<span class="dot-fail">●</span> ${lbl.fail}`;
-        return;
-      }
-      statusEl.innerHTML = `<span class="dot-live">●</span> ${items.length} ${lbl.found}`;
-      listEl.innerHTML = items.map(ev => `<div class="event-item">
-        ${ev.date ? `<div class="event-date">${escHtml(ev.date)}</div>` : ''}
-        <div class="event-title"><a href="${ev.url}" target="_blank" rel="noopener">${escHtml(ev.title)}</a></div>
-        ${ev.desc ? `<div class="event-desc">${escHtml(ev.desc)}…</div>` : ''}
-      </div>`).join('');
-    })
-    .catch(() => {
-      statusEl.innerHTML = `<span class="dot-fail">●</span> ${lbl.fail}`;
-    });
-}
+// ─── NICE EVENTS — static curated data, updated regularly by Claude ────────
+// Stand: 7. Juni 2026
+const NICE_EVENTS_STAND = "7. Juni 2026";
+const NICE_EVENTS = [
+  { from:"2026-06-07", to:"2026-09-27", dateLabel:"So. wöch.", title:"Harmonie de Nice — Sonntagskonzerte", desc:"Jeden So · 17h · Jardins des Arènes de Cimiez oder Jardin Albert 1er · gratis", url:"https://www.nice.fr/agenda/orchestre-dharmonie-de-la-ville-de-nice/", tags:["Gratis","Klassik"] },
+  { from:"2026-06-12", to:"2026-06-13", dateLabel:"12.–13. Jun", title:"Orchestre Philharmonique — Bruch · Brahms", desc:"Opéra de Nice · Violon: Akiko Suwanai · 10–34 €", url:"https://www.opera-nice.org/agenda/", tags:["Klassik","Konzert"] },
+  { from:"2026-06-13", to:"2026-06-14", dateLabel:"13.–14. Jun", title:"WE Music Festival", desc:"Théâtre de Verdure · Fritz Kalkbrenner, Miss Kittin, The Hacker", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Electro","Festival"] },
+  { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse / Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Dauerausstellung", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
+  { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner", url:"https://www.nuitscarrees.com/", tags:["Festival","Musik"] },
+  { from:"2026-06-21", to:"2026-06-21", dateLabel:"21. Jun", title:"Fête de la Musique — Nizza", desc:"Ab 18h · Place Masséna, Vieux Nice, Promenade du Paillon · Alle Stilrichtungen · gratis", url:"https://www.nice.fr/nice-music-live/", tags:["Gratis","Fest"] },
+  { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · 21.6. gratis / ab 23.6. 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
+  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Indie, Pop, Electronic · Villefranche-sur-Mer", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Festival","Musik"] },
+];
 
 // Init
 setLang('de');
