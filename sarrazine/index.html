@@ -1322,7 +1322,9 @@ function buildCard(item, open) {
         <div id="shop-map" style="height:260px;margin:0.5rem 0.75rem 0.75rem;border-radius:8px;overflow:hidden;"></div>
       </div>
     </div>`;
-    if (item.sportmap) {
+  }
+  if (item.sportmap) {
+
     const lang = document.documentElement.lang || 'de';
     const sportList = SPORT_PINS.map((p, i) => {
       const colors = ['#1a6fa8','#1a6fa8','#0d8a5e','#7b3fa0','#7b3fa0'];
@@ -1347,8 +1349,9 @@ function buildCard(item, open) {
         <div id="sport-map" style="height:280px;margin:0.5rem 0.75rem 0.75rem;border-radius:8px;overflow:hidden;"></div>
       </div>
     </div>`;
+  
   }
-}
+
   if (item.marketscard) {
     const dayMap = {0:'So',1:'Mo',2:'Di',3:'Mi',4:'Do',5:'Fr',6:'Sa'};
     const todayKey = dayMap[new Date().getDay()];
