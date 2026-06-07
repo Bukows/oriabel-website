@@ -1280,102 +1280,177 @@ function initWeatherCard(lang) {
   var el = document.getElementById('weather-top');
   if (!el || el.dataset.loaded === '1') return;
   var useLang = lang || document.documentElement.lang || 'de';
-  var days = {
-    de:['So','Mo','Di','Mi','Do','Fr','Sa'],
-    en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],
-    fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']
-  };
+  var dNames = {de:['So','Mo','Di','Mi','Do','Fr','Sa'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']};
   var tod = {de:'Heute',en:'Today',fr:"Aujourd'hui"};
   var hdrTxt = {de:'Nizza · Wetter',en:'Nice · Weather',fr:'Nice · Météo'};
-  var loadTxt = {de:'Wetterdaten werden geladen…',en:'Loading weather…',fr:'Chargement météo…'};
+  var pollenNames = {
+    grass_pollen:{de:'Gras',en:'Grass',fr:'Graminées'},
+    olive_pollen:{de:'Olive',en:'Olive',fr:'Olivier'},
+    birch_pollen:{de:'Birke',en:'Birch',fr:'Bouleau'},
+    alder_pollen:{de:'Erle',en:'Alder',fr:'Aulne'},
+    mugwort_pollen:{de:'Beifuss',en:'Mugwort',fr:'Armoise'}
+  };
+  var pollenLvlLbl = {de:['Gering','Mittel','Hoch','Sehr hoch'],en:['Low','Moderate','High','Very high'],fr:['Faible','Modéré','Élevé','Très élevé']};
+  var pollenClr = ['#27ae60','#f39c12','#e74c3c','#8e1f1f'];
+  var moonN = {de:['Neumond','Zunehmend','Erstes Viertel','Zunehmend','Vollmond','Abnehmend','Letztes Viertel','Abnehmend'],en:['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'],fr:['Nouvelle Lune','Croissant','Premier Quartier','Gibbeuse','Pleine Lune','Décroissante','Dernier Quartier','Décroissante']};
   var wmoTxt = {
     de:{0:'Sonnig',1:'Heiter',2:'Teils bewölkt',3:'Bewölkt',45:'Nebel',48:'Reifnebel',51:'Leichter Niesel',53:'Nieselregen',55:'Starker Niesel',61:'Leichter Regen',63:'Regen',65:'Starker Regen',71:'Leichter Schnee',73:'Schneefall',75:'Starker Schnee',80:'Regenschauer',81:'Schauer',82:'Starke Schauer',95:'Gewitter',96:'Gewitter+Hagel',99:'Heftiges Gewitter'},
     en:{0:'Sunny',1:'Clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Rime fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',80:'Showers',81:'Rain showers',82:'Heavy showers',95:'Thunderstorm',96:'T-storm+hail',99:'Severe T-storm'},
     fr:{0:'Ensoleillé',1:'Dégagé',2:'Partiellement nuageux',3:'Couvert',45:'Brouillard',48:'Brouillard givrant',51:'Bruine légère',53:'Bruine',55:'Bruine dense',61:'Pluie légère',63:'Pluie',65:'Forte pluie',71:'Neige légère',73:'Neige',75:'Forte neige',80:'Averses',81:'Averses de pluie',82:'Fortes averses',95:'Orage',96:'Orage+grêle',99:'Orage violent'}
   };
-  var wmoIcon = function(c) {
+  var wmoIcon = function(c){
     if(c===0) return '☀';
     if(c<=2) return '⛅';
     if(c===3) return '☁';
-    if(c<=48) return '🌫';
-    if(c<=55) return '🌦';
-    if(c<=65) return '🌧';
+    if(c<=48) return '\U0001f32b';
+    if(c<=55) return '\U0001f326';
+    if(c<=65) return '\U0001f327';
     if(c<=77) return '❄';
-    if(c<=82) return '🌦';
+    if(c<=82) return '\U0001f326';
     return '⛈';
   };
-  // Set header title
   var hdrEl = document.getElementById('weather-hdr');
   if(hdrEl) hdrEl.textContent = hdrTxt[useLang] || hdrTxt.de;
-  el.textContent = loadTxt[useLang] || loadTxt.de;
+  el.textContent = '…';
 
-  var url = 'https://api.open-meteo.com/v1/forecast?latitude=43.6918&longitude=7.2364' +
+  function moonEmoji(now) {
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var known = new Date(2000, 0, 6);
+    var diff = (d - known) / 86400000;
+    var phase = ((diff % 29.53058867) + 29.53058867) % 29.53058867;
+    if(phase < 1.85) return '\U0001f311';
+    if(phase < 5.54) return '\U0001f312';
+    if(phase < 9.22) return '\U0001f313';
+    if(phase < 12.91) return '\U0001f314';
+    if(phase < 16.61) return '\U0001f315';
+    if(phase < 20.30) return '\U0001f316';
+    if(phase < 23.99) return '\U0001f317';
+    if(phase < 27.68) return '\U0001f318';
+    return '\U0001f311';
+  }
+  function moonName(now, lng) {
+    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var known = new Date(2000, 0, 6);
+    var diff = (d - known) / 86400000;
+    var phase = ((diff % 29.53058867) + 29.53058867) % 29.53058867;
+    var idx = Math.round(phase / 29.53058867 * 8) % 8;
+    var nm = moonN[lng] || moonN.de;
+    return nm[idx];
+  }
+  function polLen(v, lng) {
+    if(!v || v < 1) return null;
+    var li = v < 10 ? 0 : v < 50 ? 1 : v < 200 ? 2 : 3;
+    return {text:(pollenLvlLbl[lng]||pollenLvlLbl.de)[li], color:pollenClr[li]};
+  }
+  function parseTime(iso) {
+    if(!iso) return '';
+    var m = iso.match(/T(\d{2}:\d{2})/);
+    return m ? m[1] : iso.slice(11,16);
+  }
+
+  var today = new Date().toISOString().slice(0,10);
+  var weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=43.6918&longitude=7.2364' +
     '&current=temperature_2m,weather_code,apparent_temperature' +
-    '&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min' +
-    '&timezone=Europe%2FParis&forecast_days=5';
+    '&hourly=temperature_2m,weather_code' +
+    '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset' +
+    '&timezone=Europe%2FParis&forecast_days=10';
+  var pollenUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.6918&longitude=7.2364' +
+    '&hourly=grass_pollen,olive_pollen,birch_pollen,alder_pollen,mugwort_pollen' +
+    '&timezone=Europe%2FParis&forecast_days=1';
 
-  fetch(url).then(function(r){return r.json();}).then(function(data) {
-    var cur = data.current;
-    var h = data.hourly;
-    var d = data.daily;
-    var dNames = days[useLang] || days.de;
+  Promise.all([
+    fetch(weatherUrl).then(function(r){return r.json();}),
+    fetch(pollenUrl).then(function(r){return r.json();}).catch(function(){return null;})
+  ]).then(function(res) {
+    var data = res[0]; var pollen = res[1];
+    var cur = data.current; var h = data.hourly; var d = data.daily;
+    var dN = dNames[useLang] || dNames.de;
     var todTxt = tod[useLang] || tod.de;
     var descs = wmoTxt[useLang] || wmoTxt.de;
-    var today = new Date().toISOString().slice(0,10);
 
-    // Current temp big display
     var curIcon = wmoIcon(cur.weather_code);
-    var curDesc = descs[cur.weather_code] || '';
     var curTemp = Math.round(cur.temperature_2m);
-    var todayMax = d.temperature_2m_max[0] != null ? Math.round(d.temperature_2m_max[0]) : '–';
-    var todayMin = d.temperature_2m_min[0] != null ? Math.round(d.temperature_2m_min[0]) : '–';
+    var curDesc = descs[cur.weather_code] || '';
+    var todMax = Math.round(d.temperature_2m_max[0]);
+    var todMin = Math.round(d.temperature_2m_min[0]);
 
-    var html = '<div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 1rem 0.5rem">' +
-      '<div style="font-size:2.2rem;line-height:1">' + curIcon + '</div>' +
+    var html = '<div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 1rem 0.4rem">' +
+      '<div style="font-size:2.4rem;line-height:1">' + curIcon + '</div>' +
       '<div>' +
-        '<div style="font-size:1.8rem;font-weight:700;line-height:1">' + curTemp + '°</div>' +
+        '<div style="font-size:1.9rem;font-weight:700;line-height:1">' + curTemp + '°</div>' +
         '<div style="font-size:0.8rem;color:var(--muted)">' + curDesc + '</div>' +
       '</div>' +
       '<div style="margin-left:auto;text-align:right">' +
-        '<div style="font-size:0.85rem;font-weight:600">' + todayMax + '° / <span style="color:var(--muted)">' + todayMin + '°</span></div>' +
+        '<div style="font-size:0.9rem;font-weight:600">' + todMax + '° / <span style="color:var(--muted)">' + todMin + '°</span></div>' +
         '<div style="font-size:0.75rem;color:var(--muted)">' + todTxt + '</div>' +
       '</div>' +
     '</div>';
 
-    // Hourly strip — show 6,8,10,12,14,16,18,20h today
-    var todayPrefix = today + 'T';
+    var now = new Date();
+    var sr = parseTime(d.sunrise[0]);
+    var ss = parseTime(d.sunset[0]);
+    var mE = moonEmoji(now);
+    var mN = moonName(now, useLang);
+    html += '<div style="display:flex;gap:1.2rem;padding:0.25rem 1rem 0.3rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--muted)">' +
+      '<span>↑ ' + sr + '</span>' +
+      '<span>↓ ' + ss + '</span>' +
+      '<span style="margin-left:auto">' + mE + ' ' + mN + '</span>' +
+    '</div>';
+
     var hourSlots = [6,8,10,12,14,16,18,20];
-    var hourHtml = '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch">' +
-      '<div style="display:flex;gap:0;min-width:max-content;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0.5rem 0.5rem">';
+    html += '<div style="display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">';
     hourSlots.forEach(function(hr) {
-      var key = today + 'T' + String(hr).padStart(2,'0') + ':00';
+      var key = today + 'T' + (hr < 10 ? '0' : '') + hr + ':00';
       var idx = h.time.indexOf(key);
       if(idx === -1) return;
       var temp = Math.round(h.temperature_2m[idx]);
       var icon = wmoIcon(h.weather_code[idx]);
-      hourHtml += '<div style="text-align:center;min-width:52px;padding:0.1rem 0.25rem">' +
-        '<div style="font-size:0.72rem;color:var(--muted)">' + hr + 'h</div>' +
-        '<div style="font-size:1.1rem;margin:0.15rem 0">' + icon + '</div>' +
-        '<div style="font-size:0.82rem;font-weight:600">' + temp + '°</div>' +
+      html += '<div style="flex:1;text-align:center;padding:0.35rem 0">' +
+        '<div style="font-size:0.68rem;color:var(--muted)">' + hr + 'h</div>' +
+        '<div style="font-size:1rem;margin:0.1rem 0">' + icon + '</div>' +
+        '<div style="font-size:0.78rem;font-weight:600">' + temp + '°</div>' +
       '</div>';
     });
-    hourHtml += '</div></div>';
-    html += hourHtml;
+    html += '</div>';
 
-    // 5-day forecast
-    html += '<div style="display:flex;border-top:1px solid var(--border)">';
-    for(var i=0;i<Math.min(5,d.time.length);i++) {
+    if(pollen && pollen.hourly) {
+      var ph = pollen.hourly;
+      var polTypes = ['grass_pollen','olive_pollen','birch_pollen','alder_pollen','mugwort_pollen'];
+      var polRow = [];
+      polTypes.forEach(function(type) {
+        if(!ph[type]) return;
+        var vals = ph[type].slice(0,24).filter(function(x){return x!=null;});
+        if(!vals.length) return;
+        var mx = Math.max.apply(null, vals);
+        if(mx < 1) return;
+        var lv = polLen(mx, useLang);
+        if(!lv) return;
+        var pn = (pollenNames[type] || {})[useLang] || type;
+        polRow.push('<span style="white-space:nowrap;margin-right:0.8rem"><span style="color:var(--muted)">' + pn + ':</span> <b style="color:' + lv.color + '">' + lv.text + '</b></span>');
+      });
+      if(polRow.length) {
+        var polHdr = {de:'Pollenflug',en:'Pollen',fr:'Pollen'};
+        html += '<div style="padding:0.3rem 1rem;font-size:0.78rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:0.1rem 0">' +
+          '<span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-right:0.7rem;align-self:center">' + (polHdr[useLang]||polHdr.de) + '</span>' +
+          polRow.join('') +
+        '</div>';
+      }
+    }
+
+    html += '<div style="display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch">';
+    var days10 = Math.min(10, d.time.length);
+    for(var i=0;i<days10;i++) {
       var dt = new Date(d.time[i] + 'T12:00:00');
-      var dayLbl = d.time[i] === today ? todTxt.slice(0,2) : dNames[dt.getDay()];
-      var mx = Math.round(d.temperature_2m_max[i]);
-      var mn = Math.round(d.temperature_2m_min[i]);
-      var ic = wmoIcon(d.weather_code[i]);
-      var bg = i===0 ? 'background:rgba(0,0,0,0.03);' : '';
-      html += '<div style="flex:1;text-align:center;padding:0.5rem 0.1rem;' + bg + (i>0?'border-left:1px solid var(--border)':'') + '">' +
-        '<div style="font-size:0.72rem;color:var(--muted);font-weight:600">' + dayLbl + '</div>' +
-        '<div style="font-size:1.1rem;margin:0.2rem 0">' + ic + '</div>' +
-        '<div style="font-size:0.8rem;font-weight:700">' + mx + '°</div>' +
-        '<div style="font-size:0.75rem;color:var(--muted)">' + mn + '°</div>' +
+      var dayLbl = d.time[i] === today ? todTxt.slice(0,2) : dN[dt.getDay()];
+      var mx2 = Math.round(d.temperature_2m_max[i]);
+      var mn2 = Math.round(d.temperature_2m_min[i]);
+      var ic2 = wmoIcon(d.weather_code[i]);
+      var bg2 = i===0 ? 'background:rgba(0,0,0,0.03);' : '';
+      html += '<div style="flex:1;min-width:44px;text-align:center;padding:0.4rem 0.05rem;' + bg2 + (i>0?'border-left:1px solid var(--border)':'') + '">' +
+        '<div style="font-size:0.68rem;color:var(--muted);font-weight:600">' + dayLbl + '</div>' +
+        '<div style="font-size:1rem;margin:0.12rem 0">' + ic2 + '</div>' +
+        '<div style="font-size:0.76rem;font-weight:700">' + mx2 + '°</div>' +
+        '<div style="font-size:0.7rem;color:var(--muted)">' + mn2 + '°</div>' +
       '</div>';
     }
     html += '</div>';
@@ -1383,7 +1458,7 @@ function initWeatherCard(lang) {
     el.innerHTML = html;
     el.dataset.loaded = '1';
   }).catch(function() {
-    el.textContent = useLang==='fr'?'Météo indisponible.':useLang==='en'?'Weather unavailable.':'Wetterdaten nicht verfügbar.';
+    el.textContent = useLang === 'fr' ? 'Météo indisponible.' : useLang === 'en' ? 'Weather unavailable.' : 'Wetterdaten nicht verfügbar.';
   });
 }
 
