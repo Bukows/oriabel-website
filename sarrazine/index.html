@@ -1302,11 +1302,11 @@ function initWeatherCard(lang) {
     if(c===0) return '☀';
     if(c<=2) return '⛅';
     if(c===3) return '☁';
-    if(c<=48) return '\U0001f32b';
-    if(c<=55) return '\U0001f326';
-    if(c<=65) return '\U0001f327';
+    if(c<=48) return '🌫';
+    if(c<=55) return '🌦';
+    if(c<=65) return '🌧';
     if(c<=77) return '❄';
-    if(c<=82) return '\U0001f326';
+    if(c<=82) return '🌦';
     return '⛈';
   };
   var hdrEl = document.getElementById('weather-hdr');
@@ -1318,15 +1318,15 @@ function initWeatherCard(lang) {
     var known = new Date(2000, 0, 6);
     var diff = (d - known) / 86400000;
     var phase = ((diff % 29.53058867) + 29.53058867) % 29.53058867;
-    if(phase < 1.85) return '\U0001f311';
-    if(phase < 5.54) return '\U0001f312';
-    if(phase < 9.22) return '\U0001f313';
-    if(phase < 12.91) return '\U0001f314';
-    if(phase < 16.61) return '\U0001f315';
-    if(phase < 20.30) return '\U0001f316';
-    if(phase < 23.99) return '\U0001f317';
-    if(phase < 27.68) return '\U0001f318';
-    return '\U0001f311';
+    if(phase < 1.85) return '🌑';
+    if(phase < 5.54) return '🌒';
+    if(phase < 9.22) return '🌓';
+    if(phase < 12.91) return '🌔';
+    if(phase < 16.61) return '🌕';
+    if(phase < 20.30) return '🌖';
+    if(phase < 23.99) return '🌗';
+    if(phase < 27.68) return '🌘';
+    return '🌑';
   }
   function moonName(now, lng) {
     var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
