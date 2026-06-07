@@ -125,14 +125,7 @@
   <div class="login-box">
     <h1>Oriabel</h1>
     <p>Admin-Bereich</p>
-    <input type="password" id="pw" placeholder="Passwort" onkeydown="if(event.key==='Enter')login()">
-    <div id="token-section" style="display:none">
-      <div class="hint">
-        GitHub Personal Access Token — einmalig eingeben, wird lokal gespeichert.<br>
-        <a href="https://github.com/settings/tokens/new?scopes=repo&description=Oriabel+Admin" target="_blank">Token generieren (github.com)</a> &rarr; Scope: <strong>repo</strong>
-      </div>
-      <input type="password" id="ghtoken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" onkeydown="if(event.key==='Enter')login()">
-    </div>
+    <input type="password" id="pw" placeholder="Passwort" onkeydown="if(event.key==='Enter')login()" autocomplete="current-password">
     <button class="btn btn-primary" style="width:100%;padding:0.6rem" onclick="login()">Anmelden</button>
     <div id="login-error"></div>
   </div>
@@ -183,7 +176,7 @@
 const REPO   = 'Bukows/oriabel-website';
 const BRANCH = 'main';
 // SHA-256 hash of admin password ("Oriabel2024!")
-const PW_HASH = '70af655a5bdcf7e61d9efe4ee35dc47487c26c413a26e03ea876917ab7f4e111';
+const ENC_PAT = 'Y8U659cXrA831+I6AxUOQpq+UWFuqpg1KnPYJdLgGsCaTbb7VPCsGGXa1J8i3phnIWC6M7gkuDpuJX7OmSXHbmgJK2PEYDEgOOFoZm0iIN+IgPGe'; // AES-256-GCM, PBKDF2-SHA256 100k iter
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let ghToken = '';
@@ -193,33 +186,32 @@ let bijouSha    = '';  // GitHub file SHA for jewelry.js
 let gemaeldeSha = '';  // GitHub file SHA for paintings.js
 
 // ── AUTH ──────────────────────────────────────────────────────────────────────
-async function sha256(str) {
-  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+async function decryptPAT(password) {
+  const data = Uint8Array.from(atob(ENC_PAT), c => c.charCodeAt(0));
+  const salt = data.slice(0, 16);
+  const iv   = data.slice(16, 28);
+  const ct   = data.slice(28);
+  const km   = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveKey']);
+  const key  = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' },
+    km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+  );
+  const dec  = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+  return new TextDecoder().decode(dec);
 }
 
 async function login() {
   const pw = document.getElementById('pw').value;
-  const hash = await sha256(pw);
-  if (hash !== PW_HASH) {
-    document.getElementById('login-error').textContent = 'Falsches Passwort.';
+  const errEl = document.getElementById('login-error');
+  errEl.textContent = 'Überprüfe…';
+  try {
+    ghToken = await decryptPAT(pw);
+  } catch {
+    errEl.textContent = 'Falsches Passwort.';
+    ghToken = '';
     return;
   }
-  // Check token
-  ghToken = localStorage.getItem('oriabel_gh_token') || '';
-  if (!ghToken) {
-    const ts = document.getElementById('token-section');
-    const ti = document.getElementById('ghtoken');
-    if (ts.style.display === 'none') {
-      ts.style.display = 'block';
-      document.getElementById('login-error').textContent = '';
-      return;
-    }
-    ghToken = ti.value.trim();
-    if (!ghToken) { document.getElementById('login-error').textContent = 'Bitte GitHub Token eingeben.'; return; }
-    localStorage.setItem('oriabel_gh_token', ghToken);
-  }
-  document.getElementById('login-error').textContent = '';
+  errEl.textContent = '';
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-ui').style.display = 'block';
   document.getElementById('h-status').textContent = 'Daten werden geladen…';
@@ -229,7 +221,6 @@ async function login() {
 
 function logout() {
   ghToken = '';
-  localStorage.removeItem('oriabel_gh_token');
   location.reload();
 }
 
