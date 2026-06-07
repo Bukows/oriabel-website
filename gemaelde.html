@@ -25,8 +25,10 @@
       line-height: 1.6;
     }
 
+    :root { --sage: #7d9182; }
+
     header {
-      background: var(--dark);
+      background: var(--sage);
       padding: 0 2rem;
       display: flex;
       align-items: center;
@@ -37,20 +39,17 @@
       z-index: 100;
     }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-    }
-
-    .logo img {
-      height: 36px;
-      width: auto;
-      display: block;
+    .header-title {
+      font-family: 'Georgia', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      color: #fff;
+      text-transform: uppercase;
     }
 
     nav a {
-      color: #ccc;
+      color: rgba(255,255,255,0.85);
       text-decoration: none;
       margin-left: 2rem;
       font-family: 'Helvetica Neue', sans-serif;
@@ -60,7 +59,7 @@
       transition: color 0.2s;
     }
 
-    nav a:hover, nav a.active { color: var(--gold); }
+    nav a:hover, nav a.active { color: #fff; border-bottom: 2px solid rgba(255,255,255,0.6); padding-bottom: 2px; }
 
     .hero {
       background: linear-gradient(135deg, #1a1a2e 0%, #1a1a1a 60%, #0d0d0d 100%);
@@ -293,7 +292,7 @@
 <body>
 
 <header>
-  <a class="logo" href="index.html"><img src="uploads/oriabel_logo.png" alt="Oriabel — Nice, France"></a>
+  <span class="header-title">Edigne Parisis</span>
   <nav>
     <a href="index.html">Bijoux</a>
     <a href="gemaelde.html" class="active">Peintures</a>
@@ -333,19 +332,8 @@
   <p>&copy; Edigne Parisis &mdash; <a href="index.html">Oriabel, Nice</a> &mdash; <a href="mailto:oriabel@oriabel.com">Contact</a></p>
 </footer>
 
+<script src="paintings.js"></script>
 <script>
-const GEMAELDE_DATEN = [
-  { id:"tableau-003", titel:"Tableau 003", kategorie:"figurativ", beschreibung:"Huile sur toile. Une composition intense, pleine d'énergie et de profondeur.", bild:"uploads/2019/02/Tableau-003.jpg", technik:"Huile sur toile", format:"60 × 80 cm", jahr:"2019", verfuegbarkeit:"Sur demande" },
-  { id:"tableau-005", titel:"Tableau 005", kategorie:"figurativ", beschreibung:"Dialogue entre lumière et ombre — format portrait expressif.", bild:"uploads/2019/02/Tableau-005.jpg", technik:"Huile sur toile", format:"50 × 70 cm", jahr:"2019", verfuegbarkeit:"Sur demande" },
-  { id:"tableau-007", titel:"Tableau 007", kategorie:"figurativ", beschreibung:"Grand format avec une palette puissante et une touche souveraine.", bild:"uploads/2019/02/Tableau-007.jpg", technik:"Huile sur toile", format:"80 × 100 cm", jahr:"2019", verfuegbarkeit:"Sur demande" },
-  { id:"11-novembre", titel:"11 Novembre – Ville Donner", kategorie:"landschaft", beschreibung:"Style naïf, scène populaire finement travaillée. 11 novembre – une fête du souvenir.", bild:"uploads/2019/02/DSC02328.jpg", technik:"Huile sur toile", format:"70 × 90 cm", jahr:"2018", verfuegbarkeit:"Sur demande" },
-  { id:"rue-de-ville", titel:"Rue de Ville", kategorie:"landschaft", beschreibung:"Scène urbaine impressionniste avec clocher, signée E. Parisis.", bild:"uploads/2019/02/IMG_7011.jpg", technik:"Huile sur toile", format:"60 × 80 cm", jahr:"vers 1950", verfuegbarkeit:"Sur demande" },
-  { id:"plage-de-nice", titel:"Plage de Nice", kategorie:"landschaft", beschreibung:"La Baie des Anges sous la lumière de midi. Format panoramique, atmosphère méditerranéenne.", bild:"uploads/2019/02/plage-de-Nice.jpg", technik:"Huile sur toile", format:"90 × 70 cm", jahr:"2017", verfuegbarkeit:"Sur demande" },
-  { id:"tableau-021", titel:"Tableau 021", kategorie:"abstrakt", beschreibung:"Composition libre — la touche comme expression du mouvement et de la dynamique.", bild:"uploads/2019/02/Tableau-021.jpg", technik:"Huile sur toile", format:"70 × 100 cm", jahr:"2018", verfuegbarkeit:"Sur demande" },
-  { id:"tableau-022", titel:"Tableau 022", kategorie:"abstrakt", beschreibung:"Haute atmosphère avec une palette expressive.", bild:"uploads/2019/02/Tableau-022.jpg", technik:"Technique mixte", format:"50 × 80 cm", jahr:"2018", verfuegbarkeit:"Sur demande" },
-  { id:"tableau-025", titel:"Tableau 025", kategorie:"abstrakt", beschreibung:"Composition puissante — la lumière comme thème pictural central.", bild:"uploads/2019/02/Tableau-025.jpg", technik:"Huile sur bois", format:"40 × 60 cm", jahr:"2018", verfuegbarkeit:"Sur demande" },
-  { id:"tableau-026", titel:"Tableau 026", kategorie:"abstrakt", beschreibung:"Transitions fluides entre couleur et forme — acrylique sur toile.", bild:"uploads/2019/02/Tableau-026.jpg", technik:"Acrylique sur toile", format:"80 × 80 cm", jahr:"2018", verfuegbarkeit:"Sur demande" }
-];
 
 const catLabels = { figurativ:"Figuratif", landschaft:"Paysage & Ville", abstrakt:"Abstrait" };
 let activeCat = "all";
