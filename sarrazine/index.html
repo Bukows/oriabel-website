@@ -748,7 +748,7 @@ const T = {
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monatlich (3. Sa) · 30 Händler · Vieux Nice", days:["Sa"], time:"monatl." }
       ]},
       { icon:"📅", label:"Was läuft gerade", eventscard:true },
-      { icon:"🚲", label:"Fahrradverleih & Ausflüge", rows:[
+      { icon:"🚲", label:"Fahrradverleih & Ausflüge", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", rows:[
         ["Fahrrad","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"],
         ["Tour du Cap-Ferrat","[Küstenrundweg (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · leicht · ~1,5 Std\nStartpunkt: Hafen Saint-Jean-Cap-Ferrat"],
         ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Sentier du Littoral · 2,7 km · leicht\nStartpunkt: Plage de la Garoupe"],
@@ -895,7 +895,7 @@ const T = {
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monthly (3rd Sat) · 30 vendors · Old Nice", days:["Sa"], time:"monthly" }
       ]},
       { icon:"📅", label:"Events in Nice", eventscard:true },
-      { icon:"🚲", label:"Cycling & Hikes", rows:[
+      { icon:"🚲", label:"Cycling & Hikes", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", rows:[
         ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"],
         ["Tour du Cap-Ferrat","[Coastal loop trail (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4.8 km · easy · ~1.5h\nStart: Port of Saint-Jean-Cap-Ferrat"],
         ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Coastal footpath · 2.7 km · easy\nStart: Plage de la Garoupe"],
@@ -1042,7 +1042,7 @@ const T = {
         { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~mensuel (3e sam.) · 30 marchands · Vieux Nice", days:["Sa"], time:"mensuel" }
       ]},
       { icon:"📅", label:"Événements à Nice", eventscard:true },
-      { icon:"🚲", label:"Vélos & Randonnées", rows:[
+      { icon:"🚲", label:"Vélos & Randonnées", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", rows:[
         ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"],
         ["Tour du Cap-Ferrat","[Sentier littoral (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · facile · ~1h30\nDépart : port de Saint-Jean-Cap-Ferrat"],
         ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Sentier du Littoral · 2,7 km · facile\nDépart : Plage de la Garoupe"],
@@ -1416,6 +1416,7 @@ function buildCard(item, open) {
     </div>
     <div class="card-body">
       <div class="info-table">${rowsToHtml(item.rows)}</div>
+      ${item.komootlink ? `<div style="padding:0.25rem 0.75rem 0.75rem"><a href="${item.komootlink}" target="_blank" rel="noopener" style="display:inline-block;padding:0.45rem 1rem;background:var(--accent);color:#fff;border-radius:20px;font-size:0.82rem;text-decoration:none;font-weight:600;">Touren auf Komoot – Nizza &amp; Umgebung</a></div>` : ''}
     </div>
   </div>`;
 }
