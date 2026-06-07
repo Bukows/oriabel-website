@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Oriabel</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --sage: #7d9182;
+      --sage-d: #5a6b5e;
+      --gold: #c8a96e;
+      --light: #f7f4ef;
+      --border: #ddd;
+      --red: #c0392b;
+      --text: #222;
+      --muted: #666;
+      --radius: 6px;
+    }
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; background: var(--light); color: var(--text); font-size: 14px; }
+
+    /* ── LOGIN ── */
+    #login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    }
+    .login-box {
+      background: #fff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 2.5rem 2rem; width: 340px; text-align: center;
+    }
+    .login-box h1 { font-size: 1.4rem; font-weight: 400; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .login-box p { color: var(--muted); font-size: 0.82rem; margin-bottom: 1.5rem; }
+    .login-box input {
+      width: 100%; padding: 0.6rem 0.75rem; border: 1px solid var(--border);
+      border-radius: var(--radius); font-size: 0.9rem; margin-bottom: 0.75rem;
+    }
+    .login-box input:focus { outline: none; border-color: var(--sage); }
+    .login-box .hint { font-size: 0.75rem; color: var(--muted); margin-bottom: 1rem; text-align: left; }
+    .login-box .hint a { color: var(--sage); }
+    #login-error { color: var(--red); font-size: 0.8rem; margin-top: 0.5rem; min-height: 1.2rem; }
+
+    /* ── HEADER ── */
+    #admin-ui { display: none; }
+    header {
+      background: var(--sage); color: #fff; padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; height: 52px;
+      position: sticky; top: 0; z-index: 100;
+    }
+    header h1 { font-size: 1rem; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; }
+    header .hright { display: flex; align-items: center; gap: 1rem; }
+    header .hright span { font-size: 0.75rem; opacity: 0.75; }
+    .btn { display: inline-block; padding: 0.4rem 1rem; border-radius: var(--radius); border: none; cursor: pointer; font-size: 0.82rem; font-weight: 600; transition: opacity 0.15s; }
+    .btn:hover { opacity: 0.82; }
+    .btn-primary { background: var(--sage); color: #fff; }
+    .btn-ghost { background: rgba(255,255,255,0.2); color: #fff; }
+    .btn-danger { background: var(--red); color: #fff; }
+    .btn-save { background: var(--sage-d); color: #fff; padding: 0.55rem 1.5rem; font-size: 0.9rem; }
+    .btn-add { background: #fff; color: var(--sage-d); border: 1.5px solid var(--sage); }
+    .btn-small { padding: 0.25rem 0.65rem; font-size: 0.75rem; }
+
+    /* ── TABS ── */
+    .tabs { background: #fff; border-bottom: 1px solid var(--border); display: flex; padding: 0 1.5rem; }
+    .tab { padding: 0.75rem 1.25rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; border-bottom: 3px solid transparent; color: var(--muted); transition: color 0.15s; }
+    .tab.active { color: var(--sage-d); border-bottom-color: var(--sage); }
+
+    /* ── CONTENT ── */
+    .tab-body { display: none; padding: 1.25rem 1.5rem; }
+    .tab-body.active { display: block; }
+    .tab-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .tab-actions h2 { font-size: 0.95rem; font-weight: 600; }
+
+    /* ── STATUS ── */
+    #status-bar {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      padding: 0.6rem 1.5rem; font-size: 0.82rem; font-weight: 600;
+      display: none; z-index: 200; text-align: center;
+    }
+    #status-bar.ok  { background: #d1fae5; color: #065f46; display: block; }
+    #status-bar.err { background: #fee2e2; color: #7f1d1d; display: block; }
+    #status-bar.inf { background: #e0f2fe; color: #0c4a6e; display: block; }
+
+    /* ── ITEM CARD ── */
+    .item-card {
+      background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
+      margin-bottom: 0.85rem; overflow: hidden;
+    }
+    .item-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.6rem 0.85rem; background: #fafaf8; cursor: pointer;
+      border-bottom: 1px solid var(--border);
+    }
+    .item-head-left { display: flex; align-items: center; gap: 0.75rem; }
+    .item-thumb { width: 40px; height: 40px; object-fit: cover; border-radius: 3px; background: #eee; }
+    .item-name { font-weight: 600; font-size: 0.88rem; }
+    .item-cat { font-size: 0.72rem; color: var(--muted); background: var(--light); padding: 0.1rem 0.4rem; border-radius: 3px; }
+    .item-body { padding: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; }
+    .item-body.hidden { display: none; }
+    .field { display: flex; flex-direction: column; gap: 0.2rem; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .field input, .field select, .field textarea {
+      padding: 0.45rem 0.6rem; border: 1px solid var(--border); border-radius: 4px;
+      font-size: 0.85rem; font-family: inherit; color: var(--text);
+    }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--sage); }
+    .field textarea { resize: vertical; min-height: 60px; }
+
+    /* ── IMAGE UPLOAD ── */
+    .img-row { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .img-preview { width: 64px; height: 64px; object-fit: cover; border-radius: 4px; background: #eee; border: 1px solid var(--border); }
+    .img-path { font-size: 0.75rem; color: var(--muted); word-break: break-all; flex: 1; }
+    .upload-btn-label {
+      display: inline-block; padding: 0.3rem 0.75rem; background: #f0ede8;
+      border: 1px solid var(--border); border-radius: var(--radius); cursor: pointer;
+      font-size: 0.78rem; font-weight: 600; white-space: nowrap;
+    }
+    .upload-btn-label:hover { background: #e6e2dc; }
+    .upload-input { display: none; }
+    .upload-progress { font-size: 0.75rem; color: var(--sage-d); }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Oriabel</h1>
+    <p>Admin-Bereich</p>
+    <input type="password" id="pw" placeholder="Passwort" onkeydown="if(event.key==='Enter')login()">
+    <div id="token-section" style="display:none">
+      <div class="hint">
+        GitHub Personal Access Token — einmalig eingeben, wird lokal gespeichert.<br>
+        <a href="https://github.com/settings/tokens/new?scopes=repo&description=Oriabel+Admin" target="_blank">Token generieren (github.com)</a> &rarr; Scope: <strong>repo</strong>
+      </div>
+      <input type="password" id="ghtoken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" onkeydown="if(event.key==='Enter')login()">
+    </div>
+    <button class="btn btn-primary" style="width:100%;padding:0.6rem" onclick="login()">Anmelden</button>
+    <div id="login-error"></div>
+  </div>
+</div>
+
+<!-- ── ADMIN UI ── -->
+<div id="admin-ui">
+  <header>
+    <h1>Admin — Oriabel</h1>
+    <div class="hright">
+      <span id="h-status"></span>
+      <button class="btn btn-ghost btn-small" onclick="logout()">Abmelden</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="bijoux" onclick="switchTab('bijoux')">Bijoux</div>
+    <div class="tab" data-tab="gemaelde" onclick="switchTab('gemaelde')">Gemälde</div>
+  </div>
+
+  <div class="tab-body active" id="tab-bijoux">
+    <div class="tab-actions">
+      <h2>Schmuck — alle Artikel</h2>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn btn-add" onclick="addItem('bijoux')">+ Neues Stück</button>
+        <button class="btn btn-save" onclick="saveSection('bijoux')">Speichern & Deployen</button>
+      </div>
+    </div>
+    <div id="bijoux-list"></div>
+  </div>
+
+  <div class="tab-body" id="tab-gemaelde">
+    <div class="tab-actions">
+      <h2>Gemälde — alle Werke</h2>
+      <div style="display:flex;gap:0.5rem">
+        <button class="btn btn-add" onclick="addItem('gemaelde')">+ Neues Gemälde</button>
+        <button class="btn btn-save" onclick="saveSection('gemaelde')">Speichern & Deployen</button>
+      </div>
+    </div>
+    <div id="gemaelde-list"></div>
+  </div>
+</div>
+
+<div id="status-bar"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const REPO   = 'Bukows/oriabel-website';
+const BRANCH = 'main';
+// SHA-256 hash of admin password ("Oriabel2024!")
+const PW_HASH = '89198ab58b57d3bdbb92bbc0da72122196cf250b7eed163355810104cba9614e';
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let ghToken = '';
+let bijouData   = [];  // current SCHMUCK_DATEN array
+let gemaeldeData = []; // current GEMAELDE_DATEN array
+let bijouSha    = '';  // GitHub file SHA for jewelry.js
+let gemaeldeSha = '';  // GitHub file SHA for paintings.js
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function sha256(str) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+async function login() {
+  const pw = document.getElementById('pw').value;
+  const hash = await sha256(pw);
+  if (hash !== PW_HASH) {
+    document.getElementById('login-error').textContent = 'Falsches Passwort.';
+    return;
+  }
+  // Check token
+  ghToken = localStorage.getItem('oriabel_gh_token') || '';
+  if (!ghToken) {
+    const ts = document.getElementById('token-section');
+    const ti = document.getElementById('ghtoken');
+    if (ts.style.display === 'none') {
+      ts.style.display = 'block';
+      document.getElementById('login-error').textContent = '';
+      return;
+    }
+    ghToken = ti.value.trim();
+    if (!ghToken) { document.getElementById('login-error').textContent = 'Bitte GitHub Token eingeben.'; return; }
+    localStorage.setItem('oriabel_gh_token', ghToken);
+  }
+  document.getElementById('login-error').textContent = '';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('admin-ui').style.display = 'block';
+  document.getElementById('h-status').textContent = 'Daten werden geladen…';
+  await loadAll();
+  document.getElementById('h-status').textContent = '';
+}
+
+function logout() {
+  ghToken = '';
+  localStorage.removeItem('oriabel_gh_token');
+  location.reload();
+}
+
+// ── GITHUB API ────────────────────────────────────────────────────────────────
+async function ghGet(path) {
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}?ref=${BRANCH}`, {
+    headers: { Authorization: `token ${ghToken}`, Accept: 'application/vnd.github.v3+json' }
+  });
+  if (!r.ok) throw new Error(`GitHub GET ${path}: ${r.status}`);
+  return r.json();
+}
+
+async function ghPut(path, content64, sha, message) {
+  const body = { message, content: content64, branch: BRANCH };
+  if (sha) body.sha = sha;
+  const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${path}`, {
+    method: 'PUT',
+    headers: { Authorization: `token ${ghToken}`, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
+  return r.json();
+}
+
+// ── LOAD DATA ─────────────────────────────────────────────────────────────────
+async function loadAll() {
+  try {
+    const [bj, gm] = await Promise.all([ghGet('jewelry.js'), ghGet('paintings.js')]);
+    bijouSha    = bj.sha;
+    gemaeldeSha = gm.sha;
+    const bjSrc  = atob(bj.content.replace(/\n/g,''));
+    const gmSrc  = atob(gm.content.replace(/\n/g,''));
+    bijouData    = evalArray(bjSrc,  'SCHMUCK_DATEN');
+    gemaeldeData = evalArray(gmSrc,  'GEMAELDE_DATEN');
+    renderList('bijoux');
+    renderList('gemaelde');
+    showStatus('Daten geladen.', 'ok', 2000);
+  } catch(e) {
+    showStatus('Fehler beim Laden: ' + e.message, 'err');
+  }
+}
+
+function evalArray(src, varName) {
+  // extract array literal from JS source
+  const m = src.match(new RegExp(`const\\s+${varName}\\s*=\\s*(\\[[\\s\\S]*?\\]);`));
+  if (!m) return [];
+  try { return Function('"use strict"; return ' + m[1])(); } catch(e) { return []; }
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+const BIJOUX_CATS   = ['kette','ohrring','armband'];
+const GEMAELDE_CATS = ['figurativ','landschaft','abstrakt'];
+
+function renderList(type) {
+  const data = type === 'bijoux' ? bijouData : gemaeldeData;
+  const cats = type === 'bijoux' ? BIJOUX_CATS : GEMAELDE_CATS;
+  const container = document.getElementById(type + '-list');
+  container.innerHTML = '';
+  data.forEach((item, idx) => {
+    container.appendChild(buildCard(type, item, idx, cats));
+  });
+}
+
+function buildCard(type, item, idx, cats) {
+  const div = document.createElement('div');
+  div.className = 'item-card';
+  div.id = `card-${type}-${idx}`;
+  const imgSrc = item.bild || '';
+  const catOpts = cats.map(c => `<option value="${c}"${item.kategorie===c?' selected':''}>${c}</option>`).join('');
+
+  let fields = '';
+  if (type === 'bijoux') {
+    fields = `
+      <div class="field"><label>ID</label><input data-field="id" value="${esc(item.id||'')}"></div>
+      <div class="field"><label>Kategorie</label><select data-field="kategorie">${catOpts}</select></div>
+      <div class="field full"><label>Titel</label><input data-field="titel" value="${esc(item.titel||'')}"></div>
+      <div class="field full"><label>Beschreibung</label><textarea data-field="beschreibung">${esc(item.beschreibung||'')}</textarea></div>
+      <div class="field"><label>Material</label><input data-field="material" value="${esc(item.material||'')}"></div>
+      <div class="field"><label>Grösse</label><input data-field="groesse" value="${esc(item.groesse||'')}"></div>
+      <div class="field"><label>Jahr</label><input data-field="jahr" value="${esc(item.jahr||'')}"></div>
+      <div class="field"><label>Verfügbarkeit</label><input data-field="verfuegbarkeit" value="${esc(item.verfuegbarkeit||'')}"></div>`;
+  } else {
+    fields = `
+      <div class="field"><label>ID</label><input data-field="id" value="${esc(item.id||'')}"></div>
+      <div class="field"><label>Kategorie</label><select data-field="kategorie">${catOpts}</select></div>
+      <div class="field full"><label>Titel</label><input data-field="titel" value="${esc(item.titel||'')}"></div>
+      <div class="field full"><label>Beschreibung</label><textarea data-field="beschreibung">${esc(item.beschreibung||'')}</textarea></div>
+      <div class="field"><label>Technik</label><input data-field="technik" value="${esc(item.technik||'')}"></div>
+      <div class="field"><label>Format</label><input data-field="format" value="${esc(item.format||'')}"></div>
+      <div class="field"><label>Jahr</label><input data-field="jahr" value="${esc(item.jahr||'')}"></div>
+      <div class="field"><label>Verfügbarkeit</label><input data-field="verfuegbarkeit" value="${esc(item.verfuegbarkeit||'')}"></div>`;
+  }
+
+  div.innerHTML = `
+    <div class="item-head" onclick="toggleCard('${type}',${idx})">
+      <div class="item-head-left">
+        <img class="item-thumb" src="${imgSrc}" onerror="this.style.background='#e8e2d8'">
+        <span class="item-name">${esc(item.titel||'(kein Titel)')}</span>
+        <span class="item-cat">${esc(item.kategorie||'')}</span>
+      </div>
+      <button class="btn btn-danger btn-small" onclick="event.stopPropagation();deleteItem('${type}',${idx})">Löschen</button>
+    </div>
+    <div class="item-body" id="body-${type}-${idx}">
+      ${fields}
+      <div class="field full">
+        <label>Bild</label>
+        <div class="img-row">
+          <img class="img-preview" id="prev-${type}-${idx}" src="${imgSrc}" onerror="this.style.background='#e8e2d8'">
+          <span class="img-path" id="imgpath-${type}-${idx}">${esc(imgSrc)}</span>
+          <label class="upload-btn-label">
+            Bild hochladen
+            <input class="upload-input" type="file" accept="image/*" onchange="uploadImage(this,'${type}',${idx})">
+          </label>
+          <span class="upload-progress" id="uprog-${type}-${idx}"></span>
+        </div>
+      </div>
+    </div>`;
+  return div;
+}
+
+function toggleCard(type, idx) {
+  const body = document.getElementById(`body-${type}-${idx}`);
+  body.classList.toggle('hidden');
+}
+
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+// ── COLLECT EDITS ─────────────────────────────────────────────────────────────
+function collectData(type) {
+  const data = type === 'bijoux' ? bijouData : gemaeldeData;
+  data.forEach((item, idx) => {
+    const card = document.getElementById(`card-${type}-${idx}`);
+    if (!card) return;
+    card.querySelectorAll('[data-field]').forEach(el => {
+      item[el.dataset.field] = el.value;
+    });
+    // image path from span
+    const pathEl = document.getElementById(`imgpath-${type}-${idx}`);
+    if (pathEl) item.bild = pathEl.textContent;
+  });
+}
+
+// ── ADD / DELETE ──────────────────────────────────────────────────────────────
+function addItem(type) {
+  const newItem = type === 'bijoux'
+    ? { id:'neues-stueck', titel:'Neues Stück', kategorie:'kette', beschreibung:'', bild:'', material:'', groesse:'', jahr:'2024', verfuegbarkeit:'Sur demande' }
+    : { id:'neues-bild', titel:'Neues Gemälde', kategorie:'figurativ', beschreibung:'', bild:'', technik:'Huile sur toile', format:'', jahr:'2024', verfuegbarkeit:'Sur demande' };
+  if (type === 'bijoux') bijouData.push(newItem);
+  else gemaeldeData.push(newItem);
+  renderList(type);
+  // scroll to new card and open it
+  const idx = (type === 'bijoux' ? bijouData : gemaeldeData).length - 1;
+  const card = document.getElementById(`card-${type}-${idx}`);
+  if (card) card.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function deleteItem(type, idx) {
+  if (!confirm('Eintrag löschen?')) return;
+  collectData(type);
+  if (type === 'bijoux') bijouData.splice(idx, 1);
+  else gemaeldeData.splice(idx, 1);
+  renderList(type);
+}
+
+// ── IMAGE UPLOAD ──────────────────────────────────────────────────────────────
+async function uploadImage(input, type, idx) {
+  const file = input.files[0];
+  if (!file) return;
+  const prog = document.getElementById(`uprog-${type}-${idx}`);
+  prog.textContent = 'Wird hochgeladen…';
+  try {
+    const b64 = await fileToBase64(file);
+    const fname = file.name.replace(/\s+/g,'_');
+    const path = `uploads/${fname}`;
+    // Check if file exists (to get SHA for overwrite)
+    let existingSha = null;
+    try { const ex = await ghGet(path); existingSha = ex.sha; } catch(_) {}
+    await ghPut(path, b64.split(',')[1], existingSha, `Admin: Bild hochgeladen — ${fname}`);
+    // Update UI
+    const pathEl = document.getElementById(`imgpath-${type}-${idx}`);
+    const prevEl = document.getElementById(`prev-${type}-${idx}`);
+    if (pathEl) pathEl.textContent = path;
+    if (prevEl) { prevEl.src = b64; }
+    prog.textContent = 'Hochgeladen!';
+    setTimeout(() => { prog.textContent = ''; }, 3000);
+    showStatus(`Bild "${fname}" hochgeladen.`, 'ok', 3000);
+  } catch(e) {
+    prog.textContent = '';
+    showStatus('Fehler beim Hochladen: ' + e.message, 'err');
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = e => res(e.target.result);
+    r.onerror = rej;
+    r.readAsDataURL(file);
+  });
+}
+
+// ── SAVE SECTION ──────────────────────────────────────────────────────────────
+async function saveSection(type) {
+  collectData(type);
+  const data    = type === 'bijoux' ? bijouData : gemaeldeData;
+  const varName = type === 'bijoux' ? 'SCHMUCK_DATEN' : 'GEMAELDE_DATEN';
+  const file    = type === 'bijoux' ? 'jewelry.js' : 'paintings.js';
+  const sha     = type === 'bijoux' ? bijouSha : gemaeldeSha;
+
+  showStatus('Wird gespeichert…', 'inf');
+  try {
+    const js = buildJS(varName, data);
+    const b64 = btoa(unescape(encodeURIComponent(js)));
+    const result = await ghPut(file, b64, sha, `Admin: ${type === 'bijoux' ? 'Bijoux' : 'Gemälde'} aktualisiert`);
+    if (type === 'bijoux') bijouSha = result.content.sha;
+    else gemaeldeSha = result.content.sha;
+    showStatus('Gespeichert! Seite wird in ~1 Minute aktualisiert.', 'ok', 5000);
+  } catch(e) {
+    showStatus('Fehler beim Speichern: ' + e.message, 'err');
+  }
+}
+
+function buildJS(varName, data) {
+  const header = varName === 'SCHMUCK_DATEN'
+    ? `// Bijoux Oriabel — Artikel-Daten\n// Felder: id, titel, kategorie (kette|ohrring|armband), beschreibung, bild, material, groesse, jahr, verfuegbarkeit\n\n`
+    : `// Gemälde von Edigne Parisis\n// Felder: id, titel, kategorie (figurativ|landschaft|abstrakt), beschreibung, bild, technik, format, jahr, verfuegbarkeit\n\n`;
+  const rows = data.map(item => {
+    const entries = Object.entries(item).map(([k,v]) => `  ${k}:${JSON.stringify(v)}`).join(', ');
+    return `  {${entries}}`;
+  }).join(',\n');
+  return header + `const ${varName} = [\n${rows}\n];\n`;
+}
+
+// ── TAB SWITCH ────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  document.querySelectorAll('.tab-body').forEach(b => b.classList.toggle('active', b.id === 'tab-' + tab));
+}
+
+// ── STATUS ────────────────────────────────────────────────────────────────────
+let statusTimer;
+function showStatus(msg, type, ms) {
+  const bar = document.getElementById('status-bar');
+  bar.textContent = msg;
+  bar.className = type;
+  clearTimeout(statusTimer);
+  if (ms) statusTimer = setTimeout(() => { bar.className = ''; }, ms);
+}
+</script>
+</body>
+</html>
