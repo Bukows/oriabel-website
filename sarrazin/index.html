@@ -1992,15 +1992,31 @@ function setLang(lang) {
   var barsListEl = document.getElementById('bars-list');
   if (barsListEl && t.bars) {
     var tagColors = {Rooftop:'#1a5276', Club:'#8e44ad', Bar:'#c0392b'};
-    barsListEl.innerHTML = t.bars.map(function(b, i) {
+    var rooftops  = t.bars.filter(function(b) { return b.tag === 'Rooftop'; });
+    var clubsBars = t.bars.filter(function(b) { return b.tag !== 'Rooftop'; });
+    // sort clubs first, then bars
+    clubsBars.sort(function(a,b) { return (a.tag === 'Club' ? 0 : 1) - (b.tag === 'Club' ? 0 : 1); });
+    function barItem(b, i) {
       var mapsUrl = 'https://maps.google.com/?q=' + encodeURIComponent(b.addr + ', France');
       var clr = tagColors[b.tag] || '#555';
       var webLink = b.url ? ' <a href="' + b.url + '" class="ext-link" target="_blank" rel="noopener" style="font-size:0.74rem;font-weight:600">Web</a>' : '';
-      return '<div style="display:flex;gap:0.6rem;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">' +
-        '<span style="background:' + clr + ';color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
-        '<div><strong>' + escHtml(b.name) + '</strong> <span style="font-size:0.68rem;color:' + clr + ';font-weight:600;text-transform:uppercase;letter-spacing:0.04em">' + b.tag + '</span>' + webLink + '<br><span style="font-size:0.76rem;color:var(--muted)">' + escHtml(b.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.75rem">' + escHtml(b.addr) + '</a></div>' +
+      return '<div style="display:flex;gap:0.45rem;padding:0.28rem 0;border-bottom:1px solid var(--border);font-size:0.8rem;align-items:flex-start">' +
+        '<span style="background:' + clr + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
+        '<div><strong>' + escHtml(b.name) + '</strong> <span style="font-size:0.66rem;color:' + clr + ';font-weight:600;text-transform:uppercase;letter-spacing:0.04em">' + b.tag + '</span>' + webLink + '<br><span style="font-size:0.73rem;color:var(--muted)">' + escHtml(b.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.72rem">' + escHtml(b.addr) + '</a></div>' +
       '</div>';
-    }).join('');
+    }
+    var ch = 'padding:0.28rem 0.75rem;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);border-bottom:1px solid var(--border)';
+    var cb = 'padding:0.3rem 0.75rem 0.35rem';
+    barsListEl.innerHTML = '<div style="display:flex">' +
+      '<div style="flex:1;border-right:1px solid var(--border)">' +
+        '<div style="' + ch + '">Rooftops</div>' +
+        '<div style="' + cb + '">' + rooftops.map(barItem).join('') + '</div>' +
+      '</div>' +
+      '<div style="flex:1">' +
+        '<div style="' + ch + '">Clubs &amp; Bars</div>' +
+        '<div style="' + cb + '">' + clubsBars.map(barItem).join('') + '</div>' +
+      '</div>' +
+    '</div>';
   }
 
   const rl = document.getElementById('resto-list');
