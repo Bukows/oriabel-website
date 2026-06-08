@@ -1,2057 +1,1320 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tour Sarrazine — Gästeinfo</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oriabel · Nice — Bijoux, Kintsugi, Peintures · Edigne Parisis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
   <style>
+    /* =========================================================
+       RESET & BASE
+    ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --red:    #c0392b;
-      --red-bg: #fdf0ef;
-      --blue:   #2E75B6;
-      --dark:   #1a1a1a;
-      --sage:   #7d9182;
-      --sage-light: #a0b0a5;
-      --mid:    #555;
-      --muted:  #888;
-      --light:  #f5f7fa;
-      --card:   #ffffff;
-      --border: #e0e4e8;
-      --gold:   #c8a96e;
-      --radius: 10px;
+      --color-bg:        #f8f6f1;
+      --color-surface:   #ffffff;
+      --color-primary:   #1a1a1a;
+      --color-secondary: #686868;
+      --color-accent:    #8b6b4a;
+      --color-border:    #d1d1d1;
+      --color-hover-bg:  #f0ece4;
+      --font-serif:      'Playfair Display', Georgia, serif;
+      --font-sans:       'Source Sans 3', system-ui, sans-serif;
+      --shadow-card:     0 2px 12px rgba(0,0,0,0.08);
+      --shadow-hover:    0 8px 32px rgba(0,0,0,0.14);
+      --radius:          4px;
+      --transition:      0.25s ease;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: var(--light);
-      color: var(--dark);
-      font-size: 15px;
-      line-height: 1.55;
+      background-color: var(--color-bg);
+      color: var(--color-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.75;
     }
 
-    /* ── HEADER ── */
-    header {
-      background: var(--light);
-      padding: 0.6rem 1rem;
-      position: sticky;
-      top: 0;
-      z-index: 200;
-    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
 
-    .header-inner {
-      max-width: 900px;
+    .row {
+      max-width: 1200px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      gap: 0.75rem;
-      background: var(--sage);
-      padding: 0.75rem 1.2rem;
-      border-radius: var(--radius);
+      padding: 0 24px;
     }
 
-    .header-title-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+    /* =========================================================
+       HEADER
+    ========================================================= */
+    #header {
+      position: sticky; top: 0; z-index: 200;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow var(--transition);
+    }
+    #header.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,0.12); }
+
+    .header-wrapper {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 24px; height: 72px;
     }
 
-    .header-title {
-      color: #fff;
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      line-height: 1.2;
-      white-space: nowrap;
-    }
-
-    .header-sub {
-      color: rgba(255,255,255,0.65);
-      font-size: 0.72rem;
-      font-weight: 400;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-    }
-
-    .lang-switcher {
-      display: flex;
-      gap: 0.3rem;
-      flex-shrink: 0;
-      justify-content: flex-end;
-    }
-
-    .lang-btn {
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.22);
-      color: rgba(255,255,255,0.8);
-      padding: 0.28rem 0.5rem;
-      border-radius: 5px;
-      font-size: 1rem;
+    .site-logo {
+      font-family: var(--font-serif);
+      font-size: 1.35rem; font-weight: 700;
+      letter-spacing: 0.02em; white-space: nowrap;
       cursor: pointer;
-      transition: all 0.15s;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
+    }
+    .site-logo span { font-style: italic; font-weight: 400; color: var(--color-accent); }
+
+    nav.main-nav ul { display: flex; gap: 28px; list-style: none; }
+    nav.main-nav a, nav.main-nav button {
+      font-size: 0.875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--color-secondary);
+      transition: color var(--transition);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-sans);
+    }
+    nav.main-nav a:hover,
+    nav.main-nav button:hover,
+    nav.main-nav a.active,
+    nav.main-nav button.active { color: var(--color-accent); }
+
+    .nav-toggle {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .nav-toggle span {
+      display: block; width: 24px; height: 2px;
+      background: var(--color-primary); border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
     }
 
-    .lang-btn .flag { font-size: 1.1rem; }
-    .lang-btn .code { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; }
+    /* =========================================================
+       MAIN CHOICE — Deux grandes tuiles d'entrée
+    ========================================================= */
+    .main-choice {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 480px;
+    }
 
-    .lang-btn:hover { background: rgba(255,255,255,0.22); color: #fff; }
-    .lang-btn.active {
-      background: rgba(255,255,255,0.28);
-      border-color: rgba(255,255,255,0.5);
+    .choice-card {
+      position: relative; overflow: hidden; cursor: pointer;
+      border: none; background: none; padding: 0;
+      display: block; width: 100%;
+    }
+    .choice-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      transition: transform 0.6s ease;
+      min-height: 480px;
+    }
+    .choice-card:hover img { transform: scale(1.05); }
+
+    .choice-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 32px;
       color: #fff;
+      transition: background var(--transition);
+    }
+    .choice-card:nth-child(1) .choice-overlay {
+      background: linear-gradient(135deg, rgba(139,107,74,0.55) 0%, rgba(26,26,26,0.65) 100%);
+    }
+    .choice-card:nth-child(2) .choice-overlay {
+      background: linear-gradient(135deg, rgba(26,26,26,0.62) 0%, rgba(100,80,55,0.50) 100%);
+    }
+    .choice-card:hover .choice-overlay {
+      background: rgba(0,0,0,0.48) !important;
     }
 
-    /* ── ADDRESS BAR ── */
-    .address-bar {
-      background: #edf0ed;
-      border-bottom: 1px solid #d5ddd6;
-      padding: 0.5rem 1.2rem;
-      font-size: 0.8rem;
-      color: var(--sage-light);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      justify-content: center;
+    .choice-label {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.24em;
+      color: #d4b896; margin-bottom: 12px;
     }
-
-    .address-bar strong { color: #4a6352; }
-
-    /* ── MAIN ── */
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 1rem;
+    .choice-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700; line-height: 1.1; margin-bottom: 14px;
     }
-
-    /* ── EMERGENCY ── */
-    .emergency-tile {
-      background: var(--red);
+    .choice-desc {
+      font-size: 0.88rem; color: rgba(255,255,255,0.82);
+      max-width: 300px; line-height: 1.55; margin-bottom: 24px;
+    }
+    .choice-btn {
+      display: inline-block; padding: 11px 32px;
+      font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      border: 2px solid rgba(255,255,255,0.7); color: #fff;
       border-radius: var(--radius);
-      margin-bottom: 1rem;
+      transform: translateY(6px); opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease, background 0.2s, border-color 0.2s;
+    }
+    .choice-card:hover .choice-btn {
+      transform: translateY(0); opacity: 1;
+    }
+    .choice-btn:hover { background: rgba(255,255,255,0.18); border-color: #fff; }
+
+    .choice-divider {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 48px; height: 48px;
+      background: var(--color-surface);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--color-accent);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       SLIDESHOW
+    ========================================================= */
+    .slideshow-section {
+      position: relative;
+      background: var(--color-primary);
       overflow: hidden;
     }
 
-    .emergency-header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.85rem 1.1rem;
+    .slideshow-track {
+      position: relative;
+      height: 520px;
     }
 
-    .emergency-header h2 {
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .slide.active { opacity: 1; }
+    .slide img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+    }
+
+    .slideshow-nav {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 10;
+    }
+    .slide-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      border: none; cursor: pointer; padding: 0;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .slide-dot.active {
+      background: #fff;
+      transform: scale(1.3);
+    }
+
+    .slideshow-arrows {
+      position: absolute; top: 50%; width: 100%;
+      display: flex; justify-content: space-between; padding: 0 16px;
+      transform: translateY(-50%); z-index: 10; pointer-events: none;
+    }
+    .slide-arrow {
+      pointer-events: all;
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 50%; cursor: pointer; color: #fff;
+      font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .slide-arrow:hover { background: rgba(255,255,255,0.35); }
+
+    /* =========================================================
+       VIEW HEADER (for Oriabel / Edigne sub-pages)
+    ========================================================= */
+    .view-hero {
+      background: var(--color-primary);
       color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      padding: 52px 0 40px;
+      text-align: center;
+    }
+    .view-hero .eyebrow {
+      font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: #d4b896; margin-bottom: 12px;
+    }
+    .view-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; margin-bottom: 10px;
+    }
+    .view-hero p {
+      color: rgba(255,255,255,0.72);
+      max-width: 520px; margin: 0 auto;
+      font-size: 0.95rem; line-height: 1.65;
     }
 
-    .emerg-badge {
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 0.15rem 0.5rem;
-      border-radius: 20px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    .emergency-body {
-      background: var(--red-bg);
-      padding: 0.8rem 1.1rem 1rem;
-    }
-
-    .emerg-row {
-      display: flex;
-      gap: 0.8rem;
-      padding: 0.55rem 0;
-      border-bottom: 1px solid rgba(192,57,43,0.12);
-      align-items: flex-start;
-    }
-
-    .emerg-row:last-child { border-bottom: none; }
-
-    .emerg-label {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--red);
-      min-width: 130px;
-      flex-shrink: 0;
-      line-height: 1.4;
-    }
-
-    .emerg-value {
-      font-size: 0.85rem;
-      color: var(--dark);
-      line-height: 1.5;
-    }
-
-    .emerg-value a {
-      color: var(--red);
-      font-weight: 700;
-      text-decoration: none;
-    }
-
-    .emerg-number {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: var(--red);
-      letter-spacing: 0.02em;
-    }
-
-    /* ── KPI TILES ── */
-    .emerg-numbers {
+    /* =========================================================
+       CATEGORY SELECTOR (Oriabel sub-categories)
+    ========================================================= */
+    .cat-selector {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.6rem;
-      padding: 0.75rem;
-    }
-
-    @media (max-width: 380px) {
-      .emerg-numbers { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    a.emerg-kpi {
-      background: #fff;
-      border: 2px solid var(--red);
-      border-radius: 8px;
-      padding: 1rem 0.5rem 0.85rem;
-      text-align: center;
-      text-decoration: none;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.3rem;
-      transition: background 0.15s;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    a.emerg-kpi:hover, a.emerg-kpi:active { background: var(--red); }
-    a.emerg-kpi:hover .kpi-num, a.emerg-kpi:active .kpi-num { color: #fff; }
-    a.emerg-kpi:hover .kpi-lbl, a.emerg-kpi:active .kpi-lbl { color: rgba(255,255,255,0.85); }
-
-    .kpi-num {
-      font-size: 2.4rem;
-      font-weight: 900;
-      color: var(--red);
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-
-    .kpi-lbl {
-      font-size: 0.68rem;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-weight: 700;
-    }
-
-    /* ── GRID ── */
-    .plants-notice {
-      max-width: 900px;
-      margin: 0.6rem auto 0;
-      padding: 0.55rem 1.2rem;
-      background: #eef3ef;
-      border: 1px solid #c3d4c7;
-      border-radius: var(--radius);
-      font-size: 0.82rem;
-      color: #3d5c45;
-    }
-
-    .section-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      margin: 1.2rem 0 0.5rem 0.2rem;
-    }
-
-    .tile-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-    }
-
-    .tile-grid.single { grid-template-columns: 1fr; }
-
-    /* ── CARD / TILE ── */
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-
-    .card-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      padding: 0.85rem 1.1rem;
-      cursor: pointer;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    .card-toggle:hover { background: #fafafa; }
-
-    .card-icon {
-      font-size: 1.15rem;
-      flex-shrink: 0;
-      width: 28px;
-      text-align: center;
-    }
-
-    .card-label {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--dark);
-      flex: 1;
-    }
-
-    .card-chevron {
-      color: var(--muted);
-      font-size: 0.7rem;
-      transition: transform 0.2s;
-      flex-shrink: 0;
-    }
-
-    .card.open .card-chevron { transform: rotate(180deg); }
-
-    .card-body {
-      display: none;
-      border-top: 1px solid var(--border);
-    }
-
-    .card.open .card-body { display: block; }
-
-    /* ── INFO TABLE ── */
-    .info-table {
-      width: 100%;
-    }
-
-    .info-row {
-      display: flex;
       gap: 0;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+      border-bottom: 2px solid var(--color-border);
     }
 
-    .info-row:last-child { border-bottom: none; }
-
-    .info-key {
-      background: #f0f4f8;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--mid);
-      padding: 0.55rem 0.8rem;
-      min-width: 38%;
-      max-width: 38%;
-      flex-shrink: 0;
-      line-height: 1.4;
+    .cat-sel-btn {
+      padding: 20px 16px;
+      font-family: var(--font-serif);
+      font-size: 1.05rem; font-weight: 700;
+      text-align: center; cursor: pointer;
+      background: var(--color-surface);
+      border: none;
+      border-right: 1px solid var(--color-border);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+      color: var(--color-secondary);
+    }
+    .cat-sel-btn:last-child { border-right: none; }
+    .cat-sel-btn:hover { background: var(--color-hover-bg); color: var(--color-primary); }
+    .cat-sel-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+      background: var(--color-surface);
+    }
+    .cat-sel-btn .cat-sub-label {
+      display: block;
+      font-family: var(--font-sans);
+      font-size: 0.7rem; font-weight: 400;
+      color: inherit; opacity: 0.7;
+      margin-top: 4px;
+      text-transform: uppercase; letter-spacing: 0.1em;
     }
 
-    .info-val {
-      font-size: 0.82rem;
-      color: var(--dark);
-      padding: 0.55rem 0.85rem;
-      line-height: 1.5;
-      flex: 1;
+    /* =========================================================
+       SECTION TABS (sous-catégories internes)
+    ========================================================= */
+    .tabs-bar {
+      display: flex; gap: 0;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 40px; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      padding: 12px 24px;
+      font-size: 0.82rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--color-secondary);
+      background: none; border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px; cursor: pointer; white-space: nowrap;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .tab-btn:hover { color: var(--color-primary); }
+    .tab-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
     }
 
-    .info-val a {
-      color: var(--blue);
-      text-decoration: none;
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* =========================================================
+       SECTION COMMUNE
+    ========================================================= */
+    .section { padding: 56px 0; }
+    .section + .section { border-top: 1px solid var(--color-border); }
+
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-eyebrow {
+      font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: var(--color-accent); margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700; line-height: 1.2; margin-bottom: 10px;
+    }
+    .section-sub {
+      color: var(--color-secondary); max-width: 500px;
+      margin: 0 auto; font-size: 0.95rem;
     }
 
-    .info-val.full {
-      min-width: 100%;
-      background: #fafbfc;
+    /* =========================================================
+       PRODUCT GRID
+    ========================================================= */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .product-grid.jewelry-grid {
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     }
 
-    .warn { color: #b85c00; font-weight: 600; }
-
-    /* ── LINKS: TEL & MAPS ── */
-    a.tel-link {
-      color: inherit;
-      font-weight: 700;
-      text-decoration: none;
-      border-bottom: 1px dotted currentColor;
+    .product-small .box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      overflow: hidden; display: flex; flex-direction: column;
+      height: 100%; cursor: pointer;
+      transition: box-shadow var(--transition), transform var(--transition);
     }
-    a.tel-link:hover { opacity: 0.75; }
-
-    a.maps-link {
-      color: #2563a8;
-      text-decoration: none;
-      border-bottom: 1px dotted #2563a8;
-    }
-    a.maps-link:hover { opacity: 0.75; }
-
-    a.num-call {
-      text-decoration: none;
-      color: inherit;
-    }
-    a.num-call:hover .num { opacity: 0.75; }
-
-    .emerg-value a.tel-link { color: var(--red); border-bottom-color: var(--red); }
-
-    a.ext-link {
-      color: var(--blue);
-      text-decoration: none;
-      border-bottom: 1px solid var(--blue);
-      font-weight: 600;
-    }
-    a.ext-link:hover { opacity: 0.75; }
-
-    /* ── WIFI BLOCK ── */
-    .wifi-block {
-      padding: 1rem 1.1rem;
-      display: flex;
-      gap: 1.4rem;
-      align-items: flex-start;
-      flex-wrap: wrap;
+    .product-small .box:hover {
+      box-shadow: var(--shadow-hover); transform: translateY(-3px);
     }
 
-    .wifi-info { flex: 1; min-width: 200px; }
+    .box-image {
+      position: relative; overflow: hidden;
+      background: #e8e4dc;
+    }
+    .box-image.portrait { aspect-ratio: 3 / 4; }
+    .box-image.square    { aspect-ratio: 1 / 1; }
 
-    .wifi-row {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.55rem;
-      font-size: 0.84rem;
+    .box-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product-small .box:hover .box-image img { transform: scale(1.06); }
+
+    .image-tools {
+      position: absolute; bottom: 10px; left: 10px; right: 10px;
+      display: flex; gap: 6px;
+      opacity: 0; transform: translateY(5px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .product-small .box:hover .image-tools { opacity: 1; transform: translateY(0); }
+
+    .tool-btn {
+      flex: 1; padding: 7px 8px;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; text-align: center;
+      background: rgba(255,255,255,0.92); color: var(--color-primary);
+      border: none; border-radius: var(--radius); cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background var(--transition);
+    }
+    .tool-btn:hover { background: #fff; }
+
+    .box-text {
+      padding: 16px 16px 18px;
+      flex: 1; display: flex; flex-direction: column;
+    }
+    .product-category {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--color-accent); margin-bottom: 4px;
+    }
+    .product-title {
+      font-family: var(--font-serif);
+      font-size: 0.97rem; font-weight: 700;
+      line-height: 1.3; margin-bottom: 0;
+    }
+    .price-wrapper {
+      margin-top: auto; display: flex;
+      align-items: center; justify-content: space-between;
+      padding-top: 10px;
+    }
+    .price { font-size: 0.97rem; font-weight: 600; }
+    .price-sub { font-size: 0.75rem; color: var(--color-secondary); }
+
+    .item-tag {
+      display: inline-block;
+      font-size: 0.63rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      background: var(--color-accent); color: #fff;
+      padding: 2px 6px; border-radius: 2px; margin-bottom: 6px;
     }
 
-    .wifi-key { color: var(--muted); min-width: 90px; flex-shrink: 0; }
-    .wifi-val { font-weight: 600; color: var(--dark); word-break: break-all; flex: 1; }
-
-    .copy-btn {
-      background: #f0f4f8;
-      border: 1px solid var(--border);
-      color: var(--mid);
-      border-radius: 4px;
-      padding: 0.15rem 0.45rem;
-      font-size: 0.7rem;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background 0.15s;
-      white-space: nowrap;
-    }
-    .copy-btn:hover { background: #e0e8f0; }
-    .copy-btn.copied { background: #d4edda; color: #2a6638; border-color: #b8dfc4; }
-
-    .wifi-hint {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 0.5rem;
-      line-height: 1.4;
-    }
-
-    .wifi-qr { flex-shrink: 0; text-align: center; }
-    .wifi-qr img { width: 120px; height: 120px; border-radius: 6px; display: block; }
-    .wifi-qr-label { font-size: 0.68rem; color: var(--muted); margin-top: 0.3rem; text-align: center; }
-
-    /* ── MAP ── */
-    #map {
-      height: 340px;
-      border-radius: 0 0 var(--radius) var(--radius);
-    }
-
-    @media (max-width: 500px) { #map { height: 260px; } }
-
-    .map-header {
-      padding: 0.85rem 1.1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-
-    /* ── FOOTER ── */
-    footer {
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+    .empty-state {
       text-align: center;
-      padding: 2rem 1rem;
-      color: var(--muted);
-      font-size: 0.78rem;
+      padding: 72px 24px;
+      color: var(--color-secondary);
+    }
+    .empty-state .empty-icon {
+      font-size: 3rem; margin-bottom: 20px; opacity: 0.3;
+    }
+    .empty-state h3 {
+      font-family: var(--font-serif);
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--color-primary); margin-bottom: 10px;
+    }
+    .empty-state p { font-size: 0.93rem; max-width: 360px; margin: 0 auto; }
+
+    /* =========================================================
+       ABOUT / FOOTER SECTIONS
+    ========================================================= */
+    #about { background: var(--color-primary); color: #fff; }
+    .about-grid {
+      display: grid; grid-template-columns: 300px 1fr;
+      gap: 56px; align-items: center;
+    }
+    .about-portrait {
+      border-radius: var(--radius); overflow: hidden;
+      aspect-ratio: 3 / 4;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+    .about-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+    .about-text .section-title { color: #fff; text-align: left; margin-bottom: 18px; }
+    .about-body { color: rgba(255,255,255,0.76); line-height: 1.8; margin-bottom: 16px; font-size: 0.95rem; }
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
+    .btn {
+      display: inline-block; padding: 12px 28px;
+      font-size: 0.875rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      border-radius: var(--radius); cursor: pointer;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+      font-family: var(--font-sans);
+    }
+    .btn-primary {
+      background: var(--color-accent); color: #fff;
+      border: 2px solid var(--color-accent);
+    }
+    .btn-primary:hover { background: #6f5239; border-color: #6f5239; transform: translateY(-1px); }
+
+    /* =========================================================
+       CTA BAR
+    ========================================================= */
+    .cta-bar {
+      background: var(--color-accent); color: #fff;
+      text-align: center; padding: 52px 24px;
+    }
+    .cta-title { font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; margin-bottom: 8px; }
+    .cta-sub { color: rgba(255,255,255,0.8); margin-bottom: 26px; font-size: 0.95rem; }
+    .cta-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; }
+    .cta-form input {
+      flex: 1; padding: 11px 16px;
+      border: 2px solid rgba(255,255,255,0.38);
+      border-radius: var(--radius); background: rgba(255,255,255,0.12);
+      color: #fff; font-size: 0.88rem; font-family: var(--font-sans);
+      outline: none; transition: border-color var(--transition);
+    }
+    .cta-form input::placeholder { color: rgba(255,255,255,0.5); }
+    .cta-form input:focus { border-color: rgba(255,255,255,0.75); }
+    .cta-form button {
+      padding: 11px 22px; background: #fff; color: var(--color-accent);
+      border: none; border-radius: var(--radius);
+      font-family: var(--font-sans); font-size: 0.82rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; white-space: nowrap;
+      transition: background var(--transition);
+    }
+    .cta-form button:hover { background: #f0ece4; }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    #footer { background: #111; color: rgba(255,255,255,0.58); padding: 52px 0 28px; }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 44px; margin-bottom: 36px;
+    }
+    .footer-brand .site-logo { color: #fff; margin-bottom: 14px; }
+    .footer-tagline { font-size: 0.86rem; line-height: 1.7; margin-bottom: 18px; }
+    .footer-col h4 {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.82); margin-bottom: 14px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 9px; }
+    .footer-col a, .footer-col button {
+      font-size: 0.86rem; color: rgba(255,255,255,0.58);
+      transition: color var(--transition);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-sans); text-align: left;
+    }
+    .footer-col a:hover, .footer-col button:hover { color: #d4b896; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.76rem; flex-wrap: wrap; gap: 12px;
     }
 
-    /* ── MOBILE ── */
-    @media (max-width: 520px) {
-      .tile-grid { grid-template-columns: 1fr; }
-      .emerg-label { min-width: 110px; font-size: 0.76rem; }
-      header { padding: 0.8rem 0.9rem; }
-      main { padding: 0.75rem; }
-      .kpi-num { font-size: 1.9rem; }
+    /* =========================================================
+       LIGHTBOX
+    ========================================================= */
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 24px; backdrop-filter: blur(4px);
+    }
+    .lightbox-overlay.active { display: flex; }
+
+    .lightbox-inner {
+      position: relative; max-width: 820px; width: 100%;
+      background: var(--color-surface); border-radius: var(--radius);
+      overflow: hidden; display: grid; grid-template-columns: 1fr 1fr;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+      animation: lb-in 0.25s ease;
+    }
+    @keyframes lb-in {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .lightbox-img { overflow: hidden; }
+    .lightbox-img img { width: 100%; height: 100%; object-fit: cover; }
+    .lightbox-info { padding: 36px 32px; display: flex; flex-direction: column; }
+    .lightbox-category {
+      font-size: 0.7rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--color-accent); margin-bottom: 8px;
+    }
+    .lightbox-title {
+      font-family: var(--font-serif);
+      font-size: 1.45rem; font-weight: 700; line-height: 1.2; margin-bottom: 14px;
+    }
+    .lightbox-desc {
+      color: var(--color-secondary); font-size: 0.88rem;
+      line-height: 1.7; margin-bottom: 20px; flex: 1;
+    }
+    .lightbox-specs {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px 14px; margin-bottom: 24px;
+    }
+    .spec-item { font-size: 0.8rem; }
+    .spec-label { color: var(--color-secondary); }
+    .spec-value { font-weight: 600; }
+    .lightbox-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px; background: var(--color-bg);
+      border: none; border-radius: 50%; cursor: pointer;
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition); color: var(--color-primary);
+    }
+    .lightbox-close:hover { background: var(--color-border); }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media (max-width: 960px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .about-portrait { max-width: 260px; }
+      .main-choice { min-height: 360px; }
+      .choice-card img { min-height: 360px; }
+      .cat-selector { grid-template-columns: repeat(2, 1fr); }
+      .cat-sel-btn { border-bottom: 1px solid var(--color-border); }
     }
 
-    @media (min-width: 600px) {
-      .tile-grid { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 710px) {
+      .header-wrapper { height: 60px; }
+      nav.main-nav { display: none; }
+      nav.main-nav.open {
+        display: block; position: fixed;
+        inset: 60px 0 0 0; background: var(--color-surface);
+        padding: 28px 24px; z-index: 99; overflow-y: auto;
+      }
+      nav.main-nav.open ul { flex-direction: column; gap: 20px; }
+      nav.main-nav.open a, nav.main-nav.open button { font-size: 1.05rem; }
+      .nav-toggle { display: flex; }
+      .main-choice { grid-template-columns: 1fr; }
+      .choice-card img { min-height: 260px; }
+      .choice-divider { display: none; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .product-grid.jewelry-grid { grid-template-columns: repeat(2, 1fr); }
+      .section { padding: 44px 0; }
+      .lightbox-inner { grid-template-columns: 1fr; max-width: 380px; }
+      .lightbox-img img { min-height: 240px; max-height: 300px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .cta-form { flex-direction: column; }
+      .slideshow-track { height: 320px; }
+      .cat-selector { grid-template-columns: repeat(2, 1fr); }
     }
 
-    /* ── MARKET PILLS ── */
-    .mt { display: flex; flex-direction: column; gap: 5px; padding: 0.6rem 0.85rem; }
-    .mr { background: #fff; border-radius: 8px; padding: 7px 10px; border: 1px solid var(--border); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .mr.active-today { border-color: #fbbf24; background: linear-gradient(90deg,#fff 50%,#fffbeb); }
-    .mc { font-size: 0.83rem; font-weight: 600; color: var(--dark); min-width: 130px; }
-    .mc a { color: var(--dark); text-decoration: none; }
-    .mc a:hover { color: var(--blue); }
-    .mi { font-size: 0.75rem; color: var(--muted); flex: 1; min-width: 80px; }
-    .md { display: flex; align-items: center; gap: 3px; flex-wrap: wrap; }
-    .dp { font-size: 0.7rem; padding: 2px 6px; border-radius: 9px; background: #f1f5f9; color: #64748b; font-weight: 700; border: 1px solid var(--border); }
-    .dp.today { background: #fbbf24; color: #1e293b; border-color: #f59e0b; }
-    .time-note { font-size: 0.7rem; color: var(--muted); margin-left: 2px; }
-
-    /* ── EVENTS ── */
-    .events-wrap { padding: 0.6rem 0.85rem; }
-    .events-links { display: flex; gap: 0.6rem; margin-bottom: 0.75rem; flex-wrap: wrap; }
-    .events-link-btn { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--blue); color: #fff; text-decoration: none; padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; transition: opacity 0.15s; }
-    .events-link-btn:hover { opacity: 0.85; }
-    .events-link-btn.secondary { background: var(--sage); }
-    .ev-list { display: flex; flex-direction: column; gap: 0.45rem; }
-    .ev-item { display: flex; gap: 0.65rem; align-items: flex-start; background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 0.55rem 0.7rem; }
-    .ev-item.ev-now { border-color: var(--blue); background: #eff6ff; }
-    .ev-badge { flex-shrink: 0; min-width: 38px; text-align: center; padding-top: 0.1rem; }
-    .ev-badge .ev-dl { font-size: 0.65rem; color: var(--muted); line-height: 1.3; font-weight: 600; }
-    .ev-badge .ev-now-lbl { font-size: 0.65rem; font-weight: 800; color: var(--blue); text-transform: uppercase; letter-spacing: 0.03em; }
-    .ev-body { flex: 1; min-width: 0; }
-    .ev-title a { font-size: 0.85rem; font-weight: 600; color: var(--dark); text-decoration: none; line-height: 1.3; }
-    .ev-title a:hover { color: var(--blue); }
-    .ev-desc { font-size: 0.76rem; color: var(--muted); margin-top: 0.15rem; line-height: 1.4; }
-    .ev-tags { display: flex; gap: 0.3rem; flex-wrap: wrap; margin-top: 0.28rem; }
-    .ev-tag { font-size: 0.63rem; padding: 0.08rem 0.4rem; border-radius: 8px; background: #f1f5f9; color: #64748b; border: 1px solid var(--border); }
-    .ev-tag.free { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
-    .ev-stand { font-size: 0.68rem; color: var(--muted); margin-top: 0.6rem; text-align: right; opacity: 0.65; }
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .slideshow-track { height: 260px; }
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <div class="header-inner">
-    <div></div>
-    <div class="header-title-wrap">
-      <div class="header-title">Tour Sarrazine</div>
-      <div class="header-sub" id="hdr-sub">Gästeinfo · Nice</div>
-    </div>
-    <div class="lang-switcher">
-      <button class="lang-btn" onclick="setLang('fr')"><span class="flag">🇫🇷</span><span class="code">FR</span></button>
-      <button class="lang-btn active" onclick="setLang('de')"><span class="flag">🇩🇪</span><span class="code">DE</span></button>
-      <button class="lang-btn" onclick="setLang('en')"><span class="flag">🇬🇧</span><span class="code">EN</span></button>
-    </div>
+<div id="wrapper">
+
+<!-- ===================== HEADER ===================== -->
+<header id="header">
+  <div class="header-wrapper row">
+    <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>Nice · France</span></a>
+
+    <nav class="main-nav" id="main-nav" aria-label="Navigation principale">
+      <ul>
+        <li><button onclick="showView('home')" id="nav-accueil">Accueil</button></li>
+        <li><button onclick="showView('oriabel')" id="nav-oriabel">Oriabel</button></li>
+        <li><button onclick="showView('edigne')" id="nav-edigne">Edigne</button></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </header>
 
-<div class="address-bar">
-  <a href="https://www.google.com/maps/dir/?api=1&origin=93%20Bd%20%C3%89douard%20Herriot%2C%2006200%20Nice" target="_blank" style="color:inherit;text-decoration:underline dotted var(--sage)"><strong>Bât. D, 93 Bd Édouard Herriot, 06200 Nice</strong></a>
-  <button class="copy-btn" id="addr-copy-btn" style="font-size:0.72rem;padding:0.15rem 0.5rem" onclick="copyText('93 Bd Édouard Herriot, 06200 Nice', this)">Kopieren</button>
-  <span id="floor-info">· 6. Stock · Aufzug rechts (Nord)</span>
-</div>
+<!-- ===================== MAIN ===================== -->
+<main id="main">
 
-<main>
+  <!-- ==================== VUE : ACCUEIL ==================== -->
+  <div id="view-home">
 
-  <!-- WEATHER -->
-  <div id="weather-section" style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem;overflow:hidden;">
-    <div id="weather-hdr" style="padding:0.5rem 1rem;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--muted);border-bottom:1px solid var(--border)">Nizza · Wetter</div>
-    <div id="weather-top" style="font-size:0.84rem;color:var(--muted);padding:0.6rem 1rem">Wetterdaten werden geladen…</div>
-  </div>
+    <!-- Deux grandes tuiles d'entrée -->
+    <section id="entree" style="position:relative;">
+      <div class="main-choice">
 
-  <!-- EMERGENCY -->
-  <div class="emergency-tile">
-    <div class="emergency-header">
-      <h2 id="s-emerg"></h2>
-    </div>
-    <div class="emergency-body">
-      <div class="emerg-numbers">
-        <a href="tel:112" class="emerg-kpi"><div class="kpi-num">112</div><div class="kpi-lbl" id="lbl-eu">Alle Notfälle</div></a>
-        <a href="tel:17" class="emerg-kpi"><div class="kpi-num">17</div><div class="kpi-lbl" id="lbl-police">Polizei</div></a>
-        <a href="tel:15" class="emerg-kpi"><div class="kpi-num">15</div><div class="kpi-lbl">SAMU</div></a>
-        <a href="tel:18" class="emerg-kpi"><div class="kpi-num">18</div><div class="kpi-lbl" id="lbl-fire">Feuerwehr</div></a>
-      </div>
-      <div id="emerg-rows"></div>
-    </div>
-  </div>
-
-  <!-- PLANTS -->
-  <div class="plants-notice" id="plants-notice" style="display:none"><span id="s-plants"></span></div>
-
-  <!-- APARTMENT -->
-  <div class="section-title" id="sec-apt"></div>
-  <div class="tile-grid" id="grid-apt"></div>
-
-  <!-- EXTERNAL -->
-  <div class="section-title" id="sec-ext"></div>
-  <div class="tile-grid" id="grid-ext"></div>
-
-  <!-- RESTAURANTS MAP -->
-  <div class="section-title" id="sec-resto"></div>
-  <div class="tile-grid single">
-    <div class="card open">
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">🗺️</div>
-        <div class="card-label" id="map-label">Restaurants (Empfehlungen)</div>
-        <div class="card-chevron">▼</div>
-      </div>
-      <div class="card-body">
-        <div style="display:flex;border-bottom:1px solid var(--border)">
-          <div style="flex:1;border-right:1px solid var(--border)">
-            <div id="resto-col-hdr" style="padding:0.3rem 0.8rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);border-bottom:1px solid var(--border)">Restaurants</div>
-            <div id="resto-list" style="padding:0.35rem 0.8rem 0.4rem;font-size:0.82rem"></div>
+        <a class="choice-card" href="#" onclick="event.preventDefault(); showView('oriabel');">
+          <img src="uploads/2019/02/P1070660.jpg" alt="Oriabel — Bijoux & Créations" />
+          <div class="choice-overlay">
+            <p class="choice-label">Atelier · Nice</p>
+            <h2 class="choice-title">Oriabel</h2>
+            <p class="choice-desc">Bijoux, Kintsugi, Peintures, Travaux d'aiguilles — créations uniques et signées.</p>
+            <span class="choice-btn">Découvrir</span>
           </div>
-          <div style="flex:1">
-            <div id="brunch-col-hdr" style="padding:0.3rem 0.8rem;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);border-bottom:1px solid var(--border)">Brunch</div>
-            <div id="brunch-list" style="padding:0.35rem 0.8rem 0.4rem;font-size:0.82rem"></div>
+        </a>
+
+        <a class="choice-card" href="#" onclick="event.preventDefault(); showView('edigne');">
+          <img src="uploads/2019/02/DSC02328.jpg" alt="Edigne Parisis — Peintures" />
+          <div class="choice-overlay">
+            <p class="choice-label">Peintre · Nice</p>
+            <h2 class="choice-title">Edigne</h2>
+            <p class="choice-desc">Originales — huile, acrylique, technique mixte. Chaque tableau, une émotion.</p>
+            <span class="choice-btn">Voir les œuvres</span>
           </div>
+        </a>
+
+      </div>
+      <div class="choice-divider">&amp;</div>
+    </section>
+
+    <!-- Diaporama -->
+    <section class="slideshow-section">
+      <div class="slideshow-track" id="slideshow-track">
+        <!-- Slides injectées par JS -->
+      </div>
+      <div class="slideshow-arrows">
+        <button class="slide-arrow" onclick="slidePrev()" aria-label="Précédent">&#8249;</button>
+        <button class="slide-arrow" onclick="slideNext()" aria-label="Suivant">&#8250;</button>
+      </div>
+      <div class="slideshow-nav" id="slideshow-nav">
+        <!-- Dots injectés par JS -->
+      </div>
+    </section>
+
+  </div><!-- /#view-home -->
+
+  <!-- ==================== VUE : ORIABEL ==================== -->
+  <div id="view-oriabel" style="display:none;">
+
+    <div class="view-hero">
+      <p class="eyebrow">Atelier · Nice · France</p>
+      <h1>Oriabel</h1>
+      <p id="oriabel-subtitle">Créations uniques — bijoux, kintsugi, peintures et travaux d'aiguilles.</p>
+    </div>
+
+    <!-- Sélecteur de catégorie -->
+    <div class="cat-selector" id="oriabel-cat-selector">
+      <!-- Boutons injectés par JS -->
+    </div>
+
+    <!-- Contenu de la catégorie sélectionnée -->
+    <div id="oriabel-content">
+      <!-- Injecté par JS -->
+    </div>
+
+  </div><!-- /#view-oriabel -->
+
+  <!-- ==================== VUE : EDIGNE ==================== -->
+  <div id="view-edigne" style="display:none;">
+
+    <div class="view-hero">
+      <p class="eyebrow">Peintre · Nice · France</p>
+      <h1>Edigne Parisis</h1>
+      <p>Originales — chaque œuvre raconte la lumière, l'espace et l'émotion.</p>
+    </div>
+
+    <section class="section" style="background:var(--color-surface);">
+      <div class="row">
+        <div class="tabs-bar" id="tabs-edigne" role="tablist"></div>
+        <div id="panels-edigne"></div>
+      </div>
+    </section>
+
+  </div><!-- /#view-edigne -->
+
+  <!-- ==================== ABOUT ==================== -->
+  <section id="about" class="section">
+    <div class="row">
+      <div class="about-grid">
+        <div class="about-portrait">
+          <img src="uploads/2019/02/photo-Grosse-julien-originale.jpg" alt="Edigne Parisis & Oriabel — Atelier Nice" loading="lazy" />
         </div>
-        <div id="map"></div>
+        <div class="about-text">
+          <p class="section-eyebrow">L'atelier</p>
+          <h2 class="section-title" style="color:#fff;">Edigne Parisis &amp; Oriabel</h2>
+          <p class="about-body">
+            <strong style="color:#d4b896;">Edigne Parisis</strong> est peintre, dont l'œuvre oscille entre tradition figurative
+            et expression libre. Ses tableaux naissent en dialogue avec la lumière et l'espace —
+            souvent inspirés par les paysages et la vie sur la Côte d'Azur.
+          </p>
+          <p class="about-body">
+            Sous le nom <strong style="color:#d4b896;">Oriabel · Nice</strong>, le même atelier crée des bijoux faits main,
+            des pièces kintsugi, des peintures et des travaux d'aiguilles. Chaque création est unique,
+            signée et livrée avec soin.
+          </p>
+          <a href="#contact" class="btn btn-primary" style="margin-top:14px;">Prendre contact</a>
+        </div>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- BARS CLUBS ROOFTOPS -->
-  <div class="tile-grid single" style="margin-top:0">
-    <div class="card">
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">🍸</div>
-        <div class="card-label" id="bars-label">Bars, Clubs &amp; Rooftops</div>
-        <div class="card-chevron">&#9660;</div>
-      </div>
-      <div class="card-body">
-        <div id="bars-list" style="padding:0.6rem 1.1rem 0.5rem;border-bottom:1px solid var(--border)"></div>
-        <div id="bars-map" style="height:300px"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- VESSELS -->
-  <div class="section-title" id="sec-vessels"></div>
-  <div class="tile-grid single">
-    <div class="card" id="vessel-card">
-      <div class="card-toggle" onclick="toggleVessel(this)">
-        <div class="card-icon">⚓</div>
-        <div class="card-label" id="vessel-label">Hafen Nice – Live Schiffsverkehr</div>
-        <div class="card-chevron">▼</div>
-      </div>
-      <div class="card-body" id="vessel-body" style="padding:0.75rem">
-        <div id="vessel-map-wrap" style="border-radius:8px;overflow:hidden;min-height:300px"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- LEISURE -->
-  <div class="tile-grid" id="grid-leisure"></div>
+  <!-- ==================== CONTACT ==================== -->
+  <section class="cta-bar" id="contact">
+    <h2 class="cta-title">Nouvelles œuvres &amp; collections</h2>
+    <p class="cta-sub">Directement de l'atelier à votre boîte mail — bijoux, peintures, expositions.</p>
+    <form class="cta-form" onsubmit="handleFormSubmit(event)">
+      <input type="email" placeholder="Votre adresse e-mail" required aria-label="Adresse e-mail" />
+      <button type="submit">S'inscrire</button>
+    </form>
+  </section>
 
 </main>
 
-<footer id="footer-text"></footer>
+<!-- ===================== FOOTER ===================== -->
+<footer id="footer">
+  <div class="row">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>Nice · France</span></a>
+        <p class="footer-tagline">Bijoux faits main, kintsugi, peintures et travaux d'aiguilles — un atelier sur la Côte d'Azur.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Oriabel</h4>
+        <ul>
+          <li><button onclick="showView('oriabel')">Bijoux</button></li>
+          <li><button onclick="showView('oriabel')">Kintsugi</button></li>
+          <li><button onclick="showView('oriabel')">Peintures</button></li>
+          <li><button onclick="showView('oriabel')">Travaux d'aiguilles</button></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Edigne</h4>
+        <ul>
+          <li><button onclick="showView('edigne')">Toutes les œuvres</button></li>
+          <li><button onclick="showView('edigne')">Figuratif</button></li>
+          <li><button onclick="showView('edigne')">Paysage & Ville</button></li>
+          <li><button onclick="showView('edigne')">Abstrait</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Oriabel · Nice · France. Tous droits réservés.</span>
+      <span>Chaque création est unique.</span>
+    </div>
+  </div>
+</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script></script>
-<script></script>
-<script></script>
-<script></script>
+</div><!-- /#wrapper -->
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Vue de l'œuvre">
+  <div class="lightbox-inner">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Fermer">✕</button>
+    <div class="lightbox-img">
+      <img id="lb-img" src="" alt="" />
+    </div>
+    <div class="lightbox-info">
+      <p class="lightbox-category" id="lb-cat"></p>
+      <h2 class="lightbox-title" id="lb-title"></h2>
+      <p class="lightbox-desc" id="lb-desc"></p>
+      <div class="lightbox-specs">
+        <div class="spec-item"><div class="spec-label">Technique / Matière</div><div class="spec-value" id="lb-tech"></div></div>
+        <div class="spec-item"><div class="spec-label">Format / Taille</div><div class="spec-value" id="lb-format"></div></div>
+        <div class="spec-item"><div class="spec-label">Année</div><div class="spec-value" id="lb-year"></div></div>
+        <div class="spec-item"><div class="spec-label">Disponibilité</div><div class="spec-value" id="lb-avail"></div></div>
+      </div>
+      <a href="#contact" class="btn btn-primary" onclick="closeLightbox(); showView('home');" style="align-self:flex-start;">Faire une demande</a>
+    </div>
+  </div>
+</div>
+
+<!-- Données -->
+<script src="daten/bereiche.js"></script>
+
+<!-- ===================== JAVASCRIPT ===================== -->
 <script>
+  /* =========================================================
+     DONNÉES DIAPORAMA
+  ========================================================= */
+  var SLIDESHOW_IMAGES = [
+    'uploads/2019/02/DSC02328.jpg',
+    'uploads/2019/02/P1070660.jpg',
+    'uploads/2019/02/Tableau-003.jpg',
+    'uploads/2019/02/P1070661.jpg',
+    'uploads/2019/02/plage-de-Nice.jpg',
+    'uploads/2019/02/P1070691.jpg',
+    'uploads/2019/02/Tableau-005.jpg',
+    'uploads/2019/02/P1070699.jpg',
+    'uploads/2019/02/IMG_7011.jpg',
+    'uploads/2019/02/P1070728.jpg',
+    'uploads/2019/02/Tableau-021.jpg',
+    'uploads/2019/02/P1070733.jpg',
+    'uploads/2019/02/Tableau-022.jpg',
+    'uploads/2019/02/P1070675.jpg',
+    'uploads/2019/02/Tableau-025.jpg',
+    'uploads/2019/02/P1070685.jpg',
+    'uploads/2019/02/P1070913.jpg',
+    'uploads/2019/02/Tableau-026.jpg',
+    'uploads/2019/02/P1070934.jpg',
+    'uploads/2019/02/P1080029.jpg'
+  ];
 
-// ─── CONTENT ───────────────────────────────────────────────────────────────
+  /* =========================================================
+     GESTION DES VUES
+  ========================================================= */
+  var currentView = 'home';
 
-const T = {
-  de: {
-    floorInfo: "6. Stockwerk · Aufzug rechts (Nord)",
-    sEmerg: "Notfälle",
-    sApt: "Wohnung",
-    sExt: "Umgebung",
-    sResto: "Restaurants",
-    police: "Polizei", fire: "Feuerwehr", eu: "Alle Notfälle", copyAddr: "Kopieren",
-    mapLabel: "Restaurants (Empfehlungen)",
-    sVessels: "Hafen Nice – Live Schiffsverkehr",
-    sPlants: "Bitte daran denken, die Pflanzen auf den Balkonen und dem Küchensims zu giessen.",
-    footer: "Tour Sarrazin — Nice · Für Notfälle: 112",
-
-    emergRows: [
-      ["Krankenhaus Erwachsene", "Hôpital Pasteur · 30 Voie Romaine, 06001 Nice → Urgences"],
-      ["Krankenhaus Kinder", "Hôpital Lenval · 57 Av. de la Californie, 06200 Nice → Urgences Enfants"],
-      ["Hausarzt-Notdienst", "SOS Médecin: +33 4 93 85 01 01"],
-      ["Wasser abstellen", "Hähne kalt + warm im Vorraum zwischen Wohnungstür und Aufzug\n⚠ Richtige Wohnung prüfen!"],
-      ["Strom abstellen", "Option 1: Sicherungskasten in der Wohnung, Durchgang zur Küche rechts → alle 4 Reihen OFF\nOption 2: Vorraum zwischen Wohnungstür und Aufzug, linke Seite → grüner Linky-Kasten → Hauptschalter\n⚠ Richtige Wohnung prüfen!"]
-    ],
-
-    apt: [
-      { icon:"📞", label:"Kontakte", rows:[
-        ["Oriabel","+33 6 08 82 43 83"],
-        ["Peter","+33 7 55 63 38 43"],
-        ["Eltern Parisis (Bât. B)","+33 6 66 35 09 98"],
-        ["Hausverwaltung Luc Perrier","+33 6 21 69 53 84"]
-      ]},
-      { icon:"🔑", label:"Zugang & Codes", rows:[
-        ["Ausgang Copro","Code: 272A"],
-        ["Eingang","VIGIK-Karte (blau) oder Fernbedienung"],
-        ["Fußweg zum Meer","Kleines Tor → Av. Mont Rabeau → Tram Fabron"],
-        ["Parkplätze","Nicht fest zugeteilt – gelegentlich umstellen"]
-      ]},
-      { icon:"📶", label:"WLAN", wifi: true, rows:[
-        ["Netzwerk","Freebox-C7C7DD"],
-        ["Passwort","4drmkq9dt2qw95r6qfkr95"],
-        ["Tipp","Tipp auf Netzwerk oder Passwort → in Zwischenablage kopieren · oder QR-Code mit Kamera scannen"],
-        ["_copy","Kopieren"], ["_scan","Mit Kamera scannen"]
-      ]},
-      { icon:"🛏️", label:"Bettwäsche & Handtücher", rows:[
-        ["Einzelbetten","Schrank im Gästezimmer"],
-        ["Doppelbett","Schwarzer chinesischer Schrank"],
-        ["Graue Handtücher","Schrank am Waschtisch im Eltern-Bad (hinter Schubladen)"],
-        ["Blaue Handtücher","Schrank im Gästezimmer"],
-        ["Strandhandtücher","Schrank Harry-Potter-Zimmer"]
-      ]},
-      { icon:"❄️", label:"Klimaanlage", rows:[
-        ["Empfehlung","Lange Laufzeiten bei 24–25°C bevorzugen"],
-        ["Lüftung","Auf Minimum stellen"],
-        ["Fenster","Schließen, wenn Klimaanlage läuft"],
-        ["Nachts","AC aus, Fenster öffnen (Achtung Zugluft)"],
-        ["Heiße Nächte","SCHLAF-Modus (Mond), 25°C"]
-      ]},
-      { icon:"☀️", label:"Markisen (Balkone)", rows:[
-        ["⚠ Wichtig","Nachts und bei Abwesenheit immer einfahren (plötzliche Winde in Nice!)"],
-        ["Südbalkon","Schalter außen am Balkon"],
-        ["Nordbalkon","Schalter im Eltern-Schlafzimmer"],
-        ["⚠ Fenster","Fenster beidseitig offen → Türen können zuschlagen"]
-      ]},
-      { icon:"💡", label:"Beleuchtung (Alexa)", rows:[
-        ["Wohnzimmer","Beleuchtung über Alexa gesteuert"],
-        ["Einschalten","«Alexa, allume salon»"],
-        ["Ausschalten","«Alexa, éteint salon»"],
-        ["Manuell","Lichtschalter zweimal drücken → Alexa trennt sich, manuelle Bedienung möglich"]
-      ]},
-      { icon:"🫧", label:"Waschmaschine", rows:[
-        ["Tür schließen","Gleichmäßig auf unteren Griffteil drücken – Icon geschlossene Tür muss erscheinen, sonst startet Maschine nicht!"],
-        ["Programme","Synthétique (1h56) · Rapide (1h01)"],
-        ["Trocknen","2 Wäscheständer im Putzschrank (gegenüber Eltern-Bad) oder Trockner (Menü Mix)"]
-      ]},
-      { icon:"♻️", label:"Müll & Abfall", rows:[
-        ["Verpackungen","Separat im großen Küchen-Mülleimer → gelbe Tonne im Müllraum Keller (-1)"],
-        ["Restmüll","Kleine Tüten → Müllschlucker im Vorraum zw. Wohnungstür und Aufzug, ODER dunkle Tonne Müllraum (-1)"],
-        ["Glas","Container an der Bushaltestelle"]
-      ]},
-      { icon:"🔥", label:"Barbecue", rows:[
-        [null,"Theoretisch verboten, aber toleriert – nicht zu oft, kurze Grillzeiten."]
-      ]}
-    ],
-
-    ext: [
-      { icon:"🚌", label:"Öffentliche Verkehrsmittel", rows:[
-        ["Tickets","Einheitsticket Tram + Bus (Magnetkarte kaufen & aufladen)"],
-        ["Fahrrad/Roller","Lime oder Poney vor der Copro (ca. 3–5 € ins Zentrum)"],
-        ["Bus","[«Faculté de lettres»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214) → Bus 10 → Magnan → Tram L2"],
-        ["Tram","[«Fabron»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1180) oder [«Magnan»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1075) → Linie 2"],
-        ["Flughafen","Ab [«Fabron»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1180) Tram L2 Richtung «aéroport» (NICHT «cadam») → T1 dann T2. Ca. 40 Min."],
-        ["Zentrum","[«Jean Médecin»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1213), ca. 25 Min. (Tram L2)"],
-        ["Hafen","[«Port Lympia»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=3525), ca. 35 Min. (Tram L2 → L3)"]
-      ]},
-      { icon:"🏥", label:"Ärzte & Apotheken", rows:[
-        ["Hausarzt","Dr. Le Barzic, Tel. 04 93 96 45 86\n1 Avenue du Petit Fabron, 06200 Nice (15 Min. zu Fuß)"],
-        ["Zahnarzt","Tsipora Amsellem, Tel. 04 93 87 94 81\n11 Avenue Jean Médecin, 06000 Nice"],
-        ["Apotheke","CAP3000 (9h–20h, außer So.) · Flughafen T2 (So. 8h–20h30)"],
-        ["Online Termine","doctolib.fr"]
-      ]},
-      { icon:"🛒", label:"Einkaufen", shopmap:true, rows:[
-        ["Märkte","Cours Saleya: Mo Antiquitäten, Di–So Blumen/Gemüse\nLibération: täglich\nVentimiglia (IT): freitags (Zug empfohlen)"]
-      ]},
-      { icon:"🏬", label:"Shopping-Center", rows:[
-        ["Nice Étoile","30 Av. Jean Médecin, 06000 Nice\nTram L2 → Jean Médecin, ca. 25 Min."],
-        ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMo–Sa 10h–20h / So 11h–19h\nBus 10 oder Tram L2 Richtung Aéroport"],
-        ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(früher: Polygone)"]
-      ]},
-      { icon:"🧺", label:"Märkte", marketscard:true, markets:[
-        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Blumen & Gemüse", days:["Di","Mi","Do","Fr","Sa","So"], time:"6h–13h30" },
-        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · Lebensmittel, Käse, Charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
-        { name:"Marché Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Blumen, Lebensmittel, Südfrankreich-Produkte · 30 Min. Zug", days:["Mo","Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
-        { name:"Marché Provençal – Antibes", url:"https://maps.apple.com/?q=Marche+Provencal+Antibes+France", desc:"Rue Sade, Vieille Ville · Gemüse, Käse, Oliven · 40 Min. Zug", days:["Di","Do","Sa","So"], time:"6h–13h" }
-      ]},
-      { icon:"🏺", label:"Brocantes", marketscard:true, brocantelink:"https://brocabrac.fr/06/nice/", markets:[
-        { name:"Cours Saleya – Antiquités & Brocante", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Partie Est · ~150 Händler · Nicer Trouvaillen für jedes Budget", days:["Mo"], time:"7h30–18h" },
-        { name:"Brocante de Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Rue du Marché Forville · 30 Min. Zug (Gare St-Augustin)", days:["Mo"], time:"7h–13h" },
-        { name:"Allées de la Liberté – Cannes", url:"https://maps.apple.com/?q=Allees+de+la+Liberte+Cannes+France", desc:"Allée Charles de Gaulle · große Brocante am Hafen · 30 Min. Zug", days:["Sa","So"], time:"7h–13h" },
-        { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · nahe Vieux Menton · 45 Min. Zug", days:["Fr"], time:"matin" },
-        { name:"Brocante Place Garibaldi", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"Jeden 3. Sa./Monat · 9–17h · Antikes, Gemälde, Sammlerstücke", days:["Sa"], time:"9–17h" },
-        { name:"Artisanat Garibaldi (Kunsthandwerk)", url:"https://www.explorenicecotedazur.com/fiche/marche-artisanal-garibaldi/", desc:"Jeden 1. So./Monat · 9–19h · Keramik, Schmuck, Leder, Textil", days:["So"], time:"9–19h" }
-      ]},
-      { icon:"📅", label:"Was läuft gerade", eventscard:true },
-      { icon:"🚲", label:"Fahrrad", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://cotedazurfrance.de/zu-tun/sportliche-aktivitaten/fahrrad/die-cote-dazur-ein-paradies-fur-radfahrer/", rows:[
-        ["Verleih","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (auch Touren mit Guide)"],
-        ["Küstenroute","Nice → Cagnes-sur-Mer → Villeneuve-Loubet · 14 km · flach · familienfreundlich"],
-        ["Col d'Eze","Klassischer Anstieg ab Nice-Bord-de-Mer · 507 m · 9 km · Paris-Nizza-Profistrecke"],
-        ["Col de Vence","Hinterland Nizza · max. 9 % Steigung · Panoramablick bis Cannes"],
-        ["Cap d'Antibes – Rennradtour","[Komoot – Suche](https://www.komoot.com/discover/antibes/@43.5809,7.1281/tours?sport=racebike) · ~48 km · 200+ Hm · Küstenumrundung · Sentier du Littoral"]
-      ]},
-      { icon:"🥾", label:"Wanderungen", rows:[
-        ["Tour du Cap-Ferrat","[Küstenrundweg (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · leicht · ~1,5 Std\nStartpunkt: Hafen Saint-Jean-Cap-Ferrat"],
-        ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Sentier du Littoral · 2,7 km · leicht\nStartpunkt: Plage de la Garoupe"],
-        ["Chemin de Nietzsche – Èze","[Eze-sur-Mer → Dorf Èze (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/sentier-nietzsche-eze-bord-de-mer-a-eze-village) – 2,1 km · 400 Hm · mittel\n~45 Min bergab · ~1,5 Std bergauf"],
-        ["Hinterland – Dörfer","[Randoxygène – alle Wanderwege](https://randoxygene.departement06.fr/pied) · Peille · Peillon · Gorbio · Sainte-Agnès"]
-      ]},
-      { icon:"🚗", label:"Ausflüge (Auto)", excursionscard:true },
-      { icon:"🏊", label:"Sport", sportmap:true },
-      { icon:"🎭", label:"Kino & Theater", rows:[
-        ["Kino – Programm","[Pathé Masséna](https://www.pathe.fr/cinemas/cinema-pathe-massena) · 31 Av. Jean Médecin · Tram L2 → Jean Médecin · ~25 Min.\n[Pathé Gare du Sud](https://www.pathe.fr/cinemas/cinema-pathe-gare-du-sud) · 9 Allée Charles Pasqua · Alternative\n→ [Alle Spielzeiten auf pathe.fr](https://www.pathe.fr/cinemas/ville/nice)"],
-        ["Theater – Programm","[theatres.nice.fr](https://theatres.nice.fr/) · Portail aller Nizzaer Bühnen\n[TNN – Théâtre National de Nice](https://www.tnn.fr/fr/calendrier) · Promenade des Arts · 04 93 13 19 00\n[Théâtre de la Cité](https://www.theatredelacite.fr/) · Vieux Nice · breites Programm\n→ [Opéra de Nice](https://www.opera-nice.org/agenda/) · Rue Saint-François-de-Paule"]
-      ]},
-      { icon:"🍦", label:"Eis & Massage", rows:[
-        ["Eis","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieille Ville)"],
-        ["Massage","Le Banthai, Rue de France"]
-      ]}
-    ],
-
-    restos: [
-      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651, url:"https://pizzerialachamade.fr/fr" },
-      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758, url:"https://www.facebook.com/renesocca/", vegan:true },
-      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636, url:"https://indian-curry-tandoori.wheree.com/menu", vegan:true },
-      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652, url:"https://en.lalchimie-restaurant.com/" },
-      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648, url:"https://pin-pin.fr/", vegan:true },
-      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Plage des Canailles", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
-    ],
-    brunches: [
-      { name:"Pain & Cie", note:"Cours Saleya · Hausgemachtes, Bio-Eier, Pancakes", addr:"3 Rue Louis Gassin, Nice", lat:43.6951, lng:7.2751, url:"https://www.restaurantpainetcie.fr/", vegan:true },
-      { name:"Clay", note:"All-day-Brunch 7 Tage · Avocado-Toast, Pancakes", addr:"4 Rue Bonaparte, Nice", lat:43.6966, lng:7.2773, url:"https://www.facebook.com/clay.bonaparte/", vegan:true },
-      { name:"Marinette", note:"Trend-Café Vieux Nice · Poke Bowls, Pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
-      { name:"La Popote d'Ondine", note:"100% hausgemacht · vegan-freundlich", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Edmond Café", note:"Gemütlich, zentral gelegen", addr:"11 bis Rue du Congrès, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Vieux Nice · Pancakes, Avocado-Toast, ganztägig", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
-    ],
-    bars: [
-      { name:"Moon Bar (Rooftop Aston)", note:"360-Grad-Panorama · Pool · Live-Musik Do-Sa", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
-      { name:"SEEN by Olivier (Rooftop Anantara)", note:"6. OG · Panoramablick Baie des Anges", addr:"12 Ave de Verdun, Nice", lat:43.6991, lng:7.2649, url:"https://www.seennice.com/en/", tag:"Rooftop" },
-      { name:"Elaio - Le Meridien (Rooftop)", note:"Terrasse Promenade · Cocktails und Meeresblick", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
-      { name:"High Club", note:"Bekanntester Club der Riviera · VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
-      { name:"Wayne's Bar", note:"Live-Musik taeglich · Vieux Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
-      { name:"Calade Rooftop (Radisson Blu)", note:"Meerblick-Terrasse an der Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" }
-    ], barsLabel:"Bars, Clubs & Rooftops"
-  },
-
-  en: {
-    floorInfo: "6th floor · Lift on the right (north)",
-    sEmerg: "Emergencies",
-    sApt: "Apartment",
-    sExt: "Area",
-    sResto: "Restaurants",
-    police: "Police", fire: "Fire Brigade", eu: "All emergencies", copyAddr: "Copy",
-    mapLabel: "Restaurants (recommendations)",
-    sVessels: "Port Nice – Live Vessel Traffic",
-    sPlants: "Please remember to water the plants on the balconies and the kitchen windowsill.",
-    footer: "Tour Sarrazin — Nice · Emergency: 112",
-
-    emergRows: [
-      ["Hospital (adults)", "Hôpital Pasteur · 30 Voie Romaine, 06001 Nice → Urgences (A&E)"],
-      ["Hospital (children)", "Hôpital Lenval · 57 Av. de la Californie, 06200 Nice → Urgences Enfants"],
-      ["Home doctor", "SOS Médecin: +33 4 93 85 01 01"],
-      ["Shut off water", "Cold + hot water taps in the hallway between apartment door and lift\n⚠ Check you are using the correct apartment's valves!"],
-      ["Shut off electricity", "Option 1: Fuse box inside the apartment, right side of passage to kitchen → all 4 rows OFF\nOption 2: Hallway between apartment door and lift, left side → green Linky box → main switch\n⚠ Check you are using the correct apartment's switch!"]
-    ],
-
-    apt: [
-      { icon:"📞", label:"Contacts", rows:[
-        ["Oriabel","+33 6 08 82 43 83"],
-        ["Peter","+33 7 55 63 38 43"],
-        ["Parents Parisis (Bât. B)","+33 6 66 35 09 98"],
-        ["Property mgmt. Luc Perrier","+33 6 21 69 53 84"]
-      ]},
-      { icon:"🔑", label:"Access & Codes", rows:[
-        ["Exit Copro","Code: 272A"],
-        ["Entry","Blue VIGIK card or remote control"],
-        ["Pedestrian path to sea","Small gate → Av. Mont Rabeau → tram stop Fabron"],
-        ["Parking","Not assigned – move car occasionally"]
-      ]},
-      { icon:"📶", label:"Wi-Fi", wifi: true, rows:[
-        ["Network","Freebox-C7C7DD"],
-        ["Password","4drmkq9dt2qw95r6qfkr95"],
-        ["Tip","Tap network or password to copy · or scan QR code with camera"],
-        ["_copy","Copy"], ["_scan","Scan with camera"]
-      ]},
-      { icon:"🛏️", label:"Bedding & Towels", rows:[
-        ["Single beds","Guest room wardrobe"],
-        ["Double bed","Black Chinese wardrobe"],
-        ["Large grey towels","Cabinet at washbasin in parents' bathroom (behind drawers)"],
-        ["Blue towels","Guest room wardrobe"],
-        ["Beach towels","Harry Potter room wardrobe"]
-      ]},
-      { icon:"❄️", label:"Air Conditioning", rows:[
-        ["Recommendation","Prefer long runs at moderate temperature (24–25°C)"],
-        ["Fan","Set to minimum"],
-        ["Windows","Always close when AC is running"],
-        ["At night","Switch off AC and open windows (watch out for draughts)"],
-        ["Hot nights","SLEEP mode (moon symbol), 25°C"]
-      ]},
-      { icon:"☀️", label:"Awnings (Balconies)", rows:[
-        ["⚠ Important","Always retract at night and when away (sudden strong winds in Nice!)"],
-        ["South balcony","Switch on the balcony outside"],
-        ["North balcony","Switch in parents' bedroom"],
-        ["⚠ Windows","Both windows open → doors can slam and get damaged"]
-      ]},
-      { icon:"💡", label:"Lighting (Alexa)", rows:[
-        ["Living/dining room","Lighting controlled via Alexa"],
-        ["Switch on","«Alexa, allume salon»"],
-        ["Switch off","«Alexa, éteint salon»"],
-        ["Manual","Press light switch twice → disconnects from Alexa; manual operation possible"]
-      ]},
-      { icon:"🫧", label:"Washing Machine", rows:[
-        ["Closing door","Press steadily on the bottom of the handle – closed-door icon must appear, otherwise machine won't start!"],
-        ["Cycles","Synthetic (1h56) · Quick (1h01)"],
-        ["Drying","2 clothes horses in cleaning cupboard (opposite master bathroom) or electric dryer (Mix cycle)"]
-      ]},
-      { icon:"♻️", label:"Waste & Recycling", rows:[
-        ["Packaging","Collect separately in large kitchen bin → yellow bin in basement bin room (-1)"],
-        ["Residual waste","Small bags → waste chute in hallway between apt door and lift, OR dark bin in basement (-1)"],
-        ["Glass","Container at the bus stop"]
-      ]},
-      { icon:"🔥", label:"Barbecue", rows:[
-        [null,"Technically prohibited but tolerated – not too often, short sessions."]
-      ]}
-    ],
-
-    ext: [
-      { icon:"🚌", label:"Public Transport", rows:[
-        ["Tickets","Combined ticket for tram + bus (buy magnetic card & top up)"],
-        ["Bike/Scooter","Lime or Poney at the Copro (approx. €3–5 to centre)"],
-        ["Bus","[«Faculté de lettres»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214) → Bus 10 → Magnan → Tram L2"],
-        ["Tram","[«Fabron»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1180) or [«Magnan»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1075) → Line 2"],
-        ["Airport","From [«Fabron»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1180) Tram L2 towards «aéroport» (NOT «cadam») → T1 then T2. Approx. 40 min."],
-        ["City centre","[«Jean Médecin»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1213), approx. 25 min. (Tram L2)"],
-        ["Harbour","[«Port Lympia»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=3525), approx. 35 min. (Tram L2 → L3)"]
-      ]},
-      { icon:"🏥", label:"Medical", rows:[
-        ["GP","Dr. Le Barzic, Tel. 04 93 96 45 86\n1 Avenue du Petit Fabron, 06200 Nice (15 min. walk)"],
-        ["Dentist","Tsipora Amsellem, Tel. 04 93 87 94 81\n11 Avenue Jean Médecin, 06000 Nice"],
-        ["Pharmacy","CAP3000 (9am–8pm, not Sun.) · Airport T2 (Sun. 8am–8:30pm)"],
-        ["Online appointments","doctolib.fr"]
-      ]},
-      { icon:"🛒", label:"Shopping", shopmap:true, rows:[
-        ["Markets","Cours Saleya: Mon antiques, Tue–Sun flowers/veg/fruit\nLibération: daily\nVentimiglia (IT): Fridays (train recommended)"]
-      ]},
-      { icon:"🏬", label:"Shopping Centres", rows:[
-        ["Nice Étoile","30 Av. Jean Médecin, 06000 Nice\nTram L2 → Jean Médecin, approx. 25 min."],
-        ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nMon–Sat 10am–8pm / Sun 11am–7pm\nBus 10 or Tram L2 towards Airport"],
-        ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(formerly: Polygone)"]
-      ]},
-      { icon:"🧺", label:"Markets", marketscard:true, markets:[
-        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Flowers & vegetables", days:["Di","Mi","Do","Fr","Sa","So"], time:"6h–13h30" },
-        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · food, cheese, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
-        { name:"Marché Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Flowers, food, regional produce · 30 min by train", days:["Mo","Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
-        { name:"Marché Provençal – Antibes", url:"https://maps.apple.com/?q=Marche+Provencal+Antibes+France", desc:"Rue Sade, Old Town · vegetables, cheese, olives · 40 min by train", days:["Di","Do","Sa","So"], time:"6h–13h" }
-      ]},
-      { icon:"🏺", label:"Brocantes & Antiques", marketscard:true, brocantelink:"https://brocabrac.fr/06/nice/", markets:[
-        { name:"Cours Saleya – Antiques & Brocante", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"East side · ~150 vendors · finds for every budget", days:["Mo"], time:"7:30–18h" },
-        { name:"Brocante de Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Rue du Marché Forville · 30 min by train", days:["Mo"], time:"7h–13h" },
-        { name:"Allées de la Liberté – Cannes", url:"https://maps.apple.com/?q=Allees+de+la+Liberte+Cannes+France", desc:"Allée Charles de Gaulle · large brocante by the port · 30 min by train", days:["Sa","So"], time:"7h–13h" },
-        { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · near Vieux Menton · 45 min by train", days:["Fr"], time:"morning" },
-        { name:"Brocante Place Garibaldi", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"Every 3rd Sat/month · 9–17h · Antiques, paintings, collectibles", days:["Sa"], time:"9–17h" },
-        { name:"Garibaldi Crafts Market", url:"https://www.explorenicecotedazur.com/fiche/marche-artisanal-garibaldi/", desc:"Every 1st Sun/month · 9–19h · Ceramics, jewellery, leather, textiles", days:["Su"], time:"9–19h" }
-      ]},
-      { icon:"🚲", label:"Cycling", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://cotedazurfrance.com/to-do/sports-activities/cycling/the-cote-dazur-a-paradise-for-cyclists/", rows:[
-        ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"],
-        ["Coastal route","Nice → Cagnes-sur-Mer → Villeneuve-Loubet · 14 km · flat · family-friendly"],
-        ["Col d'Eze","Classic climb from Nice-Bord-de-Mer · 507 m · 9 km · Paris-Nice pro route"],
-        ["Col de Vence","Hinterland · max. 9% gradient · panoramic views to Cannes"],
-        ["Cap d'Antibes – road cycling","[Komoot – explore](https://www.komoot.com/discover/antibes/@43.5809,7.1281/tours?sport=racebike) · ~48 km · 200+ m climb · coastal circuit"]
-      ]},
-      { icon:"🥾", label:"Hikes", rows:[
-        ["Tour du Cap-Ferrat","[Coastal loop trail (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4.8 km · easy · ~1.5h\nStart: Port of Saint-Jean-Cap-Ferrat"],
-        ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Coastal footpath · 2.7 km · easy\nStart: Plage de la Garoupe"],
-        ["Chemin de Nietzsche – Èze","[Èze-sur-Mer → Èze village (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/sentier-nietzsche-eze-bord-de-mer-a-eze-village) – 2.1 km · 400m elevation · moderate\n~45 min down · ~1.5h up"],
-        ["Hinterland villages","[Randoxygène – all hiking trails](https://randoxygene.departement06.fr/pied) · Peille · Peillon · Gorbio · Sainte-Agnès"]
-      ]},
-      { icon:"🚗", label:"Day Trips (car)", excursionscard:true },
-
-      { icon:"🏊", label:"Sport", sportmap:true },
-      { icon:"🎭", label:"Cinema & Theatre", rows:[
-        ["Cinema – programme","[Pathé Masséna](https://www.pathe.fr/cinemas/cinema-pathe-massena) · 31 Av. Jean Médecin · Tram L2 → Jean Médecin · ~25 min\n[Pathé Gare du Sud](https://www.pathe.fr/cinemas/cinema-pathe-gare-du-sud) · 9 Allée Charles Pasqua · alternative\n→ [All Nice cinemas on pathe.fr](https://www.pathe.fr/cinemas/ville/nice)"],
-        ["Theatre – programme","[theatres.nice.fr](https://theatres.nice.fr/) · portal for all Nice theatres\n[TNN – Théâtre National de Nice](https://www.tnn.fr/fr/calendrier) · Promenade des Arts · 04 93 13 19 00\n[Théâtre de la Cité](https://www.theatredelacite.fr/) · Vieux Nice\n→ [Opéra de Nice](https://www.opera-nice.org/agenda/) · Rue Saint-François-de-Paule"]
-      ]},
-      { icon:"🍦", label:"Ice Cream & Massage", rows:[
-        ["Ice cream","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Old Town)"],
-        ["Massage","Le Banthai, Rue de France"]
-      ]}
-    ],
-
-    restos: [
-      { name:"La Chamade (Neapolitan pizza)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651, url:"https://pizzerialachamade.fr/fr" },
-      { name:"René Socca (socca & Niçois cuisine)", addr:"2 Rue Miralhéti (Old Nice)", lat:43.6958, lng:7.2758, url:"https://www.facebook.com/renesocca/", vegan:true },
-      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636, url:"https://indian-curry-tandoori.wheree.com/menu", vegan:true },
-      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652, url:"https://en.lalchimie-restaurant.com/" },
-      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648, url:"https://pin-pin.fr/", vegan:true },
-      { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Plage des Canailles (beach restaurant)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
-    ],
-    brunches: [
-      { name:"Pain & Cie", note:"Cours Saleya terrace · homemade, organic eggs, pancakes", addr:"3 Rue Louis Gassin, Nice", lat:43.6951, lng:7.2751, url:"https://www.restaurantpainetcie.fr/", vegan:true },
-      { name:"Clay", note:"All-day brunch 7 days · avocado toast, pancakes", addr:"4 Rue Bonaparte, Nice", lat:43.6966, lng:7.2773, url:"https://www.facebook.com/clay.bonaparte/", vegan:true },
-      { name:"Marinette", note:"Trendy cafe Old Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
-      { name:"La Popote d'Ondine", note:"100% homemade · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Edmond Cafe", note:"Cozy, central location", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Old Nice · pancakes, avocado toast, all day", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
-    ],
-    bars: [
-      { name:"Moon Bar (Aston Rooftop)", note:"360 panorama · pool · live music Thu-Sat", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
-      { name:"SEEN by Olivier (Anantara Rooftop)", note:"6th fl. · panoramic bay views", addr:"12 Ave de Verdun, Nice", lat:43.6991, lng:7.2649, url:"https://www.seennice.com/en/", tag:"Rooftop" },
-      { name:"Elaio - Le Meridien (Rooftop)", note:"Terrace above Promenade · cocktails & sea views", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
-      { name:"High Club", note:"Most famous club on the Riviera · VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
-      { name:"Wayne's Bar", note:"Live music nightly · Old Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
-      { name:"Calade Rooftop (Radisson Blu)", note:"Sea-view terrace on the Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" }
-    ], barsLabel:"Bars, Clubs & Rooftops"
-  },
-
-  fr: {
-    floorInfo: "6e étage · Ascenseur à droite (nord)",
-    sEmerg: "Urgences",
-    sApt: "Appartement",
-    sExt: "Quartier",
-    sResto: "Restaurants",
-    police: "Police", fire: "Pompiers", eu: "Toutes urgences", copyAddr: "Copier",
-    mapLabel: "Restaurants (recommandations)",
-    sVessels: "Port de Nice – Trafic maritime en direct",
-    sPlants: "Pensez à arroser les plantes sur les balcons et le rebord de la fenêtre de la cuisine.",
-    footer: "Tour Sarrazin — Nice · Urgences: 112",
-
-    emergRows: [
-      ["Hôpital (adultes)", "Hôpital Pasteur · 30 Voie Romaine, 06001 Nice → Urgences"],
-      ["Hôpital (enfants)", "Hôpital Lenval · 57 Av. de la Californie, 06200 Nice → Urgences Enfants"],
-      ["Médecin à domicile", "SOS Médecin: +33 4 93 85 01 01"],
-      ["Couper l'eau", "Robinets froid + chaud dans le couloir entre la porte de l'appartement et l'ascenseur\n⚠ Vérifier qu'il s'agit du bon appartement !"],
-      ["Couper l'électricité", "Option 1: Tableau électrique dans l'appartement, couloir cuisine côté droit → toutes les 4 rangées sur OFF\nOption 2: Couloir entre la porte de l'appartement et l'ascenseur, côté gauche → boîtier Linky vert → disjoncteur principal\n⚠ Vérifier qu'il s'agit du bon appartement !"]
-    ],
-
-    apt: [
-      { icon:"📞", label:"Contacts", rows:[
-        ["Oriabel","+33 6 08 82 43 83"],
-        ["Peter","+33 7 55 63 38 43"],
-        ["Parents Parisis (Bât. B)","+33 6 66 35 09 98"],
-        ["Syndic – Luc Perrier","+33 6 21 69 53 84"]
-      ]},
-      { icon:"🔑", label:"Accès & Codes", rows:[
-        ["Sortie Copro","Code: 272A"],
-        ["Entrée","Carte VIGIK (bleue) ou télécommande"],
-        ["Accès piéton à la mer","Petit portail → Av. Mont Rabeau → arrêt tram Fabron"],
-        ["Stationnement","Places non attribuées – déplacer le véhicule occasionnellement"]
-      ]},
-      { icon:"📶", label:"Wi-Fi", wifi: true, rows:[
-        ["Réseau","Freebox-C7C7DD"],
-        ["Mot de passe","4drmkq9dt2qw95r6qfkr95"],
-        ["Astuce","Appuyer sur le réseau ou le mot de passe pour copier · ou scanner le QR code avec l'appareil photo"],
-        ["_copy","Copier"], ["_scan","Scanner avec l'appareil photo"]
-      ]},
-      { icon:"🛏️", label:"Linge & Serviettes", rows:[
-        ["Lits simples","Armoire dans la chambre d'amis"],
-        ["Lit double","Armoire chinoise noire"],
-        ["Grandes serviettes grises","Meuble à vasque dans la salle de bains parentale (derrière les tiroirs)"],
-        ["Serviettes bleues","Armoire chambre d'amis"],
-        ["Serviettes de plage","Armoire chambre Harry Potter"]
-      ]},
-      { icon:"❄️", label:"Climatisation", rows:[
-        ["Recommandation","Privilégier de longues durées à température modérée (24–25°C)"],
-        ["Ventilation","Régler au minimum"],
-        ["Fenêtres","Fermer quand la clim est en marche"],
-        ["La nuit","Éteindre la clim et ouvrir les fenêtres (attention aux courants d'air)"],
-        ["Nuits chaudes","Mode SLEEP (lune), 25°C"]
-      ]},
-      { icon:"☀️", label:"Stores (Balcons)", rows:[
-        ["⚠ Important","Toujours rentrer les stores la nuit et en cas d'absence (vents soudains à Nice !)"],
-        ["Balcon sud","Interrupteur à l'extérieur sur le balcon"],
-        ["Balcon nord","Interrupteur dans la chambre parentale"],
-        ["⚠ Fenêtres","Fenêtres ouvertes des deux côtés → les portes peuvent claquer et s'endommager"]
-      ]},
-      { icon:"💡", label:"Éclairage (Alexa)", rows:[
-        ["Salon & salle à manger","Éclairage commandé par Alexa"],
-        ["Allumer","«Alexa, allume salon»"],
-        ["Éteindre","«Alexa, éteint salon»"],
-        ["Manuel","Appuyer deux fois sur l'interrupteur → déconnexion d'Alexa, commande manuelle possible"]
-      ]},
-      { icon:"🫧", label:"Machine à laver", rows:[
-        ["Fermeture porte","Appuyer de façon régulière sur la partie basse de la poignée – l'icône porte fermée doit apparaître, sinon la machine ne démarre pas !"],
-        ["Programmes","Synthétique (1h56) · Rapide (1h01)"],
-        ["Séchage","2 étendoirs dans le placard ménage (en face de la salle de bain parentale) ou sèche-linge électrique (programme Mix)"]
-      ]},
-      { icon:"♻️", label:"Déchets & Tri", rows:[
-        ["Emballages","Collecte séparée dans la grande poubelle cuisine → bac jaune dans le local poubelles cave (-1)"],
-        ["Déchets ménagers","Petits sacs → vide-ordures dans le couloir entre la porte et l'ascenseur OU bac sombre cave (-1)"],
-        ["Verre","Conteneur à l'arrêt de bus"]
-      ]},
-      { icon:"🔥", label:"Barbecue", rows:[
-        [null,"Techniquement interdit mais toléré – pas trop souvent et en sessions courtes."]
-      ]}
-    ],
-
-    ext: [
-      { icon:"🚌", label:"Transports en commun", rows:[
-        ["Tickets","Ticket unique tram + bus (acheter carte magnétique et recharger)"],
-        ["Vélo/Trottinette","Lime ou Poney devant la Copro (env. 3–5 € jusqu'au centre)"],
-        ["Bus","[«Faculté de lettres»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1214) → Bus 10 → Magnan → Tram L2"],
-        ["Tram","[«Fabron»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1180) ou [«Magnan»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1075) → Ligne 2"],
-        ["Aéroport","Depuis [«Fabron»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1180) Tram L2 direction «aéroport» (PAS «cadam») → T1 puis T2. Env. 40 min."],
-        ["Centre-ville","[«Jean Médecin»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=1213), env. 25 min. (Tram L2)"],
-        ["Port","[«Port Lympia»](https://www.lignesdazur.com/fr/horaires?context=ScheduleLogicalStop&stop=3525), env. 35 min. (Tram L2 → L3)"]
-      ]},
-      { icon:"🏥", label:"Médecins & Pharmacies", rows:[
-        ["Médecin généraliste","Dr. Le Barzic, Tél. 04 93 96 45 86\n1 Avenue du Petit Fabron, 06200 Nice (15 min. à pied)"],
-        ["Dentiste","Tsipora Amsellem, Tél. 04 93 87 94 81\n11 Avenue Jean Médecin, 06000 Nice"],
-        ["Pharmacie","CAP3000 (9h–20h sf dim.) · Aéroport T2 (dim. 8h–20h30)"],
-        ["Rendez-vous en ligne","doctolib.fr"]
-      ]},
-      { icon:"🛒", label:"Courses", shopmap:true, rows:[
-        ["Marchés","Cours Saleya: lun. antiquités, mar–dim fleurs/légumes\nLibération: tous les jours\nVentimiglia (IT): vendredi (train conseillé)"]
-      ]},
-      { icon:"🏬", label:"Centres commerciaux", rows:[
-        ["Nice Étoile","30 Av. Jean Médecin, 06000 Nice\nTram L2 → Jean Médecin, env. 25 min."],
-        ["CAP3000","Av. Eugène Donadeï, 06700 Saint-Laurent-du-Var\nLun–Sam 10h–20h / Dim 11h–19h\nBus 10 ou Tram L2 direction Aéroport"],
-        ["Shopping Promenade Riviera","119 Av. des Alpes, 06800 Cagnes-sur-Mer\n(ex-Polygone)"]
-      ]},
-      { icon:"🧺", label:"Marchés", marketscard:true, markets:[
-        { name:"Cours Saleya", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Fleurs & légumes", days:["Di","Mi","Do","Fr","Sa","So"], time:"6h–13h30" },
-        { name:"Marché de la Libération", url:"https://maps.apple.com/?q=Marche+Liberation+Nice+France+Avenue+Malaussena", desc:"Av. Malausséna · alimentation, fromages, charcuterie", days:["Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
-        { name:"Marché Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Fleurs, alimentation, produits régionaux · 30 min en train", days:["Mo","Di","Mi","Do","Fr","Sa","So"], time:"7h–13h" },
-        { name:"Marché Provençal – Antibes", url:"https://maps.apple.com/?q=Marche+Provencal+Antibes+France", desc:"Rue Sade, Vieille Ville · légumes, fromages, olives · 40 min en train", days:["Di","Do","Sa","So"], time:"6h–13h" }
-      ]},
-      { icon:"🏺", label:"Brocantes", marketscard:true, brocantelink:"https://brocabrac.fr/06/nice/", markets:[
-        { name:"Cours Saleya – Antiquités & Brocante", url:"https://maps.apple.com/?q=Cours+Saleya+Nice+France", desc:"Partie Est · ~150 marchands · trouvailles pour tous les budgets", days:["Mo"], time:"7h30–18h" },
-        { name:"Brocante de Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Rue du Marché Forville · 30 min en train", days:["Mo"], time:"7h–13h" },
-        { name:"Allées de la Liberté – Cannes", url:"https://maps.apple.com/?q=Allees+de+la+Liberte+Cannes+France", desc:"Allée Charles de Gaulle · grande brocante au bord du port · 30 min en train", days:["Sa","So"], time:"7h–13h" },
-        { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · près du Vieux Menton · 45 min en train", days:["Fr"], time:"matin" },
-        { name:"Brocante Place Garibaldi", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"Chaque 3e sam./mois · 9–17h · Antiquités, tableaux, objets", days:["Sa"], time:"9–17h" },
-        { name:"Marché Artisanal Garibaldi", url:"https://www.explorenicecotedazur.com/fiche/marche-artisanal-garibaldi/", desc:"Chaque 1er dim./mois · 9–19h · Céramiques, bijoux, cuir, textiles", days:["Di"], time:"9–19h" }
-      ]},
-      { icon:"🚲", label:"Vélos", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://cotedazurfrance.fr/a-faire/activites-sportives/velo/la-cote-dazur-le-paradis-des-cyclistes/", rows:[
-        ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"],
-        ["Piste côtière","Nice → Cagnes-sur-Mer → Villeneuve-Loubet · 14 km · plat · idéal famille"],
-        ["Col d'Eze","Ascension classique depuis Nice-Bord-de-Mer · 507 m · 9 km · itinéraire Paris-Nice"],
-        ["Col de Vence","Arrière-pays niçois · max. 9 % · panorama jusqu'à Cannes"],
-        ["Cap d'Antibes – vélo de route","[Komoot – explorer](https://www.komoot.com/discover/antibes/@43.5809,7.1281/tours?sport=racebike) · ~48 km · 200+ m dénivelé · tour côtier"]
-      ]},
-      { icon:"🥾", label:"Randonnées", rows:[
-        ["Tour du Cap-Ferrat","[Sentier littoral (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/tour-de-saint-jean-cap-ferrat) – 4,8 km · facile · ~1h30\nDépart : port de Saint-Jean-Cap-Ferrat"],
-        ["Cap d'Antibes – La Garoupe","[Tour du Cap d'Antibes (Randoxygène)](https://randoxygene.departement06.fr/littoral/tour-du-cap-dantibes) – Sentier du Littoral · 2,7 km · facile\nDépart : Plage de la Garoupe"],
-        ["Chemin de Nietzsche – Èze","[Eze-sur-Mer → village d'Èze (AllTrails)](https://www.alltrails.com/trail/france/alpes-maritimes/sentier-nietzsche-eze-bord-de-mer-a-eze-village) – 2,1 km · 400m dénivelé · moyen\n~45 min descente · ~1h30 montée"],
-        ["Arrière-pays – villages","[Randoxygène – toutes les randonnées](https://randoxygene.departement06.fr/pied) · Peille · Peillon · Gorbio · Sainte-Agnès"]
-      ]},
-      { icon:"🚗", label:"Excursions (voiture)", excursionscard:true },
-
-      { icon:"🏊", label:"Sport", sportmap:true },
-      { icon:"🎭", label:"Cinéma & Théâtre", rows:[
-        ["Cinéma – programme","[Pathé Masséna](https://www.pathe.fr/cinemas/cinema-pathe-massena) · 31 Av. Jean Médecin · Tram L2 → Jean Médecin · ~25 min\n[Pathé Gare du Sud](https://www.pathe.fr/cinemas/cinema-pathe-gare-du-sud) · 9 Allée Charles Pasqua · alternative\n→ [Tous les cinémas sur pathe.fr](https://www.pathe.fr/cinemas/ville/nice)"],
-        ["Théâtre – programme","[theatres.nice.fr](https://theatres.nice.fr/) · portail de tous les théâtres niçois\n[TNN – Théâtre National de Nice](https://www.tnn.fr/fr/calendrier) · Promenade des Arts · 04 93 13 19 00\n[Théâtre de la Cité](https://www.theatredelacite.fr/) · Vieux Nice\n→ [Opéra de Nice](https://www.opera-nice.org/agenda/) · Rue Saint-François-de-Paule"]
-      ]},
-      { icon:"🍦", label:"Glaces & Massage", rows:[
-        ["Glaces","Arlequin Gelati / Cesar Milano (Malaussena & Jean Médecin) · Azzurro (Rue Ste-Réparate, Vieux Nice)"],
-        ["Massage","Le Banthai, Rue de France"]
-      ]}
-    ],
-
-    restos: [
-      { name:"La Chamade (pizza napolitaine)", addr:"12 Rue Dante, Nice", lat:43.7038, lng:7.2651, url:"https://pizzerialachamade.fr/fr" },
-      { name:"René Socca (socca & cuisine niçoise)", addr:"2 Rue Miralhéti (Vieux Nice)", lat:43.6958, lng:7.2758, url:"https://www.facebook.com/renesocca/", vegan:true },
-      { name:"Indian Curry & Tandoori", addr:"12 Rue Meyerbeer, Nice", lat:43.7006, lng:7.2636, url:"https://indian-curry-tandoori.wheree.com/menu", vegan:true },
-      { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652, url:"https://en.lalchimie-restaurant.com/" },
-      { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648, url:"https://pin-pin.fr/", vegan:true },
-      { name:"Popotte d'Ondine (style café NY)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Plage des Canailles (restaurant de plage)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
-    ],
-    brunches: [
-      { name:"Pain & Cie", note:"Terrasse Cours Saleya · fait-maison, oeufs bio", addr:"3 Rue Louis Gassin, Nice", lat:43.6951, lng:7.2751, url:"https://www.restaurantpainetcie.fr/", vegan:true },
-      { name:"Clay", note:"Brunch toute la journee 7j/7 · avocado toast, pancakes", addr:"4 Rue Bonaparte, Nice", lat:43.6966, lng:7.2773, url:"https://www.facebook.com/clay.bonaparte/", vegan:true },
-      { name:"Marinette", note:"Cafe branche Vieux Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
-      { name:"La Popote d'Ondine", note:"100% fait-maison · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Edmond Cafe", note:"Ambiance chaleureuse, bien situe", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Vieux Nice · pancakes, avocado toast, toute la journee", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
-    ],
-    bars: [
-      { name:"Moon Bar (Rooftop Aston)", note:"360 panorama · piscine · musique live jeu-sam", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
-      { name:"SEEN by Olivier (Rooftop Anantara)", note:"6e et. · vue panoramique Baie des Anges", addr:"12 Ave de Verdun, Nice", lat:43.6991, lng:7.2649, url:"https://www.seennice.com/en/", tag:"Rooftop" },
-      { name:"Elaio - Le Meridien (Rooftop)", note:"Terrasse Promenade · cocktails et vue mer", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
-      { name:"High Club", note:"Le club le plus connu de la Riviera · ambiance VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
-      { name:"Wayne's Bar", note:"Musique live tous les soirs · Vieux Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
-      { name:"Calade Rooftop (Radisson Blu)", note:"Terrasse vue mer sur la Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" }
-    ], barsLabel:"Bars, Clubs & Rooftops"
-  }
-};
-
-// ─── MAP SETUP ──────────────────────────────────────────────────────────────
-
-let shopMap = null;
-
-const SPORT_PINS = [
-  { n:"Piscine Saint-Augustin",   t:{de:"Hallenbad · 25m · 4€ · Mo–Fr 7–20h, Sa 7–18h, So 9–18h",  en:"Indoor pool · 25m · €4 · Mon–Fri 7am–8pm, Sat 7am–6pm, Sun 9am–6pm",  fr:"Piscine couverte · 25m · 4€ · Lun–Ven 7–20h, Sam 7–18h, Dim 9–18h"}, a:"Rue de la Santoline, 06200", lat:43.6744, lng:7.2021, url:"https://www.nice.fr/lieux/piscine-saint-augustin/" },
-  { n:"Piscine Jean Médecin",     t:{de:"Hallenbad · 25m · 4€ · Mo–Fr 7–20h, Sa 7–18h, So 9–18h",  en:"Indoor pool · 25m · €4 · Mon–Fri 7am–8pm, Sat 7am–6pm, Sun 9am–6pm",  fr:"Piscine couverte · 25m · 4€ · Lun–Ven 7–20h, Sam 7–18h, Dim 9–18h"}, a:"178 Rue de France",          lat:43.6919, lng:7.2461, url:"https://www.nice.fr/lieux/piscine-jean-medecin/" },
-  { n:"Piscine d'été des Combes", t:{de:"Freibad · Sommer · 4€ · tägl. 10–18h",                     en:"Outdoor pool · summer only · €4 · daily 10am–6pm",                      fr:"Piscine plein air · été · 4€ · tj. 10–18h"},                           a:"Bd du Mercantour, 06200",    lat:43.7015, lng:7.1869, url:"https://www.nice.fr/lieux/piscine-dete-des-combes/" },
-  { n:"Fitness Park Californie",  t:{de:"Fitness · ab 19€/4 Wo. · Mo–So 6–23h",                     en:"Gym · from €19/4 weeks · Mon–Sun 6am–11pm",                             fr:"Fitness · dès 19€/4 sem. · Lun–Dim 6–23h"},                           a:"13-15 Av. de la Californie", lat:43.6892, lng:7.2243, url:"https://www.fitnesspark.fr/club/nice-californie/" },
-  { n:"VitaClub Nice Ouest",      t:{de:"Fitness · Mo–Fr 6:30–22h, Sa–So 8–20h",                    en:"Gym · Mon–Fri 6:30am–10pm, Sat–Sun 8am–8pm",                            fr:"Fitness · Lun–Ven 6h30–22h, Sam–Dim 8–20h"},                          a:"56 Bd Carlone",               lat:43.6951, lng:7.2399, url:"https://salle-de-sports-nice.com/" },
-];
-
-const EXCURSION_PINS = [
-  { n:"Villefranche-sur-Mer", km:8,  color:"#1a6fa8",
-    t:{de:"Malerische Altstadt · bunte Fischerhäuser · Chapelle Cocteau · Zitadelle",
-       en:"Picturesque old town · colourful houses · Cocteau chapel · citadel",
-       fr:"Vieille ville pittoresque · maisons colorées · chapelle Cocteau · citadelle"},
-    lat:43.7053, lng:7.3104 },
-  { n:"Èze", km:12, color:"#1a6fa8",
-    t:{de:"Mittelalterl. Bergdorf · Jardin Exotique · Panoramablick · Parfumerie Fragonard",
-       en:"Medieval hilltop village · exotic garden · panoramic views · Fragonard perfumery",
-       fr:"Village perché médiéval · jardin exotique · panorama · parfumerie Fragonard"},
-    lat:43.7282, lng:7.3597 },
-  { n:"La Turbie", km:18, color:"#0d8a5e",
-    t:{de:"Trophée des Alpes (röm. Denkmal) · Bergdorf · Blick auf Monaco",
-       en:"Trophy of Augustus (Roman monument) · hilltop village · views over Monaco",
-       fr:"Trophée des Alpes (monument romain) · village perché · vue sur Monaco"},
-    lat:43.7502, lng:7.3989 },
-  { n:"Monaco", km:20, color:"#0d8a5e",
-    t:{de:"Fürstenpalast · Ozeanograph. Museum · Jardin Exotique · Casino Monte-Carlo",
-       en:"Prince's Palace · Oceanographic Museum · Exotic Garden · Casino Monte-Carlo",
-       fr:"Palais Princier · Musée Océanographique · Jardin Exotique · Casino Monte-Carlo"},
-    lat:43.7384, lng:7.4246 },
-  { n:"St-Paul-de-Vence", km:25, color:"#7b3fa0",
-    t:{de:"Mittelalterl. Dorf · Fondation Maeght (Moderne Kunst) · Galerien",
-       en:"Medieval village · Fondation Maeght (modern art) · galleries",
-       fr:"Village médiéval · Fondation Maeght (art moderne) · galeries"},
-    lat:43.6972, lng:7.1204 },
-  { n:"Antibes", km:28, color:"#7b3fa0",
-    t:{de:"Musée Picasso · Alter Hafen · Provenz. Markt · Altstadt-Rampen · Cap d'Antibes",
-       en:"Picasso Museum · old harbour · Provençal market · old town ramparts",
-       fr:"Musée Picasso · vieux port · marché provençal · remparts · Cap d'Antibes"},
-    lat:43.5809, lng:7.1281 },
-  { n:"Menton", km:32, color:"#c05020",
-    t:{de:"Italianische Altstadt · Musée Cocteau · Botanische Gärten · Grenzstadt",
-       en:"Italian-style old town · Cocteau Museum · botanical gardens · border town",
-       fr:"Vieille ville baroque · Musée Cocteau · jardins exotiques · ville frontalière"},
-    lat:43.7745, lng:7.4953 },
-  { n:"Cannes", km:38, color:"#c05020",
-    t:{de:"Croisette · Île Ste-Marguerite (Maskenmann) · Festival-Kulisse · Marché Forville",
-       en:"Croisette · île Sainte-Marguerite (Man in Iron Mask) · film festival setting",
-       fr:"Croisette · île Sainte-Marguerite (Masque de Fer) · décor du Festival"},
-    lat:43.5528, lng:7.0174 },
-  { n:"Grasse", km:42, color:"#6b6020",
-    t:{de:"Welthauptstadt des Parfüms · Musée Internat. de la Parfumerie · Fragonard · Molinard",
-       en:"World capital of perfume · International Perfume Museum · Fragonard · Molinard",
-       fr:"Capitale mondiale du parfum · Musée International de la Parfumerie · Fragonard"},
-    lat:43.6604, lng:6.9206 },
-  { n:"Ventimiglia", km:50, color:"#2a6820",
-    t:{de:"Großer Freitagsmarkt · Altstadt · erster Stopp in Italien",
-       en:"Large Friday market · old town · first stop in Italy",
-       fr:"Grand marché du vendredi · centro storico · première étape en Italie"},
-    lat:43.7914, lng:7.6088 },
-  { n:"Sanremo", km:75, color:"#2a6820",
-    t:{de:"Blumenstadt · Casino · Altstadt La Pigna · Basilika San Siro",
-       en:"City of flowers · casino · old town La Pigna · Basilica San Siro",
-       fr:"Ville des fleurs · casino · vieille ville La Pigna · Basilique San Siro"},
-    lat:43.8168, lng:7.7756 },
-];
-SHOP_PINS = [
-  { n:"Moulin de Flor",    t:{de:"Bäckerei",       en:"Bakery",       fr:"Boulangerie"}, a:"108 Av. de la Californie", lat:43.6871, lng:7.2371 },
-  { n:"Carrefour Market",  t:{de:"Supermarkt",     en:"Supermarket",  fr:"Supermarché"}, a:"Av. de la Californie",     lat:43.6873, lng:7.2368 },
-  { n:"Le Passage",        t:{de:"Konditorei",     en:"Pâtisserie",   fr:"Pâtisserie"},  a:"3 Bd Carlone",             lat:43.6934, lng:7.2428 },
-  { n:"La Ferme Niçoise",  t:{de:"Brathähnchen",   en:"Rotisserie",   fr:"Rôtisserie"},  a:"1 Bd Carlone",             lat:43.6936, lng:7.2430 },
-  { n:"ALDI",              t:{de:"Discounter",     en:"Discount",     fr:"Discount"},    a:"1 Bd de la Madeleine",     lat:43.6939, lng:7.2432 },
-  { n:"Carlone Primeurs",  t:{de:"Obst & Gemüse",  en:"Greengrocer",  fr:"Primeur"},     a:"6 Bd Carlone",             lat:43.6938, lng:7.2428 },
-  { n:"Intermarché",       t:{de:"Supermarkt",     en:"Supermarket",  fr:"Supermarché"}, a:"2 Av. Gloria",             lat:43.6918, lng:7.2441 },
-];
-
-let shopLang = "de";
-function initShopMap(lang) {
-  if (lang) shopLang = lang;
-  const el = document.getElementById('shop-map');
-  if (!el) return;
-  if (!shopMap) {
-    shopMap = L.map('shop-map').setView([43.691, 7.240], 15);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19
-    }).addTo(shopMap);
-    const aptIcon = L.divIcon({
-      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">H</div>',
-      className: '', iconSize:[28,28], iconAnchor:[14,14]
+  function showView(view) {
+    var views = ['home', 'oriabel', 'edigne'];
+    views.forEach(function(v) {
+      document.getElementById('view-' + v).style.display = (v === view) ? '' : 'none';
     });
-    L.marker([43.6918, 7.2364], {icon: aptIcon})
-      .addTo(shopMap)
-      .bindPopup('<strong>Tour Sarrazine</strong><br>93 Bd Édouard Herriot');
-    SHOP_PINS.forEach((p, i) => {
-      const icon = L.divIcon({
-        html: `<div style="background:#7d9182;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">${i+1}</div>`,
-        className: '', iconSize:[26,26], iconAnchor:[13,13]
-      });
-      L.marker([p.lat, p.lng], {icon})
-        .addTo(shopMap)
-        .bindPopup(`<strong>${i+1}. ${p.n}</strong><br><em>${p.t[shopLang]||p.t.de}</em><br>${p.a}`);
-    });
-  }
-  setTimeout(() => shopMap.invalidateSize(), 100);
-}
 
-  let sportMap = null;
-  function initSportMap(lang) {
-    const el = document.getElementById('sport-map');
+    /* Mise à jour de la navigation */
+    ['accueil','oriabel','edigne'].forEach(function(id) {
+      var el = document.getElementById('nav-' + id);
+      if (el) el.classList.toggle('active', id === view || (id === 'accueil' && view === 'home'));
+    });
+
+    currentView = view;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    /* Fermer le menu mobile */
+    document.getElementById('main-nav').classList.remove('open');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+  }
+
+  /* =========================================================
+     MENU MOBILE
+  ========================================================= */
+  document.getElementById('nav-toggle').addEventListener('click', function() {
+    var open = document.getElementById('main-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', open);
+    this.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  /* =========================================================
+     STICKY HEADER
+  ========================================================= */
+  window.addEventListener('scroll', function() {
+    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+
+  /* =========================================================
+     DIAPORAMA
+  ========================================================= */
+  var slideIndex = 0;
+  var slideTimer = null;
+
+  function buildSlideshow() {
+    var track = document.getElementById('slideshow-track');
+    var nav   = document.getElementById('slideshow-nav');
+    if (!track || !nav) return;
+
+    track.innerHTML = '';
+    nav.innerHTML   = '';
+
+    SLIDESHOW_IMAGES.forEach(function(src, i) {
+      var slide = document.createElement('div');
+      slide.className = 'slide' + (i === 0 ? ' active' : '');
+      var img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Oriabel & Edigne — Création ' + (i + 1);
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      slide.appendChild(img);
+      track.appendChild(slide);
+
+      var dot = document.createElement('button');
+      dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Image ' + (i + 1));
+      dot.addEventListener('click', (function(idx) {
+        return function() { goToSlide(idx); };
+      })(i));
+      nav.appendChild(dot);
+    });
+
+    startSlideshow();
+  }
+
+  function goToSlide(idx) {
+    var slides = document.querySelectorAll('.slide');
+    var dots   = document.querySelectorAll('.slide-dot');
+    if (!slides.length) return;
+
+    slides[slideIndex].classList.remove('active');
+    dots[slideIndex].classList.remove('active');
+
+    slideIndex = (idx + SLIDESHOW_IMAGES.length) % SLIDESHOW_IMAGES.length;
+
+    slides[slideIndex].classList.add('active');
+    dots[slideIndex].classList.add('active');
+  }
+
+  function slideNext() {
+    goToSlide(slideIndex + 1);
+    restartSlideshow();
+  }
+
+  function slidePrev() {
+    goToSlide(slideIndex - 1);
+    restartSlideshow();
+  }
+
+  function startSlideshow() {
+    if (slideTimer) clearInterval(slideTimer);
+    slideTimer = setInterval(function() {
+      goToSlide(slideIndex + 1);
+    }, 4000);
+  }
+
+  function restartSlideshow() {
+    startSlideshow();
+  }
+
+  /* =========================================================
+     TABS (Edigne + sous-catégories Bijoux)
+  ========================================================= */
+  function switchTab(btn, panelId) {
+    var tabsBar = btn.closest('.tabs-bar');
+    if (!tabsBar) return;
+    var container = tabsBar.parentElement;
+    tabsBar.querySelectorAll('.tab-btn').forEach(function(b) {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected','false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected','true');
+    container.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    var target = document.getElementById(panelId);
+    if (target) target.classList.add('active');
+  }
+
+  /* =========================================================
+     LIGHTBOX
+  ========================================================= */
+  function openLightbox(title, cat, desc, img, tech, format, year, avail) {
+    document.getElementById('lb-title').textContent  = title;
+    document.getElementById('lb-cat').textContent    = cat;
+    document.getElementById('lb-desc').textContent   = desc;
+    document.getElementById('lb-img').src            = img;
+    document.getElementById('lb-img').alt            = title;
+    document.getElementById('lb-tech').textContent   = tech;
+    document.getElementById('lb-format').textContent = format;
+    document.getElementById('lb-year').textContent   = year;
+    document.getElementById('lb-avail').textContent  = avail;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  /* =========================================================
+     NEWSLETTER
+  ========================================================= */
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    var btn = e.target.querySelector('button');
+    btn.textContent = 'Inscrit ✓';
+    btn.style.background = '#d4b896';
+    e.target.querySelector('input').value = '';
+    setTimeout(function() { btn.textContent = "S'inscrire"; btn.style.background = ''; }, 3000);
+  }
+
+  /* =========================================================
+     GENERATEUR DE CARTES PRODUITS
+  ========================================================= */
+  function karteHTML(item, bildform, tagLabel, katLabel, subLabel) {
+    var lb = JSON.stringify;
+    var tag = tagLabel
+      ? '<span class="item-tag">' + tagLabel + '</span>'
+      : '<p class="product-category">' + katLabel + '</p>';
+
+    var lbCall = 'openLightbox('
+      + lb(item.titel)            + ','
+      + lb(katLabel)              + ','
+      + lb(item.beschreibung)     + ','
+      + lb(item.bild)             + ','
+      + lb(item.technik || item.material || '') + ','
+      + lb(item.format  || item.groesse  || '') + ','
+      + lb(item.jahr    || '')    + ','
+      + lb(item.verfuegbarkeit)   + ')';
+
+    return '<div class="product-small col has-hover"><div class="col-inner">'
+      + '<div class="product-small box" onclick="' + lbCall + '">'
+      + '<div class="box-image ' + bildform + '">'
+      + '<img src="' + item.vorschau + '" alt="' + item.titel + '" loading="lazy" />'
+      + '<div class="image-tools">'
+      + '<button class="tool-btn">Voir</button>'
+      + '<button class="tool-btn">Demander</button>'
+      + '</div></div>'
+      + '<div class="box-text">'
+      + tag
+      + '<h3 class="product-title">' + item.titel + '</h3>'
+      + '<div class="price-wrapper">'
+      + '<span class="price">' + item.verfuegbarkeit + '</span>'
+      + '<span class="price-sub">' + subLabel + '</span>'
+      + '</div></div></div></div></div>';
+  }
+
+  function fuelleGrid(gridId, items, bildform, tagFn, katFn, subFn) {
+    var el = document.getElementById(gridId);
     if (!el) return;
-    if (!sportMap) {
-      sportMap = L.map('sport-map').setView([43.693, 7.218], 13);
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 19
-      }).addTo(sportMap);
-      const aptIcon = L.divIcon({
-        html: '<div style="background:#c0392b;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">H</div>',
-        className:'', iconSize:[26,26], iconAnchor:[13,13]
-      });
-      L.marker([43.6918, 7.2364], {icon: aptIcon})
-        .addTo(sportMap)
-        .bindPopup('<strong>Tour Sarrazine</strong><br>93 Bd Édouard Herriot');
-      const pinColors = ['#1a6fa8','#1a6fa8','#0d8a5e','#7b3fa0','#7b3fa0'];
-      const l = lang || document.documentElement.lang || 'de';
-      SPORT_PINS.forEach((p, i) => {
-        const icon = L.divIcon({
-          html: `<div style="background:${pinColors[i]};color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">${i+1}</div>`,
-          className:'', iconSize:[26,26], iconAnchor:[13,13]
-        });
-        L.marker([p.lat, p.lng], {icon})
-          .addTo(sportMap)
-          .bindPopup(`<strong>${i+1}. ${p.n}</strong><br><em>${p.t[l]||p.t.de}</em><br><small>${p.a}</small><br><a href="${p.url}" target="_blank" rel="noopener" style="color:#1a6fa8">Website</a>`);
-      });
-    } else {
-      sportMap.invalidateSize();
+    if (!items || items.length === 0) {
+      el.innerHTML = '<p style="color:var(--color-secondary);padding:24px 0;">Aucun article disponible.</p>';
+      return;
     }
+    el.innerHTML = items.map(function(item) {
+      return karteHTML(item, bildform, tagFn(item), katFn(item), subFn(item));
+    }).join('');
   }
 
-let excMap = null;
-let excMapEl = null;
-function initExcursionsMap(lang) {
-  var el = document.getElementById('excursions-map');
-  if (!el) return;
-  if (excMap && excMapEl !== el) { excMap.remove(); excMap = null; excMapEl = null; }
-  if (!excMap) {
-    excMapEl = el;
-    excMap = L.map(el).setView([43.68, 7.30], 9);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19
-    }).addTo(excMap);
-    var aptIcon = L.divIcon({
-      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">H</div>',
-      className: '', iconSize:[26,26], iconAnchor:[13,13]
-    });
-    L.marker([43.6918, 7.2364], {icon: aptIcon}).addTo(excMap)
-      .bindPopup('<strong>Tour Sarrazine</strong>');
-    var useLang = lang || 'de';
-    EXCURSION_PINS.forEach(function(p, i) {
-      var icon = L.divIcon({
-        html: '<div style="background:' + p.color + ';color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 4px rgba(0,0,0,0.3)">' + (i+1) + '</div>',
-        className: '', iconSize:[22,22], iconAnchor:[11,11]
-      });
-      L.marker([p.lat, p.lng], {icon: icon}).addTo(excMap)
-        .bindPopup('<strong>' + p.n + '</strong><br><span style="font-size:0.78rem">~' + p.km + ' km</span><br><span style="font-size:0.75rem;color:#555">' + (p.t[useLang]||p.t.de) + '</span>');
-    });
-  } else {
-    excMap.invalidateSize();
-  }
-}
+  /* =========================================================
+     CONSTRUCTION DES SECTIONS EDIGNE
+  ========================================================= */
+  function buildEdigne(bereich) {
+    var tabsEl   = document.getElementById('tabs-edigne');
+    var panelsEl = document.getElementById('panels-edigne');
+    if (!tabsEl || !panelsEl) return;
 
+    var kategorien = bereich.kategorien || [];
+    var produkte   = bereich.produkte   || [];
+    var bildform   = bereich.bildform   || 'portrait';
+    var KAT_LABEL  = {};
+    kategorien.forEach(function(k) { KAT_LABEL[k.id] = k.label; });
 
-var _wxData = null, _wxPollen = null;
-function initWeatherCard(lang) {
-  var el = document.getElementById('weather-top');
-  if (!el) return;
-  var useLang = lang || document.documentElement.lang || 'de';
-  var dNames = {de:['So','Mo','Di','Mi','Do','Fr','Sa'],en:['Sun','Mon','Tue','Wed','Thu','Fri','Sat'],fr:['Dim','Lun','Mar','Mer','Jeu','Ven','Sam']};
-  var tod = {de:'Heute',en:'Today',fr:"Aujourd'hui"};
-  var hdrTxt = {de:'Nizza · Wetter',en:'Nice · Weather',fr:'Nice · Météo'};
-  var pollenNames = {grass_pollen:{de:'Gras',en:'Grass',fr:'Graminées'},olive_pollen:{de:'Olive',en:'Olive',fr:'Olivier'},birch_pollen:{de:'Birke',en:'Birch',fr:'Bouleau'},alder_pollen:{de:'Erle',en:'Alder',fr:'Aulne'},mugwort_pollen:{de:'Beifuss',en:'Mugwort',fr:'Armoise'}};
-  var pollenLvlLbl = {de:['Gering','Mittel','Hoch','Sehr hoch'],en:['Low','Moderate','High','Very high'],fr:['Faible','Modéré','Élevé','Très élevé']};
-  var pollenClr = ['#27ae60','#f39c12','#e74c3c','#8e1f1f'];
-  var moonN = {de:['Neumond','Zunehmend','Erstes Viertel','Zunehmend','Vollmond','Abnehmend','Letztes Viertel','Abnehmend'],en:['New Moon','Waxing Crescent','First Quarter','Waxing Gibbous','Full Moon','Waning Gibbous','Last Quarter','Waning Crescent'],fr:['Nouvelle Lune','Croissant','Premier Quartier','Gibbeuse','Pleine Lune','Décroissante','Dernier Quartier','Décroissante']};
-  var wmoTxt = {
-    de:{0:'Sonnig',1:'Heiter',2:'Teils bewölkt',3:'Bewölkt',45:'Nebel',48:'Reifnebel',51:'Leichter Niesel',53:'Nieselregen',55:'Starker Niesel',61:'Leichter Regen',63:'Regen',65:'Starker Regen',71:'Leichter Schnee',73:'Schneefall',75:'Starker Schnee',80:'Regenschauer',81:'Schauer',82:'Starke Schauer',95:'Gewitter',96:'Gewitter+Hagel',99:'Heftiges Gewitter'},
-    en:{0:'Sunny',1:'Clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Rime fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',80:'Showers',81:'Rain showers',82:'Heavy showers',95:'Thunderstorm',96:'T-storm+hail',99:'Severe T-storm'},
-    fr:{0:'Ensoleillé',1:'Dégagé',2:'Partiellement nuageux',3:'Couvert',45:'Brouillard',48:'Brouillard givrant',51:'Bruine légère',53:'Bruine',55:'Bruine dense',61:'Pluie légère',63:'Pluie',65:'Forte pluie',71:'Neige légère',73:'Neige',75:'Forte neige',80:'Averses',81:'Averses de pluie',82:'Fortes averses',95:'Orage',96:'Orage+grêle',99:'Orage violent'}
-  };
-  var wmoIcon = function(c){
-    if(c===0) return '☀';
-    if(c<=2) return '⛅';
-    if(c===3) return '☁';
-    if(c<=48) return '🌫';
-    if(c<=55) return '🌦';
-    if(c<=65) return '🌧';
-    if(c<=77) return '❄';
-    if(c<=82) return '🌦';
-    return '⛈';
-  };
-  var hdrEl = document.getElementById('weather-hdr');
-  if(hdrEl) hdrEl.textContent = hdrTxt[useLang] || hdrTxt.de;
-
-  function moonEmoji(now) {
-    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var diff = (d - new Date(2000,0,6)) / 86400000;
-    var phase = ((diff % 29.53058867) + 29.53058867) % 29.53058867;
-    var icons = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'];
-    var idx = Math.floor(phase / 29.53058867 * 8) % 8;
-    return icons[idx];
-  }
-  function moonName(now, lng) {
-    var d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var diff = (d - new Date(2000,0,6)) / 86400000;
-    var phase = ((diff % 29.53058867) + 29.53058867) % 29.53058867;
-    var idx = Math.round(phase / 29.53058867 * 8) % 8;
-    return (moonN[lng] || moonN.de)[idx];
-  }
-  function polLen(v, lng) {
-    if(!v || v < 1) return null;
-    var li = v < 10 ? 0 : v < 50 ? 1 : v < 200 ? 2 : 3;
-    return {text:(pollenLvlLbl[lng]||pollenLvlLbl.de)[li], color:pollenClr[li]};
-  }
-  function parseTime(iso) {
-    if(!iso) return '';
-    var m = iso.match(/T(\d{2}:\d{2})/);
-    return m ? m[1] : iso.slice(11,16);
-  }
-
-  function renderWeather(data, pollen, lng) {
-    var cur = data.current; var h = data.hourly; var d = data.daily;
-    var dN = dNames[lng] || dNames.de;
-    var todTxt = tod[lng] || tod.de;
-    var descs = wmoTxt[lng] || wmoTxt.de;
-    var today = new Date().toISOString().slice(0,10);
-
-    var curIcon = wmoIcon(cur.weather_code);
-    var curTemp = Math.round(cur.temperature_2m);
-    var curDesc = descs[cur.weather_code] || '';
-    var todMax = Math.round(d.temperature_2m_max[0]);
-    var todMin = Math.round(d.temperature_2m_min[0]);
-
-    var html = '<div style="display:flex;align-items:center;gap:1rem;padding:0.75rem 1rem 0.4rem">' +
-      '<div style="font-size:2.4rem;line-height:1">' + curIcon + '</div>' +
-      '<div>' +
-        '<div style="font-size:1.9rem;font-weight:700;line-height:1">' + curTemp + '°</div>' +
-        '<div style="font-size:0.8rem;color:var(--muted)">' + curDesc + '</div>' +
-      '</div>' +
-      '<div style="margin-left:auto;text-align:right">' +
-        '<div style="font-size:0.9rem;font-weight:600">' + todMax + '° / <span style="color:var(--muted)">' + todMin + '°</span></div>' +
-        '<div style="font-size:0.75rem;color:var(--muted)">' + todTxt + '</div>' +
-      '</div>' +
-    '</div>';
-
-    var now = new Date();
-    var sr = parseTime(d.sunrise[0]);
-    var ss = parseTime(d.sunset[0]);
-    var mE = moonEmoji(now);
-    var mNm = moonName(now, lng);
-    html += '<div style="display:flex;gap:1.2rem;padding:0.25rem 1rem 0.3rem;border-top:1px solid var(--border);font-size:0.8rem;color:var(--muted)">' +
-      '<span>↑ ' + sr + '</span><span>↓ ' + ss + '</span>' +
-      '<span style="margin-left:auto">' + mE + ' ' + mNm + '</span>' +
-    '</div>';
-
-    var hourSlots = [6,8,10,12,14,16,18,20];
-    html += '<div style="display:flex;border-top:1px solid var(--border);border-bottom:1px solid var(--border)">';
-    hourSlots.forEach(function(hr) {
-      var key = today + 'T' + (hr < 10 ? '0' : '') + hr + ':00';
-      var idx = h.time.indexOf(key);
-      if(idx === -1) return;
-      var temp = Math.round(h.temperature_2m[idx]);
-      var icon = wmoIcon(h.weather_code[idx]);
-      html += '<div style="flex:1;text-align:center;padding:0.35rem 0">' +
-        '<div style="font-size:0.68rem;color:var(--muted)">' + hr + 'h</div>' +
-        '<div style="font-size:1rem;margin:0.1rem 0">' + icon + '</div>' +
-        '<div style="font-size:0.78rem;font-weight:600">' + temp + '°</div>' +
-      '</div>';
-    });
-    html += '</div>';
-
-    if(pollen && pollen.hourly) {
-      var ph = pollen.hourly;
-      var polTypes = ['grass_pollen','olive_pollen','birch_pollen','alder_pollen','mugwort_pollen'];
-      var polRow = [];
-      polTypes.forEach(function(type) {
-        if(!ph[type]) return;
-        var vals = ph[type].slice(0,24).filter(function(x){return x!=null;});
-        if(!vals.length) return;
-        var mx = Math.max.apply(null, vals);
-        if(mx < 1) return;
-        var lv = polLen(mx, lng);
-        if(!lv) return;
-        var pn = (pollenNames[type] || {})[lng] || type;
-        polRow.push('<span style="white-space:nowrap;margin-right:0.8rem"><span style="color:var(--muted)">' + pn + ':</span> <b style="color:' + lv.color + '">' + lv.text + '</b></span>');
-      });
-      if(polRow.length) {
-        var polHdr = {de:'Pollenflug',en:'Pollen',fr:'Pollen'};
-        html += '<div style="padding:0.3rem 1rem;font-size:0.78rem;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:0.1rem 0">' +
-          '<span style="font-size:0.7rem;text-transform:uppercase;letter-spacing:0.05em;color:var(--muted);margin-right:0.7rem;align-self:center">' + (polHdr[lng]||polHdr.de) + '</span>' +
-          polRow.join('') +
-        '</div>';
+    function subLabel(item) {
+      var keys = ['feld1_key','feld2_key','feld3_key'];
+      for (var i = 0; i < keys.length; i++) {
+        var k = bereich[keys[i]];
+        if (k && item[k]) return item[k].split(',')[0].trim();
       }
+      return '';
     }
+    function tagLabel(item) { return KAT_LABEL[item.kategorie] || item.kategorie; }
+    function katLabel(item) { return (bereich.kuenstlerin || '') + ' · ' + tagLabel(item); }
 
-    html += '<div style="display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch">';
-    var days10 = Math.min(10, d.time.length);
-    for(var i=0;i<days10;i++) {
-      var dt = new Date(d.time[i] + 'T12:00:00');
-      var dayLbl = d.time[i] === today ? todTxt.slice(0,2) : dN[dt.getDay()];
-      var mx2 = Math.round(d.temperature_2m_max[i]);
-      var mn2 = Math.round(d.temperature_2m_min[i]);
-      var ic2 = wmoIcon(d.weather_code[i]);
-      var bg2 = i===0 ? 'background:rgba(0,0,0,0.03);' : '';
-      html += '<div style="flex:1;min-width:44px;text-align:center;padding:0.4rem 0.05rem;' + bg2 + (i>0?'border-left:1px solid var(--border)':'') + '">' +
-        '<div style="font-size:0.68rem;color:var(--muted);font-weight:600">' + dayLbl + '</div>' +
-        '<div style="font-size:1rem;margin:0.12rem 0">' + ic2 + '</div>' +
-        '<div style="font-size:0.76rem;font-weight:700">' + mx2 + '°</div>' +
-        '<div style="font-size:0.7rem;color:var(--muted)">' + mn2 + '°</div>' +
-      '</div>';
+    /* Tab Tous */
+    var alleId = 'edigne-tous';
+    tabsEl.innerHTML = '<button class="tab-btn active" role="tab" aria-selected="true"'
+      + ' data-tab="' + alleId + '" onclick="switchTab(this,\'' + alleId + '\')">Toutes</button>';
+    panelsEl.innerHTML = '<div class="tab-panel active" id="' + alleId + '">'
+      + '<div class="product-grid" id="grid-' + alleId + '"></div></div>';
+
+    /* Tabs catégories */
+    kategorien.forEach(function(kat) {
+      var tabId = 'edigne-' + kat.id;
+      tabsEl.innerHTML += '<button class="tab-btn" role="tab" aria-selected="false"'
+        + ' data-tab="' + tabId + '" onclick="switchTab(this,\'' + tabId + '\')">' + kat.label + '</button>';
+      panelsEl.innerHTML += '<div class="tab-panel" id="' + tabId + '">'
+        + '<div class="product-grid" id="grid-' + tabId + '"></div></div>';
+    });
+
+    /* Remplir grids */
+    fuelleGrid('grid-' + alleId, produkte, bildform, tagLabel, katLabel, subLabel);
+    kategorien.forEach(function(kat) {
+      var filtered = produkte.filter(function(p) { return p.kategorie === kat.id; });
+      fuelleGrid('grid-edigne-' + kat.id, filtered, bildform, tagLabel, katLabel, subLabel);
+    });
+  }
+
+  /* =========================================================
+     CONSTRUCTION DES SECTIONS ORIABEL
+  ========================================================= */
+  var oriabelBereiche = [];
+  var currentOriabelCat = null;
+
+  function buildOriabelSelector() {
+    var selector = document.getElementById('oriabel-cat-selector');
+    if (!selector) return;
+    selector.innerHTML = '';
+
+    oriabelBereiche.forEach(function(bereich, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'cat-sel-btn' + (idx === 0 ? ' active' : '');
+      btn.innerHTML = bereich.titre_nav || bereich.titre;
+      if (bereich.sous_titre) {
+        var prodCount = (bereich.produkte || []).length;
+        var sub = document.createElement('span');
+        sub.className = 'cat-sub-label';
+        sub.textContent = prodCount > 0 ? prodCount + ' pièce' + (prodCount > 1 ? 's' : '') : 'À venir';
+        btn.appendChild(sub);
+      }
+      btn.addEventListener('click', (function(b, i) {
+        return function() { selectOriabelCat(b, i); };
+      })(bereich, idx));
+      selector.appendChild(btn);
+    });
+
+    /* Afficher la première catégorie par défaut */
+    if (oriabelBereiche.length > 0) {
+      renderOriabelCat(oriabelBereiche[0]);
+      currentOriabelCat = 0;
     }
-    html += '</div>';
-    el.innerHTML = html;
   }
 
-  // If data already cached, re-render immediately (language switch)
-  if (_wxData) {
-    renderWeather(_wxData, _wxPollen, useLang);
-    return;
-  }
-
-  el.textContent = '…';
-  var weatherUrl = 'https://api.open-meteo.com/v1/forecast?latitude=43.6918&longitude=7.2364' +
-    '&current=temperature_2m,weather_code,apparent_temperature' +
-    '&hourly=temperature_2m,weather_code' +
-    '&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset' +
-    '&timezone=Europe%2FParis&forecast_days=10';
-  var pollenUrl = 'https://air-quality-api.open-meteo.com/v1/air-quality?latitude=43.6918&longitude=7.2364' +
-    '&hourly=grass_pollen,olive_pollen,birch_pollen,alder_pollen,mugwort_pollen' +
-    '&timezone=Europe%2FParis&forecast_days=1';
-
-  Promise.all([
-    fetch(weatherUrl).then(function(r){return r.json();}),
-    fetch(pollenUrl).then(function(r){return r.json();}).catch(function(){return null;})
-  ]).then(function(res) {
-    _wxData = res[0]; _wxPollen = res[1];
-    renderWeather(_wxData, _wxPollen, useLang);
-  }).catch(function() {
-    el.textContent = useLang === 'fr' ? 'Météo indisponible.' : useLang === 'en' ? 'Weather unavailable.' : 'Wetterdaten nicht verfügbar.';
-  });
-}
-
-
-let map = null;
-
-function initMap(lang) {
-  const restos = T[lang].restos;
-
-  if (!map) {
-    map = L.map('map').setView([43.7, 7.265], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      maxZoom: 19
-    }).addTo(map);
-
-    // Apartment marker
-    const aptIcon = L.divIcon({
-      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3)">🏠</div>',
-      className: '', iconSize:[32,32], iconAnchor:[16,16]
+  function selectOriabelCat(bereich, idx) {
+    /* Mettre à jour les boutons */
+    var buttons = document.querySelectorAll('.cat-sel-btn');
+    buttons.forEach(function(b, i) {
+      b.classList.toggle('active', i === idx);
     });
-    L.marker([43.7102, 7.2175], {icon: aptIcon})
-      .addTo(map)
-      .bindPopup('<strong>Tour Sarrazin</strong><br>93 Bd Édouard Herriot');
-  } else {
-    map.eachLayer(l => { if (l instanceof L.Marker) map.removeLayer(l); });
-    // Re-add apartment
-    const aptIcon = L.divIcon({
-      html: '<div style="background:#2E75B6;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,0.3)">🏠</div>',
-      className: '', iconSize:[32,32], iconAnchor:[16,16]
-    });
-    L.marker([43.7102, 7.2175], {icon: aptIcon})
-      .addTo(map)
-      .bindPopup('<strong>Tour Sarrazin</strong><br>93 Bd Édouard Herriot');
+    currentOriabelCat = idx;
+    renderOriabelCat(bereich);
   }
 
-  restos.forEach((r, i) => {
-    const icon = L.divIcon({
-      html: `<div style="background:#c0392b;color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">${i+1}</div>`,
-      className: '', iconSize:[28,28], iconAnchor:[14,14]
-    });
-    L.marker([r.lat, r.lng], {icon})
-      .addTo(map)
-      .bindPopup(`<strong>${i+1}. ${r.name}</strong><br>${r.addr}`);
-  });
+  function renderOriabelCat(bereich) {
+    var content = document.getElementById('oriabel-content');
+    if (!content) return;
 
-  // Brunch markers (blue)
-  if (T[lang] && T[lang].brunches) {
-    T[lang].brunches.forEach(function(r, i) {
-      var bIcon = L.divIcon({
-        html: '<div style="background:#1a6db5;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">' + (i+1) + '</div>',
-        className: '', iconSize:[24,24], iconAnchor:[12,12]
-      });
-      L.marker([r.lat, r.lng], {icon: bIcon}).addTo(map)
-        .bindPopup('<strong>Brunch ' + (i+1) + ': ' + r.name + '</strong><br>' + r.addr);
-    });
-  }
-  setTimeout(() => map.invalidateSize(), 100);
-}
+    var produkte   = bereich.produkte   || [];
+    var kategorien = bereich.kategorien || [];
+    var bildform   = bereich.bildform   || 'square';
+    var id         = bereich.id;
 
-// ─── RENDER ─────────────────────────────────────────────────────────────────
-
-function escHtml(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function renderVal(val) {
-  if (!val) return '';
-
-  // Extract [text](url) markdown links before escaping
-  const links = [];
-  const withPlaceholders = val.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, (m, text, url) => {
-    links.push({ text, url });
-    return `\x00LINK${links.length - 1}\x00`;
-  });
-
-  let s = escHtml(withPlaceholders).replace(/\n/g, '<br>');
-
-  // Restore markdown links
-  links.forEach((l, i) => {
-    s = s.replace(`\x00LINK${i}\x00`, `<a href="${l.url}" class="ext-link" target="_blank">${escHtml(l.text)}</a>`);
-  });
-
-  // Phone numbers: +33 X XX XX XX XX  or  0X XX XX XX XX  or  04 XX XX XX XX
-  s = s.replace(/(\+33[\s]?\d(?:[\s]?\d{2}){4}|\b0[1-9](?:[\s.]?\d{2}){4})/g, function(m) {
-    const digits = m.replace(/[^\d]/g, '');
-    const tel = digits.startsWith('0') ? '+33' + digits.slice(1) : '+' + digits;
-    return `<a href="tel:${tel}" class="tel-link">${m}</a>`;
-  });
-
-  // Street addresses (French patterns)
-  s = s.replace(/((?:\d+\s+)?(?:Rue|Av\.|Avenue|Bd\b|Boulevard|Promenade|Voie|Chemin|Place|Allée|Impasse)[^<]{4,80})/gi, function(m) {
-    const clean = m.replace(/<br>/g, ' ').replace(/\s+/g, ' ').trim();
-    return `<a href="https://maps.google.com/?q=${encodeURIComponent(clean)}" class="maps-link" target="_blank">${m}</a>`;
-  });
-
-  return s;
-}
-
-function rowsToHtml(rows) {
-  return rows.map(r => {
-    if (r[0] === null) {
-      return `<div class="info-row"><div class="info-val full" style="min-width:100%;padding:0.6rem 0.85rem">${renderVal(r[1])}</div></div>`;
-    }
-    const warn = r[0].includes('⚠') ? ' class="warn"' : '';
-    return `<div class="info-row">
-      <div class="info-key"${warn}>${escHtml(r[0]).replace(/⚠/g,'⚠')}</div>
-      <div class="info-val">${renderVal(r[1])}</div>
-    </div>`;
-  }).join('');
-}
-
-function buildCard(item, open) {
-  const openClass = open ? ' open' : '';
-  if (item.wifi) {
-    const ssid = 'Freebox-C7C7DD';
-    const pw = '4drmkq9dt2qw95r6qfkr95';
-    const copyLbl = escHtml(item.rows[3][1]);
-    const scanLbl = escHtml(item.rows[4][1]);
-    return `<div class="card${openClass}">
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">${item.icon}</div>
-        <div class="card-label">${escHtml(item.label)}</div>
-        <div class="card-chevron">▼</div>
-      </div>
-      <div class="card-body">
-        <div class="wifi-block">
-          <div class="wifi-info">
-            <div class="wifi-row">
-              <span class="wifi-key">${escHtml(item.rows[0][0])}</span>
-              <span class="wifi-val">${escHtml(ssid)}</span>
-              <button class="copy-btn" onclick="copyText('${ssid}', this)">${copyLbl}</button>
-            </div>
-            <div class="wifi-row">
-              <span class="wifi-key">${escHtml(item.rows[1][0])}</span>
-              <span class="wifi-val">${escHtml(pw)}</span>
-              <button class="copy-btn" onclick="copyText('${pw}', this)">${copyLbl}</button>
-            </div>
-            <div class="wifi-hint">${escHtml(item.rows[2][1])}</div>
-          </div>
-          <div class="wifi-qr">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?data=WIFI:T:WPA;S:${encodeURIComponent(ssid)};P:${encodeURIComponent(pw)};;&size=120x120&margin=4" alt="QR Code Wi-Fi" loading="lazy">
-            <div class="wifi-qr-label">${scanLbl}</div>
-          </div>
-        </div>
-      </div>
-    </div>`;
-  }
-  if (item.shopmap) {
-    const lang = document.documentElement.lang || 'de';
-    const shopList = SHOP_PINS.map((p, i) => `
-      <div style="display:flex;gap:0.65rem;padding:0.4rem 0.85rem;border-bottom:1px solid var(--border);align-items:flex-start;font-size:0.84rem">
-        <span style="background:var(--sage);color:#fff;border-radius:50%;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">${i+1}</span>
-        <div>
-          <strong>${p.n}</strong>
-          <span style="color:var(--muted);font-size:0.76rem;margin-left:0.3rem">${p.t[lang]||p.t.de}</span><br>
-          <span style="color:#2563a8;font-size:0.78rem">${p.a}</span>
-        </div>
-      </div>`).join('');
-    return `<div class="card${openClass}">
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">${item.icon}</div>
-        <div class="card-label">${escHtml(item.label)}</div>
-        <div class="card-chevron">▼</div>
-      </div>
-      <div class="card-body">
-        <div class="info-table">${rowsToHtml(item.rows)}</div>
-        <div style="border-top:2px solid var(--border)">${shopList}</div>
-        <div id="shop-map" style="height:260px;margin:0.5rem 0.75rem 0.75rem;border-radius:8px;overflow:hidden;"></div>
-      </div>
-    </div>`;
-  }
-  if (item.sportmap) {
-
-    const lang = document.documentElement.lang || 'de';
-    const sportList = SPORT_PINS.map((p, i) => {
-      const colors = ['#1a6fa8','#1a6fa8','#0d8a5e','#7b3fa0','#7b3fa0'];
-      return `<div style="display:flex;gap:0.65rem;padding:0.4rem 0.85rem;border-bottom:1px solid var(--border);align-items:flex-start;font-size:0.84rem">
-        <span style="background:${colors[i]};color:#fff;border-radius:50%;min-width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">${i+1}</span>
-        <div>
-          <strong><a href="${p.url}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">${p.n}</a></strong>
-          <span style="color:var(--muted);font-size:0.76rem;margin-left:0.3rem">${p.t[lang]||p.t.de}</span><br>
-          <a href="https://maps.google.com/?q=${encodeURIComponent(p.n+' '+p.a+' Nice')}" target="_blank" rel="noopener" style="color:#2563a8;font-size:0.78rem">${p.a}</a>
-        </div>
-      </div>`;
-    }).join('');
-    return `<div class="card${openClass}">
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">${item.icon}</div>
-        <div class="card-label">${escHtml(item.label)}</div>
-        <div class="card-chevron">▼</div>
-      </div>
-      <div class="card-body">
-        <div style="border-top:1px solid var(--border)">${sportList}</div>
-        <div id="sport-map" style="height:280px;margin:0.5rem 0.75rem 0.75rem;border-radius:8px;overflow:hidden;"></div>
-      </div>
-    </div>`;
-  
-  }
-
-
-  if (item.excursionscard) {
-    var eLang = document.documentElement.lang || 'de';
-    var routeLbl = eLang === 'en' ? 'Directions →' : eLang === 'fr' ? 'Itinéraire →' : 'Route →';
-    var excList = '';
-    EXCURSION_PINS.forEach(function(p, i) {
-      var mapsUrl = 'https://www.google.com/maps/dir/43.6918,7.2364/' + p.lat + ',' + p.lng + '/';
-      var desc = p.t[eLang] || p.t.de;
-      excList += '<div style="display:flex;gap:0.6rem;padding:0.5rem 0.75rem;border-bottom:1px solid var(--border);align-items:flex-start;">'
-        + '<span style="background:' + p.color + ';color:#fff;border-radius:50%;width:22px;height:22px;min-width:22px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;margin-top:2px;">' + (i+1) + '</span>'
-        + '<div style="flex:1;min-width:0;">'
-        + '<div style="display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;">'
-        + '<strong style="font-size:0.88rem;">' + escHtml(p.n) + '</strong>'
-        + '<span style="font-size:0.75rem;color:var(--muted);background:var(--light);padding:1px 6px;border-radius:10px;">~' + p.km + ' km</span>'
-        + '</div>'
-        + '<span style="font-size:0.78rem;color:var(--mid);display:block;margin-top:1px;">' + escHtml(desc) + '</span>'
-        + '<a href="' + mapsUrl + '" target="_blank" rel="noopener" style="font-size:0.75rem;color:var(--blue);text-decoration:none;">' + routeLbl + '</a>'
+    if (produkte.length === 0) {
+      /* État vide */
+      content.innerHTML = '<div class="row"><div class="empty-state">'
+        + '<div class="empty-icon">✦</div>'
+        + '<h3>' + (bereich.titre_nav || bereich.titre) + '</h3>'
+        + '<p>' + (bereich.sous_titre || 'De nouvelles créations seront ajoutées prochainement.') + '</p>'
         + '</div></div>';
-    });
-    return '<div class="card' + openClass + '">'
-      + '<div class="card-toggle" onclick="toggleCard(this)">'
-      + '<div class="card-icon">' + item.icon + '</div>'
-      + '<div class="card-label">' + escHtml(item.label) + '</div>'
-      + '<div class="card-chevron">▼</div>'
-      + '</div>'
-      + '<div class="card-body">'
-      + '<div style="border-top:1px solid var(--border)">' + excList + '</div>'
-      + '<div id="excursions-map" style="height:300px;border-radius:0 0 var(--radius) var(--radius);overflow:hidden;"></div>'
-      + '</div></div>';
-  }
-
-  if (item.marketscard) {
-    const dayMap = {0:'So',1:'Mo',2:'Di',3:'Mi',4:'Do',5:'Fr',6:'Sa'};
-    const todayKey = dayMap[new Date().getDay()];
-    function makePills(days, time) {
-      const all = ['Mo','Di','Mi','Do','Fr','Sa','So'];
-      return days.map(d => {
-        const cls = d === todayKey ? ' today' : '';
-        return `<span class="dp${cls}" data-day="${d}">${d}</span>`;
-      }).join('') + (time ? `<span class="time-note">${time}</span>` : '');
+      return;
     }
-    function makeRow(linkText, linkUrl, desc, days, time) {
-      const isTodayActive = days.includes(todayKey);
-      const rowCls = isTodayActive ? ' active-today' : '';
-      return `<div class="mr${rowCls}"><div class="mc"><a href="${linkUrl}" target="_blank" rel="noopener">${linkText}</a></div><div class="mi">${desc}</div><div class="md">${makePills(days, time)}</div></div>`;
+
+    /* Construire section avec tabs si sous-catégories */
+    var KAT_LABEL = {};
+    kategorien.forEach(function(k) { KAT_LABEL[k.id] = k.label; });
+
+    function subLabel(item) {
+      var keys = ['feld1_key','feld2_key','feld3_key'];
+      for (var i = 0; i < keys.length; i++) {
+        var k = bereich[keys[i]];
+        if (k && item[k]) return item[k].split(',')[0].trim();
+      }
+      return '';
     }
-    const rows = item.markets.map(m => makeRow(m.name, m.url, m.desc, m.days, m.time)).join('');
-    return `<div class="card${openClass}">
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">${item.icon}</div>
-        <div class="card-label">${escHtml(item.label)}</div>
-        <div class="card-chevron">▼</div>
-      </div>
-      <div class="card-body">
-        <div class="mt">${rows}</div>
-      </div>
-    </div>`;
-  }
-  if (item.eventscard) {
-    const lang = document.documentElement.lang || 'de';
-    const today = new Date(); today.setHours(0,0,0,0);
-    const lbl = { de:{now:'Heute',agenda:'Mehr auf nice.fr/agenda',opera:'Opéra Nice',stand:'Stand:'},
-                  en:{now:'Today',agenda:'More on nice.fr/agenda',opera:'Opéra Nice',stand:'Updated:'},
-                  fr:{now:"Aujourd'hui",agenda:'Voir nice.fr/agenda',opera:'Opéra Nice',stand:'Mis à jour:'} }[lang] || {};
-    const visible = NICE_EVENTS.filter(e => { const d = new Date(e.to); d.setHours(23,59,59); return d >= today; });
-    const rows = visible.map(e => {
-      const from = new Date(e.from); from.setHours(0,0,0,0);
-      const to   = new Date(e.to);   to.setHours(23,59,59);
-      const isNow = from <= today && today <= to;
-      const tagsHtml = (e.tags||[]).map(t => `<span class="ev-tag${t==='Gratis'||t==='Free'||t==='Entrée libre'?' free':''}">${escHtml(t)}</span>`).join('');
-      return `<div class="ev-item${isNow?' ev-now':''}">
-        <div class="ev-badge">${isNow ? `<div class="ev-now-lbl">${lbl.now}</div>` : `<div class="ev-dl">${escHtml(e.dateLabel)}</div>`}</div>
-        <div class="ev-body">
-          <div class="ev-title"><a href="${e.url}" target="_blank" rel="noopener">${escHtml(e.title)}</a></div>
-          <div class="ev-desc">${escHtml(e.desc)}</div>
-          ${tagsHtml ? `<div class="ev-tags">${tagsHtml}</div>` : ''}
-        </div>
-      </div>`;
-    }).join('');
-    return `<div class="card${openClass}">
-      <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">${item.icon}</div>
-        <div class="card-label">${escHtml(item.label)}</div>
-        <div class="card-chevron">▼</div>
-      </div>
-      <div class="card-body">
-        <div class="events-wrap">
-          <div class="events-links">
-            <a href="https://www.nice.fr/agenda" target="_blank" rel="noopener" class="events-link-btn">${lbl.agenda}</a>
-            <a href="https://www.opera-nice.org/agenda/" target="_blank" rel="noopener" class="events-link-btn secondary">${lbl.opera}</a>
-          </div>
-          <div class="ev-list">${rows || '<div style="font-size:0.82rem;color:var(--muted);padding:0.5rem 0">Keine aktuellen Events verfügbar</div>'}</div>
-          <div class="ev-stand">${lbl.stand} ${NICE_EVENTS_STAND}</div>
-        </div>
-      </div>
-    </div>`;
-  }
-  return `<div class="card${openClass}">
-    <div class="card-toggle" onclick="toggleCard(this)">
-      <div class="card-icon">${item.icon}</div>
-      <div class="card-label">${escHtml(item.label)}</div>
-      <div class="card-chevron">▼</div>
-    </div>
-    <div class="card-body">
-      <div class="info-table">${rowsToHtml(item.rows)}</div>
-      ${item.komootlink || item.stravalink ? `<div style="padding:0.25rem 0.75rem 0.75rem;display:flex;flex-wrap:wrap;gap:0.4rem;">
-        ${item.komootlink ? `<a href="${item.komootlink}" target="_blank" rel="noopener" style="display:inline-block;padding:0.4rem 0.9rem;background:var(--sage);color:#fff;border-radius:20px;font-size:0.82rem;text-decoration:none;font-weight:600;">Touren auf Komoot</a>` : ''}
-        ${item.stravalink ? `<a href="${item.stravalink}" target="_blank" rel="noopener" style="display:inline-block;padding:0.4rem 0.9rem;background:#0066a1;color:#fff;border-radius:20px;font-size:0.82rem;text-decoration:none;font-weight:600;">CRT – Touren-Guide</a>` : ''}
-      </div>` : ''}
-    </div>
-  </div>`;
-}
+    function tagLabel(item) { return KAT_LABEL[item.kategorie] || item.kategorie || ''; }
+    function katLabel(item) { return (bereich.kuenstlerin || 'Oriabel') + ' · ' + tagLabel(item); }
 
-function renderWifiQR() { /* handled inline in buildCard */ }
+    var gridClass = (bildform === 'portrait') ? 'product-grid' : 'product-grid jewelry-grid';
+    var alleId = id + '-tous';
 
-function copyText(text, btn) {
-  navigator.clipboard.writeText(text).then(() => {
-    const orig = btn.textContent;
-    btn.textContent = '✓';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1800);
-  }).catch(() => {
-    // Fallback for older browsers
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta);
-    ta.select(); document.execCommand('copy');
-    document.body.removeChild(ta);
-    btn.textContent = '✓';
-    btn.classList.add('copied');
-    setTimeout(() => { btn.textContent = btn.textContent.includes('✓') ? (currentLang === 'fr' ? 'Copier' : currentLang === 'en' ? 'Copy' : 'Kopieren') : btn.textContent; btn.classList.remove('copied'); }, 1800);
-  });
-}
+    var html = '<section class="section" style="background:var(--color-surface);"><div class="row">';
 
-let currentLang = 'de';
-let restoMapRendered = false;
+    /* Sous-titre de la catégorie */
+    if (bereich.sous_titre) {
+      html += '<div class="section-header" style="margin-bottom:32px;">'
+        + '<p class="section-sub">' + bereich.sous_titre + '</p></div>';
+    }
 
-let vesselLoaded = false;
+    if (kategorien.length > 0) {
+      /* Avec tabs */
+      html += '<div class="tabs-bar" id="tabs-' + id + '" role="tablist">'
+        + '<button class="tab-btn active" role="tab" aria-selected="true"'
+        + ' data-tab="' + alleId + '" onclick="switchTab(this,\'' + alleId + '\')">Toutes</button>';
+      kategorien.forEach(function(kat) {
+        var tabId = id + '-' + kat.id;
+        html += '<button class="tab-btn" role="tab" aria-selected="false"'
+          + ' data-tab="' + tabId + '" onclick="switchTab(this,\'' + tabId + '\')">' + kat.label + '</button>';
+      });
+      html += '</div>';
+      html += '<div id="panels-' + id + '">';
+      html += '<div class="tab-panel active" id="' + alleId + '">'
+        + '<div class="' + gridClass + '" id="grid-' + alleId + '"></div></div>';
+      kategorien.forEach(function(kat) {
+        var tabId = id + '-' + kat.id;
+        html += '<div class="tab-panel" id="' + tabId + '">'
+          + '<div class="' + gridClass + '" id="grid-' + tabId + '"></div></div>';
+      });
+      html += '</div>';
+    } else {
+      /* Sans tabs */
+      html += '<div class="' + gridClass + '" id="grid-' + alleId + '"></div>';
+    }
 
-function toggleVessel(toggleEl) {
-  const card = toggleEl.closest('.card');
-  card.classList.toggle('open');
-  if (card.classList.contains('open') && !vesselLoaded) {
-    vesselLoaded = true;
-    const wrap = document.getElementById('vessel-map-wrap');
-    // Inject VesselFinder widget via iframe (HTTPS-safe)
-    wrap.innerHTML = `<iframe
-      src="https://www.vesselfinder.com/aismap?zoom=13&lat=43.695&lon=7.278&width=100%25&height=320&names=true&mmsi=&show_names=true&fleet=&fleet_hide_old_positions=false&clickable=true"
-      width="100%" height="320"
-      style="border:none;border-radius:8px"
-      loading="lazy"
-      title="VesselFinder – Port de Nice">
-    </iframe>`;
-  }
-}
+    html += '</div></section>';
+    content.innerHTML = html;
 
-var barsMap = null;
-function initBarsMap(lang) {
-  var bEl = document.getElementById('bars-map');
-  if (!bEl) return;
-  if (!barsMap) {
-    barsMap = L.map('bars-map').setView([43.695, 7.26], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '(c) OpenStreetMap', maxZoom:19
-    }).addTo(barsMap);
-  } else {
-    barsMap.eachLayer(function(l) { if (l instanceof L.Marker) barsMap.removeLayer(l); });
-  }
-  var tagColors = {Rooftop:'#1a5276', Club:'#8e44ad', Bar:'#c0392b'};
-  var bars = T[lang] && T[lang].bars ? T[lang].bars : [];
-  bars.forEach(function(b, i) {
-    var clr = tagColors[b.tag] || '#555';
-    var bIcon = L.divIcon({
-      html: '<div style="background:' + clr + ';color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">' + (i+1) + '</div>',
-      className:'', iconSize:[24,24], iconAnchor:[12,12]
+    /* Remplir grids */
+    fuelleGrid('grid-' + alleId, produkte, bildform, tagLabel, katLabel, subLabel);
+    kategorien.forEach(function(kat) {
+      var filtered = produkte.filter(function(p) { return p.kategorie === kat.id; });
+      fuelleGrid('grid-' + id + '-' + kat.id, filtered, bildform, tagLabel, katLabel, subLabel);
     });
-    L.marker([b.lat, b.lng], {icon: bIcon}).addTo(barsMap)
-      .bindPopup('<strong>' + (i+1) + '. ' + b.name + '</strong><br>' + b.addr);
-  });
-  setTimeout(function() { barsMap.invalidateSize(); }, 100);
-}
-
-function setLang(lang) {
-  currentLang = lang;
-  const t = T[lang];
-  document.documentElement.lang = lang;
-
-  // Lang buttons
-  document.querySelectorAll('.lang-btn').forEach(b => {
-    const code = b.querySelector('.code');
-    b.classList.toggle('active', code && code.textContent === lang.toUpperCase());
-  });
-
-  // Header
-  document.getElementById('floor-info').textContent = '· ' + t.floorInfo;
-  document.getElementById('s-emerg').textContent = t.sEmerg;
-  document.getElementById('lbl-police').textContent = t.police;
-  document.getElementById('lbl-fire').textContent = t.fire;
-  document.getElementById('lbl-eu').textContent = t.eu;
-  document.getElementById('addr-copy-btn').textContent = t.copyAddr;
-  document.getElementById('s-plants').textContent = t.sPlants;
-  document.getElementById('vessel-label').textContent = t.sVessels;
-  document.getElementById('sec-vessels').textContent = t.sVessels;
-  document.getElementById('plants-notice').style.display = '';
-  document.getElementById('sec-apt').textContent = t.sApt;
-  document.getElementById('sec-ext').textContent = t.sExt;
-  document.getElementById('sec-resto').textContent = t.sResto;
-  document.getElementById('map-label').textContent = t.mapLabel;
-  document.getElementById('footer-text').textContent = t.footer;
-
-  // Emergency rows
-  const er = document.getElementById('emerg-rows');
-  er.innerHTML = t.emergRows.map(([lbl, val]) => {
-    const warn = lbl.includes('⚠') || lbl.toLowerCase().includes('wasser') || lbl.toLowerCase().includes('strom') || lbl.toLowerCase().includes('water') || lbl.toLowerCase().includes('electr') || lbl.toLowerCase().includes('eau') || lbl.toLowerCase().includes('électr') || lbl.toLowerCase().includes('couper') ? ' class="warn"' : '';
-    return `<div class="emerg-row">
-      <div class="emerg-label"${warn}>${escHtml(lbl)}</div>
-      <div class="emerg-value">${renderVal(val)}</div>
-    </div>`;
-  }).join('');
-
-  // Apt grid
-  const gApt = document.getElementById('grid-apt');
-  gApt.innerHTML = t.apt.map((item, i) => buildCard(item, i < 2)).join('');
-
-  // Ext grid
-  const gExt = document.getElementById('grid-ext');
-  gExt.innerHTML = t.ext.map((item, i) => buildCard(item, i === 0)).join('');
-
-  // Restaurant list
-  const bch = document.getElementById('brunch-col-hdr');
-  if (bch) bch.textContent = 'Brunch';
-
-  // Brunch list
-  const blEl = document.getElementById('brunch-list');
-  if (blEl && t.brunches) {
-    blEl.innerHTML = t.brunches.map(function(r, i) {
-      var mapsUrl = 'https://maps.google.com/?q=' + encodeURIComponent(r.addr + ', France');
-      var veganBadge = r.vegan ? '<span style="background:#3d7a52;color:#fff;font-size:0.6rem;font-weight:700;padding:0.08rem 0.32rem;border-radius:3px;margin-left:0.35rem;text-transform:uppercase;letter-spacing:0.04em;vertical-align:middle">vegan</span>' : '';
-      var webLink = r.url ? ' <a href="' + r.url + '" class="ext-link" target="_blank" rel="noopener" style="font-size:0.74rem;font-weight:600">Web</a>' : '';
-      return '<div style="display:flex;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--border);align-items:flex-start">' +
-        '<span style="background:#1a6db5;color:#fff;border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
-        '<div><strong>' + escHtml(r.name) + '</strong>' + veganBadge + webLink + '<br><span style="font-size:0.75rem;color:var(--muted)">' + escHtml(r.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.75rem">' + escHtml(r.addr) + '</a></div>' +
-      '</div>';
-    }).join('');
   }
 
-  // Bars list
-  var barsLblEl = document.getElementById('bars-label');
-  if (barsLblEl && t.barsLabel) barsLblEl.textContent = t.barsLabel;
-  var barsListEl = document.getElementById('bars-list');
-  if (barsListEl && t.bars) {
-    var tagColors = {Rooftop:'#1a5276', Club:'#8e44ad', Bar:'#c0392b'};
-    barsListEl.innerHTML = t.bars.map(function(b, i) {
-      var mapsUrl = 'https://maps.google.com/?q=' + encodeURIComponent(b.addr + ', France');
-      var clr = tagColors[b.tag] || '#555';
-      var webLink = b.url ? ' <a href="' + b.url + '" class="ext-link" target="_blank" rel="noopener" style="font-size:0.74rem;font-weight:600">Web</a>' : '';
-      return '<div style="display:flex;gap:0.6rem;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">' +
-        '<span style="background:' + clr + ';color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
-        '<div><strong>' + escHtml(b.name) + '</strong> <span style="font-size:0.68rem;color:' + clr + ';font-weight:600;text-transform:uppercase;letter-spacing:0.04em">' + b.tag + '</span>' + webLink + '<br><span style="font-size:0.76rem;color:var(--muted)">' + escHtml(b.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.75rem">' + escHtml(b.addr) + '</a></div>' +
-      '</div>';
-    }).join('');
-  }
+  /* =========================================================
+     INITIALISATION
+  ========================================================= */
+  document.addEventListener('DOMContentLoaded', function() {
+    var bereiche = (typeof window.BEREICHE_DATEN !== 'undefined') ? window.BEREICHE_DATEN : [];
 
-  const rl = document.getElementById('resto-list');
-  rl.innerHTML = t.restos.map((r, i) => {
-    const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(r.addr + ', Nice, France')}`;
-    const veganBadge = r.vegan ? `<span style="background:#3d7a52;color:#fff;font-size:0.6rem;font-weight:700;padding:0.08rem 0.32rem;border-radius:3px;margin-left:0.35rem;text-transform:uppercase;letter-spacing:0.04em;vertical-align:middle">vegan</span>` : '';
-    const webLink = r.url ? ` <a href="${r.url}" class="ext-link" target="_blank" style="font-size:0.74rem;font-weight:600">Web</a>` : '';
-    return `<div style="display:flex;gap:0.6rem;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">
-      <span style="background:var(--red);color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">${i+1}</span>
-      <div><strong>${escHtml(r.name)}</strong>${veganBadge}${webLink}<br><a href="${mapsUrl}" class="maps-link" target="_blank">${escHtml(r.addr)}</a></div>
-    </div>`;
-  }).join('');
+    if (bereiche.length === 0) {
+      console.warn('bereiche.js non chargé ou vide.');
+    }
 
-  renderWifiQR();
-  initMap(lang);
-  if (typeof highlightToday === 'function') highlightToday();
-  initWeatherCard(lang);
-}
+    /* Séparer Oriabel et Edigne */
+    var edigneBereiche = bereiche.filter(function(b) { return b.section === 'edigne'; });
+    oriabelBereiche    = bereiche.filter(function(b) { return b.section === 'oriabel'; });
 
+    /* Construire section Edigne */
+    if (edigneBereiche.length > 0) {
+      buildEdigne(edigneBereiche[0]);
+    }
 
-function toggleCard(toggleEl) {
-  const card = toggleEl.closest('.card');
-  card.classList.toggle('open');
-  if (card.classList.contains('open')) {
-    if (map) setTimeout(() => map.invalidateSize(), 50);
-    if (card.querySelector('#shop-map')) initShopMap(document.documentElement.lang);
-    if (card.querySelector('#sport-map')) initSportMap(document.documentElement.lang);
-    if (card.querySelector('#bars-map')) initBarsMap(document.documentElement.lang);
-    if (card.querySelector('#excursions-map')) initExcursionsMap(document.documentElement.lang);
-    if (card.querySelector('#weather-content')) initWeatherCard(document.documentElement.lang);
-  }
-}
+    /* Construire sélecteur Oriabel */
+    if (oriabelBereiche.length > 0) {
+      buildOriabelSelector();
+    }
 
-
-function highlightToday() {
-  const map = {0:'So',1:'Mo',2:'Di',3:'Mi',4:'Do',5:'Fr',6:'Sa'};
-  const today = map[new Date().getDay()];
-  document.querySelectorAll('.dp[data-day]').forEach(pill => {
-    pill.classList.toggle('today', pill.getAttribute('data-day') === today);
-    const row = pill.closest('.mr');
-    if (row && pill.getAttribute('data-day') === today) row.classList.add('active-today');
+    /* Construire le diaporama */
+    buildSlideshow();
   });
-}
-
-// ─── NICE EVENTS — static curated data, updated regularly by Claude ────────
-// Stand: 7. Juni 2026
-const NICE_EVENTS_STAND = "8. Juni 2026";
-const NICE_EVENTS = [
-  { from:"2026-06-07", to:"2026-09-27", dateLabel:"So. wöch.", title:"Harmonie de Nice — Sonntagskonzerte", desc:"Jeden So · 17h · Jardins des Arènes de Cimiez oder Jardin Albert 1er · gratis", url:"https://www.nice.fr/agenda/orchestre-dharmonie-de-la-ville-de-nice/", tags:["Gratis","Klassik"] },
-  { from:"2026-06-12", to:"2026-06-13", dateLabel:"12.–13. Jun", title:"Orchestre Philharmonique — Bruch · Brahms", desc:"Opéra de Nice · Violon: Akiko Suwanai · 10–34 €", url:"https://www.opera-nice.org/agenda/", tags:["Klassik","Konzert"] },
-  { from:"2026-06-13", to:"2026-06-14", dateLabel:"13.–14. Jun", title:"WE Music Festival", desc:"Théâtre de Verdure · Fritz Kalkbrenner, Miss Kittin, The Hacker", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Electro","Festival"] },
-  { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse / Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Dauerausstellung", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
-  { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner", url:"https://www.nuitscarrees.com/", tags:["Festival","Musik"] },
-  { from:"2026-06-21", to:"2026-06-21", dateLabel:"21. Jun", title:"Fête de la Musique — Nizza", desc:"Ab 18h · Place Masséna, Vieux Nice, Promenade du Paillon · Alle Stilrichtungen · gratis", url:"https://www.nice.fr/nice-music-live/", tags:["Gratis","Fest"] },
-  { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · 21.6. gratis / ab 23.6. 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
-  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Indie, Pop, Electronic · Villefranche-sur-Mer", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Festival","Musik"] },
-  { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN – Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenössische Tragödien unter freiem Himmel · 21h\nBérénice (Racine), Les Suppliantes (Eschyle), Un Jour sans vent u.a. · ab 10 €\nFreie Rahmenprogramme (Lesungen, Konferenzen, Debatten) parallel", url:"https://www.tnn.fr/fr/les-temps-forts/festival-de-tragedie", tags:["Theater","TNN"] },
-];
-
-// Init
-setLang('de');
-highlightToday();
-initWeatherCard(document.documentElement.lang);
 </script>
+
 </body>
 </html>
