@@ -1,407 +1,1320 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oriabel — Bijoux artisanaux</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oriabel · Nice — Bijoux, Kintsugi, Peintures · Edigne Parisis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet" />
   <style>
+    /* =========================================================
+       RESET & BASE
+    ========================================================= */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --gold: #c8a96e;
-      --gold-light: #e2cc9a;
-      --dark: #1a1a1a;
-      --mid: #3a3a3a;
-      --light: #f7f4ef;
-      --cream: #fdf9f4;
-      --text: #333;
-      --muted: #888;
+      --color-bg:        #f8f6f1;
+      --color-surface:   #ffffff;
+      --color-primary:   #1a1a1a;
+      --color-secondary: #686868;
+      --color-accent:    #8b6b4a;
+      --color-border:    #d1d1d1;
+      --color-hover-bg:  #f0ece4;
+      --font-serif:      'Playfair Display', Georgia, serif;
+      --font-sans:       'Source Sans 3', system-ui, sans-serif;
+      --shadow-card:     0 2px 12px rgba(0,0,0,0.08);
+      --shadow-hover:    0 8px 32px rgba(0,0,0,0.14);
+      --radius:          4px;
+      --transition:      0.25s ease;
     }
+
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Georgia', serif;
-      background: var(--cream);
-      color: var(--text);
-      line-height: 1.6;
+      background-color: var(--color-bg);
+      color: var(--color-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.75;
     }
 
-    /* NAV */
-    header {
-      background: var(--dark);
-      padding: 0 2rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 64px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; height: auto; }
 
-    .logo {
-      display: flex;
-      align-items: center;
-      text-decoration: none;
-    }
-
-    .logo img {
-      height: 36px;
-      width: auto;
-      display: block;
-    }
-
-    nav a {
-      color: #ccc;
-      text-decoration: none;
-      margin-left: 2rem;
-      font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.85rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-
-    nav a:hover, nav a.active { color: var(--gold); }
-
-    /* HERO */
-    .hero {
-      background: linear-gradient(135deg, #2a2016 0%, #1a1a1a 60%, #0d0d0d 100%);
-      color: #fff;
-      text-align: center;
-      padding: 5rem 2rem 4rem;
-    }
-
-    .hero h1 {
-      font-size: clamp(2rem, 5vw, 3.5rem);
-      letter-spacing: 0.2em;
-      color: var(--gold);
-      font-weight: 400;
-      margin-bottom: 0.75rem;
-    }
-
-    .hero p {
-      font-size: 1.1rem;
-      color: #aaa;
-      letter-spacing: 0.06em;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    /* FILTER TABS */
-    .filter-bar {
-      background: var(--light);
-      border-bottom: 1px solid #e0d8cc;
-      display: flex;
-      justify-content: center;
-      gap: 0;
-      overflow-x: auto;
-    }
-
-    .filter-bar button {
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      padding: 1rem 2rem;
-      font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.82rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-
-    .filter-bar button:hover { color: var(--dark); }
-    .filter-bar button.active {
-      color: var(--dark);
-      border-bottom-color: var(--gold);
-    }
-
-    /* GRID */
-    main {
+    .row {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 3rem 1.5rem;
+      padding: 0 24px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 2rem;
+    /* =========================================================
+       HEADER
+    ========================================================= */
+    #header {
+      position: sticky; top: 0; z-index: 200;
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow var(--transition);
+    }
+    #header.scrolled { box-shadow: 0 2px 16px rgba(0,0,0,0.12); }
+
+    .header-wrapper {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 24px; height: 72px;
     }
 
-    .card {
-      background: #fff;
-      border-radius: 2px;
-      overflow: hidden;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      transition: transform 0.2s, box-shadow 0.2s;
+    .site-logo {
+      font-family: var(--font-serif);
+      font-size: 1.35rem; font-weight: 700;
+      letter-spacing: 0.02em; white-space: nowrap;
       cursor: pointer;
     }
+    .site-logo span { font-style: italic; font-weight: 400; color: var(--color-accent); }
 
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    nav.main-nav ul { display: flex; gap: 28px; list-style: none; }
+    nav.main-nav a, nav.main-nav button {
+      font-size: 0.875rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--color-secondary);
+      transition: color var(--transition);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-sans);
+    }
+    nav.main-nav a:hover,
+    nav.main-nav button:hover,
+    nav.main-nav a.active,
+    nav.main-nav button.active { color: var(--color-accent); }
+
+    .nav-toggle {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 4px;
+    }
+    .nav-toggle span {
+      display: block; width: 24px; height: 2px;
+      background: var(--color-primary); border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
     }
 
-    .card-img {
-      width: 100%;
-      aspect-ratio: 4/3;
-      object-fit: cover;
+    /* =========================================================
+       MAIN CHOICE — Deux grandes tuiles d'entrée
+    ========================================================= */
+    .main-choice {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 480px;
+    }
+
+    .choice-card {
+      position: relative; overflow: hidden; cursor: pointer;
+      border: none; background: none; padding: 0;
+      display: block; width: 100%;
+    }
+    .choice-card img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+      transition: transform 0.6s ease;
+      min-height: 480px;
+    }
+    .choice-card:hover img { transform: scale(1.05); }
+
+    .choice-overlay {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 32px;
+      color: #fff;
+      transition: background var(--transition);
+    }
+    .choice-card:nth-child(1) .choice-overlay {
+      background: linear-gradient(135deg, rgba(139,107,74,0.55) 0%, rgba(26,26,26,0.65) 100%);
+    }
+    .choice-card:nth-child(2) .choice-overlay {
+      background: linear-gradient(135deg, rgba(26,26,26,0.62) 0%, rgba(100,80,55,0.50) 100%);
+    }
+    .choice-card:hover .choice-overlay {
+      background: rgba(0,0,0,0.48) !important;
+    }
+
+    .choice-label {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.24em;
+      color: #d4b896; margin-bottom: 12px;
+    }
+    .choice-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700; line-height: 1.1; margin-bottom: 14px;
+    }
+    .choice-desc {
+      font-size: 0.88rem; color: rgba(255,255,255,0.82);
+      max-width: 300px; line-height: 1.55; margin-bottom: 24px;
+    }
+    .choice-btn {
+      display: inline-block; padding: 11px 32px;
+      font-size: 0.78rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      border: 2px solid rgba(255,255,255,0.7); color: #fff;
+      border-radius: var(--radius);
+      transform: translateY(6px); opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease, background 0.2s, border-color 0.2s;
+    }
+    .choice-card:hover .choice-btn {
+      transform: translateY(0); opacity: 1;
+    }
+    .choice-btn:hover { background: rgba(255,255,255,0.18); border-color: #fff; }
+
+    .choice-divider {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+      width: 48px; height: 48px;
+      background: var(--color-surface);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--color-accent);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       SLIDESHOW
+    ========================================================= */
+    .slideshow-section {
+      position: relative;
+      background: var(--color-primary);
+      overflow: hidden;
+    }
+
+    .slideshow-track {
+      position: relative;
+      height: 520px;
+    }
+
+    .slide {
+      position: absolute; inset: 0;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .slide.active { opacity: 1; }
+    .slide img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+    }
+
+    .slideshow-nav {
+      position: absolute; bottom: 20px; left: 50%;
+      transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 10;
+    }
+    .slide-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      border: none; cursor: pointer; padding: 0;
+      transition: background var(--transition), transform var(--transition);
+    }
+    .slide-dot.active {
+      background: #fff;
+      transform: scale(1.3);
+    }
+
+    .slideshow-arrows {
+      position: absolute; top: 50%; width: 100%;
+      display: flex; justify-content: space-between; padding: 0 16px;
+      transform: translateY(-50%); z-index: 10; pointer-events: none;
+    }
+    .slide-arrow {
+      pointer-events: all;
+      width: 40px; height: 40px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 50%; cursor: pointer; color: #fff;
+      font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition);
+    }
+    .slide-arrow:hover { background: rgba(255,255,255,0.35); }
+
+    /* =========================================================
+       VIEW HEADER (for Oriabel / Edigne sub-pages)
+    ========================================================= */
+    .view-hero {
+      background: var(--color-primary);
+      color: #fff;
+      padding: 52px 0 40px;
+      text-align: center;
+    }
+    .view-hero .eyebrow {
+      font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: #d4b896; margin-bottom: 12px;
+    }
+    .view-hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700; margin-bottom: 10px;
+    }
+    .view-hero p {
+      color: rgba(255,255,255,0.72);
+      max-width: 520px; margin: 0 auto;
+      font-size: 0.95rem; line-height: 1.65;
+    }
+
+    /* =========================================================
+       CATEGORY SELECTOR (Oriabel sub-categories)
+    ========================================================= */
+    .cat-selector {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-bottom: 0;
+      border-bottom: 2px solid var(--color-border);
+    }
+
+    .cat-sel-btn {
+      padding: 20px 16px;
+      font-family: var(--font-serif);
+      font-size: 1.05rem; font-weight: 700;
+      text-align: center; cursor: pointer;
+      background: var(--color-surface);
+      border: none;
+      border-right: 1px solid var(--color-border);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: background var(--transition), color var(--transition), border-color var(--transition);
+      color: var(--color-secondary);
+    }
+    .cat-sel-btn:last-child { border-right: none; }
+    .cat-sel-btn:hover { background: var(--color-hover-bg); color: var(--color-primary); }
+    .cat-sel-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
+      background: var(--color-surface);
+    }
+    .cat-sel-btn .cat-sub-label {
       display: block;
-      background: #f0ece5;
+      font-family: var(--font-sans);
+      font-size: 0.7rem; font-weight: 400;
+      color: inherit; opacity: 0.7;
+      margin-top: 4px;
+      text-transform: uppercase; letter-spacing: 0.1em;
     }
 
-    .card-body {
-      padding: 1rem 1.2rem 1.4rem;
+    /* =========================================================
+       SECTION TABS (sous-catégories internes)
+    ========================================================= */
+    .tabs-bar {
+      display: flex; gap: 0;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 40px; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs-bar::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      padding: 12px 24px;
+      font-size: 0.82rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--color-secondary);
+      background: none; border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px; cursor: pointer; white-space: nowrap;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .tab-btn:hover { color: var(--color-primary); }
+    .tab-btn.active {
+      color: var(--color-accent);
+      border-bottom-color: var(--color-accent);
     }
 
-    .card-title {
-      font-size: 1rem;
-      font-weight: 400;
-      color: var(--dark);
-      margin-bottom: 0.3rem;
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* =========================================================
+       SECTION COMMUNE
+    ========================================================= */
+    .section { padding: 56px 0; }
+    .section + .section { border-top: 1px solid var(--color-border); }
+
+    .section-header { text-align: center; margin-bottom: 40px; }
+    .section-eyebrow {
+      font-size: 0.72rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: var(--color-accent); margin-bottom: 10px;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700; line-height: 1.2; margin-bottom: 10px;
+    }
+    .section-sub {
+      color: var(--color-secondary); max-width: 500px;
+      margin: 0 auto; font-size: 0.95rem;
     }
 
-    .card-desc {
-      font-size: 0.82rem;
-      color: var(--muted);
-      font-family: 'Helvetica Neue', sans-serif;
-      line-height: 1.5;
-      margin-bottom: 0.6rem;
+    /* =========================================================
+       PRODUCT GRID
+    ========================================================= */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 24px;
+    }
+    .product-grid.jewelry-grid {
+      grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     }
 
-    .card-meta {
-      font-size: 0.75rem;
-      color: #aaa;
-      font-family: 'Helvetica Neue', sans-serif;
+    .product-small .box {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+      overflow: hidden; display: flex; flex-direction: column;
+      height: 100%; cursor: pointer;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .product-small .box:hover {
+      box-shadow: var(--shadow-hover); transform: translateY(-3px);
     }
 
-    /* LIGHTBOX */
-    .lightbox {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.88);
-      z-index: 1000;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
+    .box-image {
+      position: relative; overflow: hidden;
+      background: #e8e4dc;
+    }
+    .box-image.portrait { aspect-ratio: 3 / 4; }
+    .box-image.square    { aspect-ratio: 1 / 1; }
+
+    .box-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .product-small .box:hover .box-image img { transform: scale(1.06); }
+
+    .image-tools {
+      position: absolute; bottom: 10px; left: 10px; right: 10px;
+      display: flex; gap: 6px;
+      opacity: 0; transform: translateY(5px);
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .product-small .box:hover .image-tools { opacity: 1; transform: translateY(0); }
+
+    .tool-btn {
+      flex: 1; padding: 7px 8px;
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase; text-align: center;
+      background: rgba(255,255,255,0.92); color: var(--color-primary);
+      border: none; border-radius: var(--radius); cursor: pointer;
+      backdrop-filter: blur(4px);
+      transition: background var(--transition);
+    }
+    .tool-btn:hover { background: #fff; }
+
+    .box-text {
+      padding: 16px 16px 18px;
+      flex: 1; display: flex; flex-direction: column;
+    }
+    .product-category {
+      font-size: 0.7rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: var(--color-accent); margin-bottom: 4px;
+    }
+    .product-title {
+      font-family: var(--font-serif);
+      font-size: 0.97rem; font-weight: 700;
+      line-height: 1.3; margin-bottom: 0;
+    }
+    .price-wrapper {
+      margin-top: auto; display: flex;
+      align-items: center; justify-content: space-between;
+      padding-top: 10px;
+    }
+    .price { font-size: 0.97rem; font-weight: 600; }
+    .price-sub { font-size: 0.75rem; color: var(--color-secondary); }
+
+    .item-tag {
+      display: inline-block;
+      font-size: 0.63rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      background: var(--color-accent); color: #fff;
+      padding: 2px 6px; border-radius: 2px; margin-bottom: 6px;
     }
 
-    .lightbox.open { display: flex; }
+    /* =========================================================
+       EMPTY STATE
+    ========================================================= */
+    .empty-state {
+      text-align: center;
+      padding: 72px 24px;
+      color: var(--color-secondary);
+    }
+    .empty-state .empty-icon {
+      font-size: 3rem; margin-bottom: 20px; opacity: 0.3;
+    }
+    .empty-state h3 {
+      font-family: var(--font-serif);
+      font-size: 1.3rem; font-weight: 700;
+      color: var(--color-primary); margin-bottom: 10px;
+    }
+    .empty-state p { font-size: 0.93rem; max-width: 360px; margin: 0 auto; }
+
+    /* =========================================================
+       ABOUT / FOOTER SECTIONS
+    ========================================================= */
+    #about { background: var(--color-primary); color: #fff; }
+    .about-grid {
+      display: grid; grid-template-columns: 300px 1fr;
+      gap: 56px; align-items: center;
+    }
+    .about-portrait {
+      border-radius: var(--radius); overflow: hidden;
+      aspect-ratio: 3 / 4;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+    .about-portrait img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+    .about-text .section-title { color: #fff; text-align: left; margin-bottom: 18px; }
+    .about-body { color: rgba(255,255,255,0.76); line-height: 1.8; margin-bottom: 16px; font-size: 0.95rem; }
+
+    /* =========================================================
+       BUTTONS
+    ========================================================= */
+    .btn {
+      display: inline-block; padding: 12px 28px;
+      font-size: 0.875rem; font-weight: 600;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      border-radius: var(--radius); cursor: pointer;
+      transition: background var(--transition), color var(--transition), transform var(--transition);
+      font-family: var(--font-sans);
+    }
+    .btn-primary {
+      background: var(--color-accent); color: #fff;
+      border: 2px solid var(--color-accent);
+    }
+    .btn-primary:hover { background: #6f5239; border-color: #6f5239; transform: translateY(-1px); }
+
+    /* =========================================================
+       CTA BAR
+    ========================================================= */
+    .cta-bar {
+      background: var(--color-accent); color: #fff;
+      text-align: center; padding: 52px 24px;
+    }
+    .cta-title { font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; margin-bottom: 8px; }
+    .cta-sub { color: rgba(255,255,255,0.8); margin-bottom: 26px; font-size: 0.95rem; }
+    .cta-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; }
+    .cta-form input {
+      flex: 1; padding: 11px 16px;
+      border: 2px solid rgba(255,255,255,0.38);
+      border-radius: var(--radius); background: rgba(255,255,255,0.12);
+      color: #fff; font-size: 0.88rem; font-family: var(--font-sans);
+      outline: none; transition: border-color var(--transition);
+    }
+    .cta-form input::placeholder { color: rgba(255,255,255,0.5); }
+    .cta-form input:focus { border-color: rgba(255,255,255,0.75); }
+    .cta-form button {
+      padding: 11px 22px; background: #fff; color: var(--color-accent);
+      border: none; border-radius: var(--radius);
+      font-family: var(--font-sans); font-size: 0.82rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; white-space: nowrap;
+      transition: background var(--transition);
+    }
+    .cta-form button:hover { background: #f0ece4; }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    #footer { background: #111; color: rgba(255,255,255,0.58); padding: 52px 0 28px; }
+    .footer-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 44px; margin-bottom: 36px;
+    }
+    .footer-brand .site-logo { color: #fff; margin-bottom: 14px; }
+    .footer-tagline { font-size: 0.86rem; line-height: 1.7; margin-bottom: 18px; }
+    .footer-col h4 {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.2em;
+      color: rgba(255,255,255,0.82); margin-bottom: 14px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 9px; }
+    .footer-col a, .footer-col button {
+      font-size: 0.86rem; color: rgba(255,255,255,0.58);
+      transition: color var(--transition);
+      background: none; border: none; cursor: pointer; padding: 0;
+      font-family: var(--font-sans); text-align: left;
+    }
+    .footer-col a:hover, .footer-col button:hover { color: #d4b896; }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.1); padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.76rem; flex-wrap: wrap; gap: 12px;
+    }
+
+    /* =========================================================
+       LIGHTBOX
+    ========================================================= */
+    .lightbox-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.88); z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 24px; backdrop-filter: blur(4px);
+    }
+    .lightbox-overlay.active { display: flex; }
 
     .lightbox-inner {
-      background: #fff;
-      max-width: 860px;
-      width: 100%;
-      border-radius: 2px;
-      display: flex;
-      gap: 0;
-      overflow: hidden;
-      max-height: 90vh;
+      position: relative; max-width: 820px; width: 100%;
+      background: var(--color-surface); border-radius: var(--radius);
+      overflow: hidden; display: grid; grid-template-columns: 1fr 1fr;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+      animation: lb-in 0.25s ease;
     }
-
-    .lightbox-img {
-      width: 50%;
-      min-width: 200px;
-      object-fit: contain;
-      background: #f5f2ed;
-      max-height: 90vh;
+    @keyframes lb-in {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
     }
-
-    .lightbox-info {
-      padding: 2.5rem 2rem;
-      flex: 1;
-      overflow-y: auto;
+    .lightbox-img { overflow: hidden; }
+    .lightbox-img img { width: 100%; height: 100%; object-fit: cover; }
+    .lightbox-info { padding: 36px 32px; display: flex; flex-direction: column; }
+    .lightbox-category {
+      font-size: 0.7rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.18em;
+      color: var(--color-accent); margin-bottom: 8px;
     }
-
     .lightbox-title {
-      font-size: 1.4rem;
-      font-weight: 400;
-      color: var(--dark);
-      margin-bottom: 1rem;
+      font-family: var(--font-serif);
+      font-size: 1.45rem; font-weight: 700; line-height: 1.2; margin-bottom: 14px;
     }
-
-    .lightbox-table {
-      font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.85rem;
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .lightbox-table td {
-      padding: 0.4rem 0;
-      vertical-align: top;
-      border-bottom: 1px solid #f0ece5;
-    }
-
-    .lightbox-table td:first-child {
-      color: var(--muted);
-      width: 40%;
-      padding-right: 1rem;
-    }
-
     .lightbox-desc {
-      font-size: 0.9rem;
-      color: #555;
-      margin-top: 1.2rem;
-      line-height: 1.7;
+      color: var(--color-secondary); font-size: 0.88rem;
+      line-height: 1.7; margin-bottom: 20px; flex: 1;
     }
-
+    .lightbox-specs {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 10px 14px; margin-bottom: 24px;
+    }
+    .spec-item { font-size: 0.8rem; }
+    .spec-label { color: var(--color-secondary); }
+    .spec-value { font-weight: 600; }
     .lightbox-close {
-      position: absolute;
-      top: 1rem;
-      right: 1.5rem;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 2rem;
-      cursor: pointer;
-      line-height: 1;
+      position: absolute; top: 14px; right: 14px;
+      width: 34px; height: 34px; background: var(--color-bg);
+      border: none; border-radius: 50%; cursor: pointer;
+      font-size: 1rem; display: flex; align-items: center; justify-content: center;
+      transition: background var(--transition); color: var(--color-primary);
+    }
+    .lightbox-close:hover { background: var(--color-border); }
+
+    /* =========================================================
+       RESPONSIVE
+    ========================================================= */
+    @media (max-width: 960px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; gap: 36px; }
+      .about-portrait { max-width: 260px; }
+      .main-choice { min-height: 360px; }
+      .choice-card img { min-height: 360px; }
+      .cat-selector { grid-template-columns: repeat(2, 1fr); }
+      .cat-sel-btn { border-bottom: 1px solid var(--color-border); }
     }
 
-    .anfrage-link {
-      display: inline-block;
-      margin-top: 1.5rem;
-      padding: 0.65rem 1.8rem;
-      background: var(--dark);
-      color: var(--gold);
-      text-decoration: none;
-      font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s;
+    @media (max-width: 710px) {
+      .header-wrapper { height: 60px; }
+      nav.main-nav { display: none; }
+      nav.main-nav.open {
+        display: block; position: fixed;
+        inset: 60px 0 0 0; background: var(--color-surface);
+        padding: 28px 24px; z-index: 99; overflow-y: auto;
+      }
+      nav.main-nav.open ul { flex-direction: column; gap: 20px; }
+      nav.main-nav.open a, nav.main-nav.open button { font-size: 1.05rem; }
+      .nav-toggle { display: flex; }
+      .main-choice { grid-template-columns: 1fr; }
+      .choice-card img { min-height: 260px; }
+      .choice-divider { display: none; }
+      .product-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+      .product-grid.jewelry-grid { grid-template-columns: repeat(2, 1fr); }
+      .section { padding: 44px 0; }
+      .lightbox-inner { grid-template-columns: 1fr; max-width: 380px; }
+      .lightbox-img img { min-height: 240px; max-height: 300px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .cta-form { flex-direction: column; }
+      .slideshow-track { height: 320px; }
+      .cat-selector { grid-template-columns: repeat(2, 1fr); }
     }
 
-    .anfrage-link:hover { background: var(--mid); }
-
-    /* FOOTER */
-    footer {
-      background: var(--dark);
-      color: #666;
-      text-align: center;
-      padding: 2.5rem 1rem;
-      font-family: 'Helvetica Neue', sans-serif;
-      font-size: 0.8rem;
-      letter-spacing: 0.06em;
-    }
-
-    footer a { color: var(--gold); text-decoration: none; }
-
-    @media (max-width: 600px) {
-      .lightbox-inner { flex-direction: column; }
-      .lightbox-img { width: 100%; max-height: 45vh; }
-      header { padding: 0 1rem; }
-      nav a { margin-left: 1rem; font-size: 0.75rem; }
+    @media (max-width: 480px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .slideshow-track { height: 260px; }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <a class="logo" href="index.html"><img src="uploads/oriabel_logo.png" alt="Oriabel — Nice, France"></a>
-  <nav>
-    <a href="index.html" class="active">Bijoux</a>
-    <a href="gemaelde.html">Peintures</a>
-  </nav>
+<div id="wrapper">
+
+<!-- ===================== HEADER ===================== -->
+<header id="header">
+  <div class="header-wrapper row">
+    <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>Nice · France</span></a>
+
+    <nav class="main-nav" id="main-nav" aria-label="Navigation principale">
+      <ul>
+        <li><button onclick="showView('home')" id="nav-accueil">Accueil</button></li>
+        <li><button onclick="showView('oriabel')" id="nav-oriabel">Oriabel</button></li>
+        <li><button onclick="showView('edigne')" id="nav-edigne">Edigne</button></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="main-nav">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
 </header>
 
-<div class="hero">
-  <h1>Oriabel</h1>
-  <p>Bijoux artisanaux — Nice, France</p>
-</div>
+<!-- ===================== MAIN ===================== -->
+<main id="main">
 
-<div class="filter-bar">
-  <button class="active" data-cat="all">Tout</button>
-  <button data-cat="kette">Colliers</button>
-  <button data-cat="ohrring">Boucles d'oreilles</button>
-  <button data-cat="armband">Bracelets</button>
-</div>
+  <!-- ==================== VUE : ACCUEIL ==================== -->
+  <div id="view-home">
 
-<main>
-  <div class="grid" id="grid"></div>
+    <!-- Deux grandes tuiles d'entrée -->
+    <section id="entree" style="position:relative;">
+      <div class="main-choice">
+
+        <a class="choice-card" href="#" onclick="event.preventDefault(); showView('oriabel');">
+          <img src="uploads/2019/02/P1070660.jpg" alt="Oriabel — Bijoux & Créations" />
+          <div class="choice-overlay">
+            <p class="choice-label">Atelier · Nice</p>
+            <h2 class="choice-title">Oriabel</h2>
+            <p class="choice-desc">Bijoux, Kintsugi, Peintures, Travaux d'aiguilles — créations uniques et signées.</p>
+            <span class="choice-btn">Découvrir</span>
+          </div>
+        </a>
+
+        <a class="choice-card" href="#" onclick="event.preventDefault(); showView('edigne');">
+          <img src="uploads/2019/02/DSC02328.jpg" alt="Edigne Parisis — Peintures" />
+          <div class="choice-overlay">
+            <p class="choice-label">Peintre · Nice</p>
+            <h2 class="choice-title">Edigne</h2>
+            <p class="choice-desc">Originales — huile, acrylique, technique mixte. Chaque tableau, une émotion.</p>
+            <span class="choice-btn">Voir les œuvres</span>
+          </div>
+        </a>
+
+      </div>
+      <div class="choice-divider">&amp;</div>
+    </section>
+
+    <!-- Diaporama -->
+    <section class="slideshow-section">
+      <div class="slideshow-track" id="slideshow-track">
+        <!-- Slides injectées par JS -->
+      </div>
+      <div class="slideshow-arrows">
+        <button class="slide-arrow" onclick="slidePrev()" aria-label="Précédent">&#8249;</button>
+        <button class="slide-arrow" onclick="slideNext()" aria-label="Suivant">&#8250;</button>
+      </div>
+      <div class="slideshow-nav" id="slideshow-nav">
+        <!-- Dots injectés par JS -->
+      </div>
+    </section>
+
+  </div><!-- /#view-home -->
+
+  <!-- ==================== VUE : ORIABEL ==================== -->
+  <div id="view-oriabel" style="display:none;">
+
+    <div class="view-hero">
+      <p class="eyebrow">Atelier · Nice · France</p>
+      <h1>Oriabel</h1>
+      <p id="oriabel-subtitle">Créations uniques — bijoux, kintsugi, peintures et travaux d'aiguilles.</p>
+    </div>
+
+    <!-- Sélecteur de catégorie -->
+    <div class="cat-selector" id="oriabel-cat-selector">
+      <!-- Boutons injectés par JS -->
+    </div>
+
+    <!-- Contenu de la catégorie sélectionnée -->
+    <div id="oriabel-content">
+      <!-- Injecté par JS -->
+    </div>
+
+  </div><!-- /#view-oriabel -->
+
+  <!-- ==================== VUE : EDIGNE ==================== -->
+  <div id="view-edigne" style="display:none;">
+
+    <div class="view-hero">
+      <p class="eyebrow">Peintre · Nice · France</p>
+      <h1>Edigne Parisis</h1>
+      <p>Originales — chaque œuvre raconte la lumière, l'espace et l'émotion.</p>
+    </div>
+
+    <section class="section" style="background:var(--color-surface);">
+      <div class="row">
+        <div class="tabs-bar" id="tabs-edigne" role="tablist"></div>
+        <div id="panels-edigne"></div>
+      </div>
+    </section>
+
+  </div><!-- /#view-edigne -->
+
+  <!-- ==================== ABOUT ==================== -->
+  <section id="about" class="section">
+    <div class="row">
+      <div class="about-grid">
+        <div class="about-portrait">
+          <img src="uploads/2019/02/photo-Grosse-julien-originale.jpg" alt="Edigne Parisis & Oriabel — Atelier Nice" loading="lazy" />
+        </div>
+        <div class="about-text">
+          <p class="section-eyebrow">L'atelier</p>
+          <h2 class="section-title" style="color:#fff;">Edigne Parisis &amp; Oriabel</h2>
+          <p class="about-body">
+            <strong style="color:#d4b896;">Edigne Parisis</strong> est peintre, dont l'œuvre oscille entre tradition figurative
+            et expression libre. Ses tableaux naissent en dialogue avec la lumière et l'espace —
+            souvent inspirés par les paysages et la vie sur la Côte d'Azur.
+          </p>
+          <p class="about-body">
+            Sous le nom <strong style="color:#d4b896;">Oriabel · Nice</strong>, le même atelier crée des bijoux faits main,
+            des pièces kintsugi, des peintures et des travaux d'aiguilles. Chaque création est unique,
+            signée et livrée avec soin.
+          </p>
+          <a href="#contact" class="btn btn-primary" style="margin-top:14px;">Prendre contact</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACT ==================== -->
+  <section class="cta-bar" id="contact">
+    <h2 class="cta-title">Nouvelles œuvres &amp; collections</h2>
+    <p class="cta-sub">Directement de l'atelier à votre boîte mail — bijoux, peintures, expositions.</p>
+    <form class="cta-form" onsubmit="handleFormSubmit(event)">
+      <input type="email" placeholder="Votre adresse e-mail" required aria-label="Adresse e-mail" />
+      <button type="submit">S'inscrire</button>
+    </form>
+  </section>
+
 </main>
 
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" id="lbClose">&times;</button>
+<!-- ===================== FOOTER ===================== -->
+<footer id="footer">
+  <div class="row">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>Nice · France</span></a>
+        <p class="footer-tagline">Bijoux faits main, kintsugi, peintures et travaux d'aiguilles — un atelier sur la Côte d'Azur.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Oriabel</h4>
+        <ul>
+          <li><button onclick="showView('oriabel')">Bijoux</button></li>
+          <li><button onclick="showView('oriabel')">Kintsugi</button></li>
+          <li><button onclick="showView('oriabel')">Peintures</button></li>
+          <li><button onclick="showView('oriabel')">Travaux d'aiguilles</button></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Edigne</h4>
+        <ul>
+          <li><button onclick="showView('edigne')">Toutes les œuvres</button></li>
+          <li><button onclick="showView('edigne')">Figuratif</button></li>
+          <li><button onclick="showView('edigne')">Paysage & Ville</button></li>
+          <li><button onclick="showView('edigne')">Abstrait</button></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2024 Oriabel · Nice · France. Tous droits réservés.</span>
+      <span>Chaque création est unique.</span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /#wrapper -->
+
+<!-- ===================== LIGHTBOX ===================== -->
+<div class="lightbox-overlay" id="lightbox" role="dialog" aria-modal="true" aria-label="Vue de l'œuvre">
   <div class="lightbox-inner">
-    <img class="lightbox-img" id="lbImg" src="" alt="">
+    <button class="lightbox-close" onclick="closeLightbox()" aria-label="Fermer">✕</button>
+    <div class="lightbox-img">
+      <img id="lb-img" src="" alt="" />
+    </div>
     <div class="lightbox-info">
-      <div class="lightbox-title" id="lbTitle"></div>
-      <table class="lightbox-table" id="lbTable"></table>
-      <div class="lightbox-desc" id="lbDesc"></div>
-      <a class="anfrage-link" href="mailto:oriabel@oriabel.com" id="lbContact">Demande de renseignements</a>
+      <p class="lightbox-category" id="lb-cat"></p>
+      <h2 class="lightbox-title" id="lb-title"></h2>
+      <p class="lightbox-desc" id="lb-desc"></p>
+      <div class="lightbox-specs">
+        <div class="spec-item"><div class="spec-label">Technique / Matière</div><div class="spec-value" id="lb-tech"></div></div>
+        <div class="spec-item"><div class="spec-label">Format / Taille</div><div class="spec-value" id="lb-format"></div></div>
+        <div class="spec-item"><div class="spec-label">Année</div><div class="spec-value" id="lb-year"></div></div>
+        <div class="spec-item"><div class="spec-label">Disponibilité</div><div class="spec-value" id="lb-avail"></div></div>
+      </div>
+      <a href="#contact" class="btn btn-primary" onclick="closeLightbox(); showView('home');" style="align-self:flex-start;">Faire une demande</a>
     </div>
   </div>
 </div>
 
-<footer>
-  <p>&copy; Oriabel &mdash; Nice, France &mdash; <a href="mailto:oriabel@oriabel.com">Contact</a> &mdash; <a href="admin.html" style="color:var(--muted);font-size:0.7rem;opacity:0.5">Admin</a></p>
-</footer>
+<!-- Données -->
+<script src="daten/bereiche.js"></script>
 
-<script src="jewelry.js"></script>
+<!-- ===================== JAVASCRIPT ===================== -->
 <script>
-
-const catLabels = { kette:"Collier", ohrring:"Boucles d'oreilles", armband:"Bracelet" };
-let activeCat = "all";
-
-function renderGrid() {
-  const grid = document.getElementById("grid");
-  const items = activeCat === "all" ? SCHMUCK_DATEN : SCHMUCK_DATEN.filter(d => d.kategorie === activeCat);
-  grid.innerHTML = items.map(d => `
-    <div class="card" onclick="openLightbox('${d.id}')">
-      <img class="card-img" src="${d.bild}" alt="${d.titel}" loading="lazy" onerror="this.style.background='#e8e2d8';this.style.minHeight='200px'">
-      <div class="card-body">
-        <div class="card-title">${d.titel}</div>
-        <div class="card-desc">${d.beschreibung}</div>
-        <div class="card-meta">${catLabels[d.kategorie] || ''}</div>
-      </div>
-    </div>
-  `).join("");
-}
-
-function openLightbox(id) {
-  const d = SCHMUCK_DATEN.find(x => x.id === id);
-  if (!d) return;
-  document.getElementById("lbImg").src = d.bild;
-  document.getElementById("lbImg").alt = d.titel;
-  document.getElementById("lbTitle").textContent = d.titel;
-  const rows = [
-    ["Matière", d.material],
-    ["Taille", d.groesse],
-    ["Année", d.jahr],
-    ["Disponibilité", d.verfuegbarkeit]
+  /* =========================================================
+     DONNÉES DIAPORAMA
+  ========================================================= */
+  var SLIDESHOW_IMAGES = [
+    'uploads/2019/02/DSC02328.jpg',
+    'uploads/2019/02/P1070660.jpg',
+    'uploads/2019/02/Tableau-003.jpg',
+    'uploads/2019/02/P1070661.jpg',
+    'uploads/2019/02/plage-de-Nice.jpg',
+    'uploads/2019/02/P1070691.jpg',
+    'uploads/2019/02/Tableau-005.jpg',
+    'uploads/2019/02/P1070699.jpg',
+    'uploads/2019/02/IMG_7011.jpg',
+    'uploads/2019/02/P1070728.jpg',
+    'uploads/2019/02/Tableau-021.jpg',
+    'uploads/2019/02/P1070733.jpg',
+    'uploads/2019/02/Tableau-022.jpg',
+    'uploads/2019/02/P1070675.jpg',
+    'uploads/2019/02/Tableau-025.jpg',
+    'uploads/2019/02/P1070685.jpg',
+    'uploads/2019/02/P1070913.jpg',
+    'uploads/2019/02/Tableau-026.jpg',
+    'uploads/2019/02/P1070934.jpg',
+    'uploads/2019/02/P1080029.jpg'
   ];
-  document.getElementById("lbTable").innerHTML = rows.map(([k,v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("");
-  document.getElementById("lbDesc").textContent = d.beschreibung;
-  document.getElementById("lightbox").classList.add("open");
-  document.body.style.overflow = "hidden";
-}
 
-document.getElementById("lbClose").onclick = closeLightbox;
-document.getElementById("lightbox").onclick = function(e) { if (e.target === this) closeLightbox(); };
-document.addEventListener("keydown", e => { if (e.key === "Escape") closeLightbox(); });
+  /* =========================================================
+     GESTION DES VUES
+  ========================================================= */
+  var currentView = 'home';
 
-function closeLightbox() {
-  document.getElementById("lightbox").classList.remove("open");
-  document.body.style.overflow = "";
-}
+  function showView(view) {
+    var views = ['home', 'oriabel', 'edigne'];
+    views.forEach(function(v) {
+      document.getElementById('view-' + v).style.display = (v === view) ? '' : 'none';
+    });
 
-document.querySelectorAll(".filter-bar button").forEach(btn => {
-  btn.onclick = function() {
-    document.querySelectorAll(".filter-bar button").forEach(b => b.classList.remove("active"));
-    this.classList.add("active");
-    activeCat = this.dataset.cat;
-    renderGrid();
-  };
-});
+    /* Mise à jour de la navigation */
+    ['accueil','oriabel','edigne'].forEach(function(id) {
+      var el = document.getElementById('nav-' + id);
+      if (el) el.classList.toggle('active', id === view || (id === 'accueil' && view === 'home'));
+    });
 
-renderGrid();
+    currentView = view;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    /* Fermer le menu mobile */
+    document.getElementById('main-nav').classList.remove('open');
+    document.getElementById('nav-toggle').setAttribute('aria-expanded','false');
+    document.body.style.overflow = '';
+  }
+
+  /* =========================================================
+     MENU MOBILE
+  ========================================================= */
+  document.getElementById('nav-toggle').addEventListener('click', function() {
+    var open = document.getElementById('main-nav').classList.toggle('open');
+    this.setAttribute('aria-expanded', open);
+    this.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+
+  /* =========================================================
+     STICKY HEADER
+  ========================================================= */
+  window.addEventListener('scroll', function() {
+    document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+
+  /* =========================================================
+     DIAPORAMA
+  ========================================================= */
+  var slideIndex = 0;
+  var slideTimer = null;
+
+  function buildSlideshow() {
+    var track = document.getElementById('slideshow-track');
+    var nav   = document.getElementById('slideshow-nav');
+    if (!track || !nav) return;
+
+    track.innerHTML = '';
+    nav.innerHTML   = '';
+
+    SLIDESHOW_IMAGES.forEach(function(src, i) {
+      var slide = document.createElement('div');
+      slide.className = 'slide' + (i === 0 ? ' active' : '');
+      var img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Oriabel & Edigne — Création ' + (i + 1);
+      img.loading = i === 0 ? 'eager' : 'lazy';
+      slide.appendChild(img);
+      track.appendChild(slide);
+
+      var dot = document.createElement('button');
+      dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
+      dot.setAttribute('aria-label', 'Image ' + (i + 1));
+      dot.addEventListener('click', (function(idx) {
+        return function() { goToSlide(idx); };
+      })(i));
+      nav.appendChild(dot);
+    });
+
+    startSlideshow();
+  }
+
+  function goToSlide(idx) {
+    var slides = document.querySelectorAll('.slide');
+    var dots   = document.querySelectorAll('.slide-dot');
+    if (!slides.length) return;
+
+    slides[slideIndex].classList.remove('active');
+    dots[slideIndex].classList.remove('active');
+
+    slideIndex = (idx + SLIDESHOW_IMAGES.length) % SLIDESHOW_IMAGES.length;
+
+    slides[slideIndex].classList.add('active');
+    dots[slideIndex].classList.add('active');
+  }
+
+  function slideNext() {
+    goToSlide(slideIndex + 1);
+    restartSlideshow();
+  }
+
+  function slidePrev() {
+    goToSlide(slideIndex - 1);
+    restartSlideshow();
+  }
+
+  function startSlideshow() {
+    if (slideTimer) clearInterval(slideTimer);
+    slideTimer = setInterval(function() {
+      goToSlide(slideIndex + 1);
+    }, 4000);
+  }
+
+  function restartSlideshow() {
+    startSlideshow();
+  }
+
+  /* =========================================================
+     TABS (Edigne + sous-catégories Bijoux)
+  ========================================================= */
+  function switchTab(btn, panelId) {
+    var tabsBar = btn.closest('.tabs-bar');
+    if (!tabsBar) return;
+    var container = tabsBar.parentElement;
+    tabsBar.querySelectorAll('.tab-btn').forEach(function(b) {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected','false');
+    });
+    btn.classList.add('active');
+    btn.setAttribute('aria-selected','true');
+    container.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+    var target = document.getElementById(panelId);
+    if (target) target.classList.add('active');
+  }
+
+  /* =========================================================
+     LIGHTBOX
+  ========================================================= */
+  function openLightbox(title, cat, desc, img, tech, format, year, avail) {
+    document.getElementById('lb-title').textContent  = title;
+    document.getElementById('lb-cat').textContent    = cat;
+    document.getElementById('lb-desc').textContent   = desc;
+    document.getElementById('lb-img').src            = img;
+    document.getElementById('lb-img').alt            = title;
+    document.getElementById('lb-tech').textContent   = tech;
+    document.getElementById('lb-format').textContent = format;
+    document.getElementById('lb-year').textContent   = year;
+    document.getElementById('lb-avail').textContent  = avail;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  /* =========================================================
+     NEWSLETTER
+  ========================================================= */
+  function handleFormSubmit(e) {
+    e.preventDefault();
+    var btn = e.target.querySelector('button');
+    btn.textContent = 'Inscrit ✓';
+    btn.style.background = '#d4b896';
+    e.target.querySelector('input').value = '';
+    setTimeout(function() { btn.textContent = "S'inscrire"; btn.style.background = ''; }, 3000);
+  }
+
+  /* =========================================================
+     GENERATEUR DE CARTES PRODUITS
+  ========================================================= */
+  function karteHTML(item, bildform, tagLabel, katLabel, subLabel) {
+    var lb = JSON.stringify;
+    var tag = tagLabel
+      ? '<span class="item-tag">' + tagLabel + '</span>'
+      : '<p class="product-category">' + katLabel + '</p>';
+
+    var lbCall = 'openLightbox('
+      + lb(item.titel)            + ','
+      + lb(katLabel)              + ','
+      + lb(item.beschreibung)     + ','
+      + lb(item.bild)             + ','
+      + lb(item.technik || item.material || '') + ','
+      + lb(item.format  || item.groesse  || '') + ','
+      + lb(item.jahr    || '')    + ','
+      + lb(item.verfuegbarkeit)   + ')';
+
+    return '<div class="product-small col has-hover"><div class="col-inner">'
+      + '<div class="product-small box" onclick="' + lbCall + '">'
+      + '<div class="box-image ' + bildform + '">'
+      + '<img src="' + item.vorschau + '" alt="' + item.titel + '" loading="lazy" />'
+      + '<div class="image-tools">'
+      + '<button class="tool-btn">Voir</button>'
+      + '<button class="tool-btn">Demander</button>'
+      + '</div></div>'
+      + '<div class="box-text">'
+      + tag
+      + '<h3 class="product-title">' + item.titel + '</h3>'
+      + '<div class="price-wrapper">'
+      + '<span class="price">' + item.verfuegbarkeit + '</span>'
+      + '<span class="price-sub">' + subLabel + '</span>'
+      + '</div></div></div></div></div>';
+  }
+
+  function fuelleGrid(gridId, items, bildform, tagFn, katFn, subFn) {
+    var el = document.getElementById(gridId);
+    if (!el) return;
+    if (!items || items.length === 0) {
+      el.innerHTML = '<p style="color:var(--color-secondary);padding:24px 0;">Aucun article disponible.</p>';
+      return;
+    }
+    el.innerHTML = items.map(function(item) {
+      return karteHTML(item, bildform, tagFn(item), katFn(item), subFn(item));
+    }).join('');
+  }
+
+  /* =========================================================
+     CONSTRUCTION DES SECTIONS EDIGNE
+  ========================================================= */
+  function buildEdigne(bereich) {
+    var tabsEl   = document.getElementById('tabs-edigne');
+    var panelsEl = document.getElementById('panels-edigne');
+    if (!tabsEl || !panelsEl) return;
+
+    var kategorien = bereich.kategorien || [];
+    var produkte   = bereich.produkte   || [];
+    var bildform   = bereich.bildform   || 'portrait';
+    var KAT_LABEL  = {};
+    kategorien.forEach(function(k) { KAT_LABEL[k.id] = k.label; });
+
+    function subLabel(item) {
+      var keys = ['feld1_key','feld2_key','feld3_key'];
+      for (var i = 0; i < keys.length; i++) {
+        var k = bereich[keys[i]];
+        if (k && item[k]) return item[k].split(',')[0].trim();
+      }
+      return '';
+    }
+    function tagLabel(item) { return KAT_LABEL[item.kategorie] || item.kategorie; }
+    function katLabel(item) { return (bereich.kuenstlerin || '') + ' · ' + tagLabel(item); }
+
+    /* Tab Tous */
+    var alleId = 'edigne-tous';
+    tabsEl.innerHTML = '<button class="tab-btn active" role="tab" aria-selected="true"'
+      + ' data-tab="' + alleId + '" onclick="switchTab(this,\'' + alleId + '\')">Toutes</button>';
+    panelsEl.innerHTML = '<div class="tab-panel active" id="' + alleId + '">'
+      + '<div class="product-grid" id="grid-' + alleId + '"></div></div>';
+
+    /* Tabs catégories */
+    kategorien.forEach(function(kat) {
+      var tabId = 'edigne-' + kat.id;
+      tabsEl.innerHTML += '<button class="tab-btn" role="tab" aria-selected="false"'
+        + ' data-tab="' + tabId + '" onclick="switchTab(this,\'' + tabId + '\')">' + kat.label + '</button>';
+      panelsEl.innerHTML += '<div class="tab-panel" id="' + tabId + '">'
+        + '<div class="product-grid" id="grid-' + tabId + '"></div></div>';
+    });
+
+    /* Remplir grids */
+    fuelleGrid('grid-' + alleId, produkte, bildform, tagLabel, katLabel, subLabel);
+    kategorien.forEach(function(kat) {
+      var filtered = produkte.filter(function(p) { return p.kategorie === kat.id; });
+      fuelleGrid('grid-edigne-' + kat.id, filtered, bildform, tagLabel, katLabel, subLabel);
+    });
+  }
+
+  /* =========================================================
+     CONSTRUCTION DES SECTIONS ORIABEL
+  ========================================================= */
+  var oriabelBereiche = [];
+  var currentOriabelCat = null;
+
+  function buildOriabelSelector() {
+    var selector = document.getElementById('oriabel-cat-selector');
+    if (!selector) return;
+    selector.innerHTML = '';
+
+    oriabelBereiche.forEach(function(bereich, idx) {
+      var btn = document.createElement('button');
+      btn.className = 'cat-sel-btn' + (idx === 0 ? ' active' : '');
+      btn.innerHTML = bereich.titre_nav || bereich.titre;
+      if (bereich.sous_titre) {
+        var prodCount = (bereich.produkte || []).length;
+        var sub = document.createElement('span');
+        sub.className = 'cat-sub-label';
+        sub.textContent = prodCount > 0 ? prodCount + ' pièce' + (prodCount > 1 ? 's' : '') : 'À venir';
+        btn.appendChild(sub);
+      }
+      btn.addEventListener('click', (function(b, i) {
+        return function() { selectOriabelCat(b, i); };
+      })(bereich, idx));
+      selector.appendChild(btn);
+    });
+
+    /* Afficher la première catégorie par défaut */
+    if (oriabelBereiche.length > 0) {
+      renderOriabelCat(oriabelBereiche[0]);
+      currentOriabelCat = 0;
+    }
+  }
+
+  function selectOriabelCat(bereich, idx) {
+    /* Mettre à jour les boutons */
+    var buttons = document.querySelectorAll('.cat-sel-btn');
+    buttons.forEach(function(b, i) {
+      b.classList.toggle('active', i === idx);
+    });
+    currentOriabelCat = idx;
+    renderOriabelCat(bereich);
+  }
+
+  function renderOriabelCat(bereich) {
+    var content = document.getElementById('oriabel-content');
+    if (!content) return;
+
+    var produkte   = bereich.produkte   || [];
+    var kategorien = bereich.kategorien || [];
+    var bildform   = bereich.bildform   || 'square';
+    var id         = bereich.id;
+
+    if (produkte.length === 0) {
+      /* État vide */
+      content.innerHTML = '<div class="row"><div class="empty-state">'
+        + '<div class="empty-icon">✦</div>'
+        + '<h3>' + (bereich.titre_nav || bereich.titre) + '</h3>'
+        + '<p>' + (bereich.sous_titre || 'De nouvelles créations seront ajoutées prochainement.') + '</p>'
+        + '</div></div>';
+      return;
+    }
+
+    /* Construire section avec tabs si sous-catégories */
+    var KAT_LABEL = {};
+    kategorien.forEach(function(k) { KAT_LABEL[k.id] = k.label; });
+
+    function subLabel(item) {
+      var keys = ['feld1_key','feld2_key','feld3_key'];
+      for (var i = 0; i < keys.length; i++) {
+        var k = bereich[keys[i]];
+        if (k && item[k]) return item[k].split(',')[0].trim();
+      }
+      return '';
+    }
+    function tagLabel(item) { return KAT_LABEL[item.kategorie] || item.kategorie || ''; }
+    function katLabel(item) { return (bereich.kuenstlerin || 'Oriabel') + ' · ' + tagLabel(item); }
+
+    var gridClass = (bildform === 'portrait') ? 'product-grid' : 'product-grid jewelry-grid';
+    var alleId = id + '-tous';
+
+    var html = '<section class="section" style="background:var(--color-surface);"><div class="row">';
+
+    /* Sous-titre de la catégorie */
+    if (bereich.sous_titre) {
+      html += '<div class="section-header" style="margin-bottom:32px;">'
+        + '<p class="section-sub">' + bereich.sous_titre + '</p></div>';
+    }
+
+    if (kategorien.length > 0) {
+      /* Avec tabs */
+      html += '<div class="tabs-bar" id="tabs-' + id + '" role="tablist">'
+        + '<button class="tab-btn active" role="tab" aria-selected="true"'
+        + ' data-tab="' + alleId + '" onclick="switchTab(this,\'' + alleId + '\')">Toutes</button>';
+      kategorien.forEach(function(kat) {
+        var tabId = id + '-' + kat.id;
+        html += '<button class="tab-btn" role="tab" aria-selected="false"'
+          + ' data-tab="' + tabId + '" onclick="switchTab(this,\'' + tabId + '\')">' + kat.label + '</button>';
+      });
+      html += '</div>';
+      html += '<div id="panels-' + id + '">';
+      html += '<div class="tab-panel active" id="' + alleId + '">'
+        + '<div class="' + gridClass + '" id="grid-' + alleId + '"></div></div>';
+      kategorien.forEach(function(kat) {
+        var tabId = id + '-' + kat.id;
+        html += '<div class="tab-panel" id="' + tabId + '">'
+          + '<div class="' + gridClass + '" id="grid-' + tabId + '"></div></div>';
+      });
+      html += '</div>';
+    } else {
+      /* Sans tabs */
+      html += '<div class="' + gridClass + '" id="grid-' + alleId + '"></div>';
+    }
+
+    html += '</div></section>';
+    content.innerHTML = html;
+
+    /* Remplir grids */
+    fuelleGrid('grid-' + alleId, produkte, bildform, tagLabel, katLabel, subLabel);
+    kategorien.forEach(function(kat) {
+      var filtered = produkte.filter(function(p) { return p.kategorie === kat.id; });
+      fuelleGrid('grid-' + id + '-' + kat.id, filtered, bildform, tagLabel, katLabel, subLabel);
+    });
+  }
+
+  /* =========================================================
+     INITIALISATION
+  ========================================================= */
+  document.addEventListener('DOMContentLoaded', function() {
+    var bereiche = (typeof window.BEREICHE_DATEN !== 'undefined') ? window.BEREICHE_DATEN : [];
+
+    if (bereiche.length === 0) {
+      console.warn('bereiche.js non chargé ou vide.');
+    }
+
+    /* Séparer Oriabel et Edigne */
+    var edigneBereiche = bereiche.filter(function(b) { return b.section === 'edigne'; });
+    oriabelBereiche    = bereiche.filter(function(b) { return b.section === 'oriabel'; });
+
+    /* Construire section Edigne */
+    if (edigneBereiche.length > 0) {
+      buildEdigne(edigneBereiche[0]);
+    }
+
+    /* Construire sélecteur Oriabel */
+    if (oriabelBereiche.length > 0) {
+      buildOriabelSelector();
+    }
+
+    /* Construire le diaporama */
+    buildSlideshow();
+  });
 </script>
+
 </body>
 </html>
