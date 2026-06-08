@@ -616,7 +616,46 @@
   <!-- BARS CLUBS ROOFTOPS -->
   <div class="tile-grid single" style="margin-top:0">
     <div class="card">
-      <div class="card-toggle" on
+      <div class="card-toggle" onclick="toggleCard(this)">
+        <div class="card-icon">🍸</div>
+        <div class="card-label" id="bars-label">Bars, Clubs &amp; Rooftops</div>
+        <div class="card-chevron">&#9660;</div>
+      </div>
+      <div class="card-body">
+        <div id="bars-list" style="padding:0.6rem 1.1rem 0.5rem;border-bottom:1px solid var(--border)"></div>
+        <div id="bars-map" style="height:300px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VESSELS -->
+  <div class="section-title" id="sec-vessels"></div>
+  <div class="tile-grid single">
+    <div class="card" id="vessel-card">
+      <div class="card-toggle" onclick="toggleVessel(this)">
+        <div class="card-icon">⚓</div>
+        <div class="card-label" id="vessel-label">Hafen Nice – Live Schiffsverkehr</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body" id="vessel-body" style="padding:0.75rem">
+        <div id="vessel-map-wrap" style="border-radius:8px;overflow:hidden;min-height:300px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEISURE -->
+  <div class="tile-grid" id="grid-leisure"></div>
+
+</main>
+
+<footer id="footer-text"></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script></script>
+<script></script>
+<script></script>
+<script></script>
+<script>
 
 // ─── CONTENT ───────────────────────────────────────────────────────────────
 
@@ -736,7 +775,8 @@ const T = {
         { name:"Brocante de Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Rue du Marché Forville · 30 Min. Zug (Gare St-Augustin)", days:["Mo"], time:"7h–13h" },
         { name:"Allées de la Liberté – Cannes", url:"https://maps.apple.com/?q=Allees+de+la+Liberte+Cannes+France", desc:"Allée Charles de Gaulle · große Brocante am Hafen · 30 Min. Zug", days:["Sa","So"], time:"7h–13h" },
         { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · nahe Vieux Menton · 45 Min. Zug", days:["Fr"], time:"matin" },
-        { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monatlich (3. Sa) · 30 Händler · Vieux Nice", days:["Sa"], time:"monatl." }
+        { name:"Brocante Place Garibaldi", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"Jeden 3. Sa./Monat · 9–17h · Antikes, Gemälde, Sammlerstücke", days:["Sa"], time:"9–17h" },
+        { name:"Artisanat Garibaldi (Kunsthandwerk)", url:"https://www.explorenicecotedazur.com/fiche/marche-artisanal-garibaldi/", desc:"Jeden 1. So./Monat · 9–19h · Keramik, Schmuck, Leder, Textil", days:["So"], time:"9–19h" }
       ]},
       { icon:"📅", label:"Was läuft gerade", eventscard:true },
       { icon:"🚲", label:"Fahrrad", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://cotedazurfrance.de/zu-tun/sportliche-aktivitaten/fahrrad/die-cote-dazur-ein-paradies-fur-radfahrer/", rows:[
@@ -782,11 +822,11 @@ const T = {
       { name:"Maranna", note:"Vieux Nice · Pancakes, Avocado-Toast, ganztägig", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
-      { name:"Moon Bar (Rooftop Aston)", note:"360°-Panorama · Pool · Live-Musik Do–Sa", addr:"12 Ave Félix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
+      { name:"Moon Bar (Rooftop Aston)", note:"360-Grad-Panorama · Pool · Live-Musik Do-Sa", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
       { name:"SEEN by Olivier (Rooftop Anantara)", note:"6. OG · Panoramablick Baie des Anges", addr:"12 Ave de Verdun, Nice", lat:43.6991, lng:7.2649, url:"https://www.seennice.com/en/", tag:"Rooftop" },
-      { name:"Elaiô – Le Méridien (Rooftop)", note:"Terrasse Promenade · Cocktails & Meeresblick", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
+      { name:"Elaio - Le Meridien (Rooftop)", note:"Terrasse Promenade · Cocktails und Meeresblick", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
       { name:"High Club", note:"Bekanntester Club der Riviera · VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
-      { name:"Wayne's Bar", note:"Live-Musik täglich · Vieux Nice", addr:"15 Rue de la Préfecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
+      { name:"Wayne's Bar", note:"Live-Musik taeglich · Vieux Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
       { name:"Calade Rooftop (Radisson Blu)", note:"Meerblick-Terrasse an der Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" }
     ], barsLabel:"Bars, Clubs & Rooftops"
   },
@@ -906,7 +946,8 @@ const T = {
         { name:"Brocante de Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Rue du Marché Forville · 30 min by train", days:["Mo"], time:"7h–13h" },
         { name:"Allées de la Liberté – Cannes", url:"https://maps.apple.com/?q=Allees+de+la+Liberte+Cannes+France", desc:"Allée Charles de Gaulle · large brocante by the port · 30 min by train", days:["Sa","So"], time:"7h–13h" },
         { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · near Vieux Menton · 45 min by train", days:["Fr"], time:"morning" },
-        { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~monthly (3rd Sat) · 30 vendors · Old Nice", days:["Sa"], time:"monthly" }
+        { name:"Brocante Place Garibaldi", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"Every 3rd Sat/month · 9–17h · Antiques, paintings, collectibles", days:["Sa"], time:"9–17h" },
+        { name:"Garibaldi Crafts Market", url:"https://www.explorenicecotedazur.com/fiche/marche-artisanal-garibaldi/", desc:"Every 1st Sun/month · 9–19h · Ceramics, jewellery, leather, textiles", days:["Su"], time:"9–19h" }
       ]},
       { icon:"🚲", label:"Cycling", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://cotedazurfrance.com/to-do/sports-activities/cycling/the-cote-dazur-a-paradise-for-cyclists/", rows:[
         ["Bike rental","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (guided tours available)"],
@@ -946,17 +987,17 @@ const T = {
     brunches: [
       { name:"Pain & Cie", note:"Cours Saleya terrace · homemade, organic eggs, pancakes", addr:"3 Rue Louis Gassin, Nice", lat:43.6951, lng:7.2751, url:"https://www.restaurantpainetcie.fr/", vegan:true },
       { name:"Clay", note:"All-day brunch 7 days · avocado toast, pancakes", addr:"4 Rue Bonaparte, Nice", lat:43.6966, lng:7.2773, url:"https://www.facebook.com/clay.bonaparte/", vegan:true },
-      { name:"Marinette", note:"Trendy café Old Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
+      { name:"Marinette", note:"Trendy cafe Old Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% homemade · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Edmond Café", note:"Cozy, central location", addr:"11 bis Rue du Congrès, Nice", lat:43.6993, lng:7.2607, url:"" },
+      { name:"Edmond Cafe", note:"Cozy, central location", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
       { name:"Maranna", note:"Old Nice · pancakes, avocado toast, all day", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
-      { name:"Moon Bar (Aston Rooftop)", note:"360° panorama · pool · live music Thu–Sat", addr:"12 Ave Félix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
+      { name:"Moon Bar (Aston Rooftop)", note:"360 panorama · pool · live music Thu-Sat", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
       { name:"SEEN by Olivier (Anantara Rooftop)", note:"6th fl. · panoramic bay views", addr:"12 Ave de Verdun, Nice", lat:43.6991, lng:7.2649, url:"https://www.seennice.com/en/", tag:"Rooftop" },
-      { name:"Elaiô – Le Méridien (Rooftop)", note:"Terrace above Promenade · cocktails & sea views", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
+      { name:"Elaio - Le Meridien (Rooftop)", note:"Terrace above Promenade · cocktails & sea views", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
       { name:"High Club", note:"Most famous club on the Riviera · VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
-      { name:"Wayne's Bar", note:"Live music nightly · Old Nice", addr:"15 Rue de la Préfecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
+      { name:"Wayne's Bar", note:"Live music nightly · Old Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
       { name:"Calade Rooftop (Radisson Blu)", note:"Sea-view terrace on the Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" }
     ], barsLabel:"Bars, Clubs & Rooftops"
   },
@@ -1076,7 +1117,8 @@ const T = {
         { name:"Brocante de Forville – Cannes", url:"https://maps.apple.com/?q=Marche+Forville+Cannes+France", desc:"Rue du Marché Forville · 30 min en train", days:["Mo"], time:"7h–13h" },
         { name:"Allées de la Liberté – Cannes", url:"https://maps.apple.com/?q=Allees+de+la+Liberte+Cannes+France", desc:"Allée Charles de Gaulle · grande brocante au bord du port · 30 min en train", days:["Sa","So"], time:"7h–13h" },
         { name:"Antiquaires & Brocanteurs – Menton", url:"https://maps.apple.com/?q=Mail+du+Bastion+Menton+France", desc:"Mail du Bastion · près du Vieux Menton · 45 min en train", days:["Fr"], time:"matin" },
-        { name:"Brocante Place Garibaldi – Nice", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"~mensuel (3e sam.) · 30 marchands · Vieux Nice", days:["Sa"], time:"mensuel" }
+        { name:"Brocante Place Garibaldi", url:"https://maps.apple.com/?q=Place+Garibaldi+Nice+France", desc:"Chaque 3e sam./mois · 9–17h · Antiquités, tableaux, objets", days:["Sa"], time:"9–17h" },
+        { name:"Marché Artisanal Garibaldi", url:"https://www.explorenicecotedazur.com/fiche/marche-artisanal-garibaldi/", desc:"Chaque 1er dim./mois · 9–19h · Céramiques, bijoux, cuir, textiles", days:["Di"], time:"9–19h" }
       ]},
       { icon:"🚲", label:"Vélos", komootlink:"https://www.komoot.com/guide/1524430/cycling-around-nice", stravalink:"https://cotedazurfrance.fr/a-faire/activites-sportives/velo/la-cote-dazur-le-paradis-des-cyclistes/", rows:[
         ["Location vélo","Lime/Poney · Bouticycle (Av. de la Californie) · Bicicletta, Rue Defly (sorties guidées)"],
@@ -1114,19 +1156,19 @@ const T = {
       { name:"Plage des Canailles (restaurant de plage)", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
     ],
     brunches: [
-      { name:"Pain & Cie", note:"Terrasse Cours Saleya · fait-maison, œufs bio", addr:"3 Rue Louis Gassin, Nice", lat:43.6951, lng:7.2751, url:"https://www.restaurantpainetcie.fr/", vegan:true },
-      { name:"Clay", note:"Brunch toute la journée 7j/7 · avocado toast, pancakes", addr:"4 Rue Bonaparte, Nice", lat:43.6966, lng:7.2773, url:"https://www.facebook.com/clay.bonaparte/", vegan:true },
-      { name:"Marinette", note:"Café branché Vieux Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
+      { name:"Pain & Cie", note:"Terrasse Cours Saleya · fait-maison, oeufs bio", addr:"3 Rue Louis Gassin, Nice", lat:43.6951, lng:7.2751, url:"https://www.restaurantpainetcie.fr/", vegan:true },
+      { name:"Clay", note:"Brunch toute la journee 7j/7 · avocado toast, pancakes", addr:"4 Rue Bonaparte, Nice", lat:43.6966, lng:7.2773, url:"https://www.facebook.com/clay.bonaparte/", vegan:true },
+      { name:"Marinette", note:"Cafe branche Vieux Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% fait-maison · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Edmond Café", note:"Ambiance chaleureuse, bien situé", addr:"11 bis Rue du Congrès, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Vieux Nice · pancakes, avocado toast, toute la journée", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
+      { name:"Edmond Cafe", note:"Ambiance chaleureuse, bien situe", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
+      { name:"Maranna", note:"Vieux Nice · pancakes, avocado toast, toute la journee", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
-      { name:"Moon Bar (Rooftop Aston)", note:"360° panorama · piscine · musique live jeu–sam", addr:"12 Ave Félix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
-      { name:"SEEN by Olivier (Rooftop Anantara)", note:"6e ét. · vue panoramique Baie des Anges", addr:"12 Ave de Verdun, Nice", lat:43.6991, lng:7.2649, url:"https://www.seennice.com/en/", tag:"Rooftop" },
-      { name:"Elaiô – Le Méridien (Rooftop)", note:"Terrasse Promenade · cocktails & vue mer", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
+      { name:"Moon Bar (Rooftop Aston)", note:"360 panorama · piscine · musique live jeu-sam", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
+      { name:"SEEN by Olivier (Rooftop Anantara)", note:"6e et. · vue panoramique Baie des Anges", addr:"12 Ave de Verdun, Nice", lat:43.6991, lng:7.2649, url:"https://www.seennice.com/en/", tag:"Rooftop" },
+      { name:"Elaio - Le Meridien (Rooftop)", note:"Terrasse Promenade · cocktails et vue mer", addr:"1 Promenade des Anglais, Nice", lat:43.6956, lng:7.2591, url:"https://www.marriott.com/en-us/hotels/nceln-le-meridien-nice/", tag:"Rooftop" },
       { name:"High Club", note:"Le club le plus connu de la Riviera · ambiance VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
-      { name:"Wayne's Bar", note:"Musique live tous les soirs · Vieux Nice", addr:"15 Rue de la Préfecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
+      { name:"Wayne's Bar", note:"Musique live tous les soirs · Vieux Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
       { name:"Calade Rooftop (Radisson Blu)", note:"Terrasse vue mer sur la Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" }
     ], barsLabel:"Bars, Clubs & Rooftops"
   }
@@ -1533,14 +1575,13 @@ function initMap(lang) {
 
   // Brunch markers (blue)
   if (T[lang] && T[lang].brunches) {
-    T[lang].brunches.forEach((r, i) => {
-      const bIcon = L.divIcon({
-        html: `<div style="background:#1a6db5;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">${i+1}</div>`,
+    T[lang].brunches.forEach(function(r, i) {
+      var bIcon = L.divIcon({
+        html: '<div style="background:#1a6db5;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">' + (i+1) + '</div>',
         className: '', iconSize:[24,24], iconAnchor:[12,12]
       });
-      L.marker([r.lat, r.lng], {icon: bIcon})
-        .addTo(map)
-        .bindPopup(`<strong>Brunch ${i+1}: ${r.name}</strong><br>${r.addr}`);
+      L.marker([r.lat, r.lng], {icon: bIcon}).addTo(map)
+        .bindPopup('<strong>Brunch ' + (i+1) + ': ' + r.name + '</strong><br>' + r.addr);
     });
   }
   setTimeout(() => map.invalidateSize(), 100);
@@ -1843,7 +1884,6 @@ function toggleVessel(toggleEl) {
   }
 }
 
-
 var barsMap = null;
 function initBarsMap(lang) {
   var bEl = document.getElementById('bars-map');
@@ -1851,25 +1891,25 @@ function initBarsMap(lang) {
   if (!barsMap) {
     barsMap = L.map('bars-map').setView([43.695, 7.26], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom:19
+      attribution: '(c) OpenStreetMap', maxZoom:19
     }).addTo(barsMap);
   } else {
-    barsMap.eachLayer(l => { if (l instanceof L.Marker) barsMap.removeLayer(l); });
+    barsMap.eachLayer(function(l) { if (l instanceof L.Marker) barsMap.removeLayer(l); });
   }
   var tagColors = {Rooftop:'#1a5276', Club:'#8e44ad', Bar:'#c0392b'};
   var bars = T[lang] && T[lang].bars ? T[lang].bars : [];
-  bars.forEach((b, i) => {
+  bars.forEach(function(b, i) {
     var clr = tagColors[b.tag] || '#555';
     var bIcon = L.divIcon({
       html: '<div style="background:' + clr + ';color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,0.3)">' + (i+1) + '</div>',
       className:'', iconSize:[24,24], iconAnchor:[12,12]
     });
-    L.marker([b.lat, b.lng], {icon: bIcon})
-      .addTo(barsMap)
+    L.marker([b.lat, b.lng], {icon: bIcon}).addTo(barsMap)
       .bindPopup('<strong>' + (i+1) + '. ' + b.name + '</strong><br>' + b.addr);
   });
-  setTimeout(() => barsMap.invalidateSize(), 100);
+  setTimeout(function() { barsMap.invalidateSize(); }, 100);
 }
+
 function setLang(lang) {
   currentLang = lang;
   const t = T[lang];
@@ -1917,44 +1957,41 @@ function setLang(lang) {
   gExt.innerHTML = t.ext.map((item, i) => buildCard(item, i === 0)).join('');
 
   // Restaurant list
-  const rl = document.getElementById('resto-list');
-  // Column headers
-  const rch = document.getElementById('resto-col-hdr');
   const bch = document.getElementById('brunch-col-hdr');
-  if (rch) rch.textContent = lang === 'fr' ? 'Restaurants' : lang === 'en' ? 'Restaurants' : 'Restaurants';
   if (bch) bch.textContent = 'Brunch';
 
   // Brunch list
-  const bl = document.getElementById('brunch-list');
-  if (bl && t.brunches) {
-    bl.innerHTML = t.brunches.map((r, i) => {
-      const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(r.addr + ', France')}`;
-      const veganBadge = r.vegan ? `<span style="background:#3d7a52;color:#fff;font-size:0.6rem;font-weight:700;padding:0.08rem 0.32rem;border-radius:3px;margin-left:0.35rem;text-transform:uppercase;letter-spacing:0.04em;vertical-align:middle">vegan</span>` : '';
-      const webLink = r.url ? ` <a href="${r.url}" class="ext-link" target="_blank" style="font-size:0.74rem;font-weight:600">Web</a>` : '';
-      return `<div style="display:flex;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--border);align-items:flex-start">
-        <span style="background:#1a6db5;color:#fff;border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px">${i+1}</span>
-        <div><strong>${escHtml(r.name)}</strong>${veganBadge}${webLink}<br><span style="font-size:0.75rem;color:var(--muted)">${escHtml(r.note)}</span><br><a href="${mapsUrl}" class="maps-link" target="_blank" style="font-size:0.75rem">${escHtml(r.addr)}</a></div>
-      </div>`;
+  const blEl = document.getElementById('brunch-list');
+  if (blEl && t.brunches) {
+    blEl.innerHTML = t.brunches.map(function(r, i) {
+      var mapsUrl = 'https://maps.google.com/?q=' + encodeURIComponent(r.addr + ', France');
+      var veganBadge = r.vegan ? '<span style="background:#3d7a52;color:#fff;font-size:0.6rem;font-weight:700;padding:0.08rem 0.32rem;border-radius:3px;margin-left:0.35rem;text-transform:uppercase;letter-spacing:0.04em;vertical-align:middle">vegan</span>' : '';
+      var webLink = r.url ? ' <a href="' + r.url + '" class="ext-link" target="_blank" rel="noopener" style="font-size:0.74rem;font-weight:600">Web</a>' : '';
+      return '<div style="display:flex;gap:0.5rem;padding:0.3rem 0;border-bottom:1px solid var(--border);align-items:flex-start">' +
+        '<span style="background:#1a6db5;color:#fff;border-radius:50%;width:19px;height:19px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
+        '<div><strong>' + escHtml(r.name) + '</strong>' + veganBadge + webLink + '<br><span style="font-size:0.75rem;color:var(--muted)">' + escHtml(r.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.75rem">' + escHtml(r.addr) + '</a></div>' +
+      '</div>';
     }).join('');
   }
 
   // Bars list
-  const barsListEl = document.getElementById('bars-list');
-  const barsLblEl = document.getElementById('bars-label');
+  var barsLblEl = document.getElementById('bars-label');
   if (barsLblEl && t.barsLabel) barsLblEl.textContent = t.barsLabel;
+  var barsListEl = document.getElementById('bars-list');
   if (barsListEl && t.bars) {
-    const tagColors = {Rooftop:'#1a5276',Club:'#8e44ad',Bar:'#c0392b'};
-    barsListEl.innerHTML = t.bars.map((b, i) => {
-      const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(b.addr + ', France')}`;
-      const clr = tagColors[b.tag] || '#555';
-      const webLink = b.url ? ` <a href="${b.url}" class="ext-link" target="_blank" style="font-size:0.74rem;font-weight:600">Web</a>` : '';
-      return `<div style="display:flex;gap:0.6rem;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">
-        <span style="background:${clr};color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">${i+1}</span>
-        <div><strong>${escHtml(b.name)}</strong> <span style="font-size:0.68rem;color:${clr};font-weight:600;text-transform:uppercase;letter-spacing:0.04em">${b.tag}</span>${webLink}<br><span style="font-size:0.76rem;color:var(--muted)">${escHtml(b.note)}</span><br><a href="${mapsUrl}" class="maps-link" target="_blank" style="font-size:0.75rem">${escHtml(b.addr)}</a></div>
-      </div>`;
+    var tagColors = {Rooftop:'#1a5276', Club:'#8e44ad', Bar:'#c0392b'};
+    barsListEl.innerHTML = t.bars.map(function(b, i) {
+      var mapsUrl = 'https://maps.google.com/?q=' + encodeURIComponent(b.addr + ', France');
+      var clr = tagColors[b.tag] || '#555';
+      var webLink = b.url ? ' <a href="' + b.url + '" class="ext-link" target="_blank" rel="noopener" style="font-size:0.74rem;font-weight:600">Web</a>' : '';
+      return '<div style="display:flex;gap:0.6rem;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">' +
+        '<span style="background:' + clr + ';color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
+        '<div><strong>' + escHtml(b.name) + '</strong> <span style="font-size:0.68rem;color:' + clr + ';font-weight:600;text-transform:uppercase;letter-spacing:0.04em">' + b.tag + '</span>' + webLink + '<br><span style="font-size:0.76rem;color:var(--muted)">' + escHtml(b.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.75rem">' + escHtml(b.addr) + '</a></div>' +
+      '</div>';
     }).join('');
   }
 
+  const rl = document.getElementById('resto-list');
   rl.innerHTML = t.restos.map((r, i) => {
     const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(r.addr + ', Nice, France')}`;
     const veganBadge = r.vegan ? `<span style="background:#3d7a52;color:#fff;font-size:0.6rem;font-weight:700;padding:0.08rem 0.32rem;border-radius:3px;margin-left:0.35rem;text-transform:uppercase;letter-spacing:0.04em;vertical-align:middle">vegan</span>` : '';
@@ -1971,6 +2008,7 @@ function setLang(lang) {
   initWeatherCard(lang);
 }
 
+
 function toggleCard(toggleEl) {
   const card = toggleEl.closest('.card');
   card.classList.toggle('open');
@@ -1978,9 +2016,9 @@ function toggleCard(toggleEl) {
     if (map) setTimeout(() => map.invalidateSize(), 50);
     if (card.querySelector('#shop-map')) initShopMap(document.documentElement.lang);
     if (card.querySelector('#sport-map')) initSportMap(document.documentElement.lang);
+    if (card.querySelector('#bars-map')) initBarsMap(document.documentElement.lang);
     if (card.querySelector('#excursions-map')) initExcursionsMap(document.documentElement.lang);
     if (card.querySelector('#weather-content')) initWeatherCard(document.documentElement.lang);
-    if (card.querySelector('#bars-map')) initBarsMap(document.documentElement.lang);
   }
 }
 
@@ -2005,16 +2043,6 @@ const NICE_EVENTS = [
   { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse / Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Dauerausstellung", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
   { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner", url:"https://www.nuitscarrees.com/", tags:["Festival","Musik"] },
   { from:"2026-06-21", to:"2026-06-21", dateLabel:"21. Jun", title:"Fête de la Musique — Nizza", desc:"Ab 18h · Place Masséna, Vieux Nice, Promenade du Paillon · Alle Stilrichtungen · gratis", url:"https://www.nice.fr/nice-music-live/", tags:["Gratis","Fest"] },
-  { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · 21.6. gratis / ab 23.6. 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
-  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Indie, Pop, Electronic · Villefranche-sur-Mer", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Festival","Musik"] },
-  { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN – Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenössische Tragödien unter freiem Himmel · 21h\nBérénice (Racine), Les Suppliantes (Eschyle), Un Jour sans vent u.a. · ab 10 €\nFreie Rahmenprogramme (Lesungen, Konferenzen, Debatten) parallel", url:"https://www.tnn.fr/fr/les-temps-forts/festival-de-tragedie", tags:["Theater","TNN"] },
-];
-
-// Init
-setLang('de');
-highlightToday();
-initWeatherCard(document.documentElement.lang);
--21", to:"2026-06-21", dateLabel:"21. Jun", title:"Fête de la Musique — Nizza", desc:"Ab 18h · Place Masséna, Vieux Nice, Promenade du Paillon · Alle Stilrichtungen · gratis", url:"https://www.nice.fr/nice-music-live/", tags:["Gratis","Fest"] },
   { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · 21.6. gratis / ab 23.6. 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
   { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Indie, Pop, Electronic · Villefranche-sur-Mer", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Festival","Musik"] },
   { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN – Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenössische Tragödien unter freiem Himmel · 21h\nBérénice (Racine), Les Suppliantes (Eschyle), Un Jour sans vent u.a. · ab 10 €\nFreie Rahmenprogramme (Lesungen, Konferenzen, Debatten) parallel", url:"https://www.tnn.fr/fr/les-temps-forts/festival-de-tragedie", tags:["Theater","TNN"] },
