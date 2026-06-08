@@ -186,61 +186,56 @@
     }
 
     /* =========================================================
-       SLIDESHOW
+       FEATURED SECTION (remplace diaporama)
     ========================================================= */
-    .slideshow-section {
-      position: relative;
-      background: var(--color-primary);
-      overflow: hidden;
+    .featured-section { padding: 56px 0 48px; background: var(--color-bg); }
+
+    .featured-eyebrow {
+      font-size: 0.68rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.22em;
+      color: var(--color-accent); text-align: center; margin-bottom: 28px;
     }
 
-    .slideshow-track {
-      position: relative;
-      height: 520px;
+    .featured-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 14px;
     }
 
-    .slide {
-      position: absolute; inset: 0;
-      opacity: 0;
-      transition: opacity 1s ease;
+    .featured-item {
+      position: relative; overflow: hidden;
+      border-radius: var(--radius); cursor: pointer; margin: 0;
+      background: #e4e0d8;
     }
-    .slide.active { opacity: 1; }
-    .slide img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center;
+    .featured-item img {
+      width: 100%; aspect-ratio: 3/4;
+      object-fit: cover; display: block;
+      transition: transform 0.55s ease;
+    }
+    .featured-item--tall img { aspect-ratio: 2/3; }
+    .featured-item:hover img { transform: scale(1.04); }
+
+    .featured-item figcaption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 22px 14px 14px;
+      background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 100%);
+      color: #fff; display: flex; flex-direction: column; gap: 3px;
+    }
+    .featured-artist {
+      font-size: 0.62rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.18em; color: #d4b896;
+    }
+    .featured-work-title {
+      font-family: var(--font-serif); font-size: 0.9rem;
+      font-style: italic; line-height: 1.3;
     }
 
-    .slideshow-nav {
-      position: absolute; bottom: 20px; left: 50%;
-      transform: translateX(-50%);
-      display: flex; gap: 8px; z-index: 10;
+    .featured-studio-line {
+      text-align: center; margin-top: 32px;
+      font-family: var(--font-serif); font-size: 1rem;
+      font-style: italic; color: var(--color-secondary);
     }
-    .slide-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: rgba(255,255,255,0.4);
-      border: none; cursor: pointer; padding: 0;
-      transition: background var(--transition), transform var(--transition);
-    }
-    .slide-dot.active {
-      background: #fff;
-      transform: scale(1.3);
-    }
-
-    .slideshow-arrows {
-      position: absolute; top: 50%; width: 100%;
-      display: flex; justify-content: space-between; padding: 0 16px;
-      transform: translateY(-50%); z-index: 10; pointer-events: none;
-    }
-    .slide-arrow {
-      pointer-events: all;
-      width: 40px; height: 40px;
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.35);
-      border-radius: 50%; cursor: pointer; color: #fff;
-      font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-      transition: background var(--transition);
-    }
-    .slide-arrow:hover { background: rgba(255,255,255,0.35); }
 
     /* =========================================================
        VIEW HEADER (for Oriabel / Edigne sub-pages)
@@ -520,32 +515,35 @@
     .btn-primary:hover { background: #6f5239; border-color: #6f5239; transform: translateY(-1px); }
 
     /* =========================================================
-       CTA BAR
+       À PROPOS PANEL
     ========================================================= */
-    .cta-bar {
-      background: var(--color-accent); color: #fff;
-      text-align: center; padding: 52px 24px;
+    .about-panel {
+      display: none; padding: 48px 0 56px;
+      background: var(--color-bg);
     }
-    .cta-title { font-family: var(--font-serif); font-size: 1.7rem; font-weight: 700; margin-bottom: 8px; }
-    .cta-sub { color: rgba(255,255,255,0.8); margin-bottom: 26px; font-size: 0.95rem; }
-    .cta-form { display: flex; gap: 10px; max-width: 420px; margin: 0 auto; }
-    .cta-form input {
-      flex: 1; padding: 11px 16px;
-      border: 2px solid rgba(255,255,255,0.38);
-      border-radius: var(--radius); background: rgba(255,255,255,0.12);
-      color: #fff; font-size: 0.88rem; font-family: var(--font-sans);
-      outline: none; transition: border-color var(--transition);
+    .about-panel.active { display: block; }
+    .about-panel-inner {
+      display: grid; grid-template-columns: 240px 1fr;
+      gap: 40px; align-items: start;
     }
-    .cta-form input::placeholder { color: rgba(255,255,255,0.5); }
-    .cta-form input:focus { border-color: rgba(255,255,255,0.75); }
-    .cta-form button {
-      padding: 11px 22px; background: #fff; color: var(--color-accent);
-      border: none; border-radius: var(--radius);
-      font-family: var(--font-sans); font-size: 0.82rem; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; white-space: nowrap;
-      transition: background var(--transition);
+    .about-panel-portrait {
+      width: 100%; aspect-ratio: 3/4;
+      object-fit: cover; border-radius: var(--radius);
+      box-shadow: 0 4px 24px rgba(0,0,0,0.12);
     }
-    .cta-form button:hover { background: #f0ece4; }
+    .about-panel-text h2 {
+      font-family: var(--font-serif); font-size: 1.65rem;
+      font-weight: 700; margin-bottom: 6px;
+    }
+    .about-panel-text .about-sub {
+      font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.18em; color: var(--color-accent); margin-bottom: 24px;
+    }
+    .about-panel-text p {
+      color: var(--color-secondary); line-height: 1.8;
+      margin-bottom: 16px; font-size: 0.96rem;
+    }
+    #view-edigne .about-panel-text .about-sub { color: var(--color-sage); }
 
     /* =========================================================
        FOOTER
@@ -736,17 +734,62 @@
       <div class="choice-divider">&amp;</div>
     </section>
 
-    <!-- Diaporama -->
-    <section class="slideshow-section">
-      <div class="slideshow-track" id="slideshow-track">
-        <!-- Slides injectées par JS -->
-      </div>
-      <div class="slideshow-arrows">
-        <button class="slide-arrow" onclick="slidePrev()" aria-label="Précédent">&#8249;</button>
-        <button class="slide-arrow" onclick="slideNext()" aria-label="Suivant">&#8250;</button>
-      </div>
-      <div class="slideshow-nav" id="slideshow-nav">
-        <!-- Dots injectés par JS -->
+    <!-- Sélection du moment -->
+    <section class="featured-section">
+      <div class="row">
+        <p class="featured-eyebrow">Sélection du moment</p>
+        <div class="featured-grid">
+
+          <figure class="featured-item" onclick="showView('oriabel')">
+            <img src="uploads/2019/02/P1070660.jpg" alt="Bijoux Oriabel" loading="lazy" />
+            <figcaption>
+              <span class="featured-artist">Oriabel</span>
+              <span class="featured-work-title">Bijoux faits main</span>
+            </figcaption>
+          </figure>
+
+          <figure class="featured-item featured-item--tall" onclick="showView('edigne')">
+            <img src="uploads/2019/02/DSC02328.jpg" alt="Edigne Parisis — 11 Novembre" loading="lazy" />
+            <figcaption>
+              <span class="featured-artist">Edigne Parisis</span>
+              <span class="featured-work-title">11 Novembre — Ville Donner</span>
+            </figcaption>
+          </figure>
+
+          <figure class="featured-item" onclick="showView('oriabel')">
+            <img src="uploads/2019/02/P1070675.jpg" alt="Bracelets Oriabel" loading="lazy" />
+            <figcaption>
+              <span class="featured-artist">Oriabel</span>
+              <span class="featured-work-title">Bracelets — Opale & Or</span>
+            </figcaption>
+          </figure>
+
+          <figure class="featured-item" onclick="showView('edigne')">
+            <img src="uploads/2019/02/plage-de-Nice.jpg" alt="Plage de Nice — Edigne Parisis" loading="lazy" />
+            <figcaption>
+              <span class="featured-artist">Edigne Parisis</span>
+              <span class="featured-work-title">Plage de Nice</span>
+            </figcaption>
+          </figure>
+
+          <figure class="featured-item featured-item--tall" onclick="showView('oriabel')">
+            <img src="uploads/2019/02/P1070661.jpg" alt="Collier Oriabel" loading="lazy" />
+            <figcaption>
+              <span class="featured-artist">Oriabel</span>
+              <span class="featured-work-title">Collier — Marguerite</span>
+            </figcaption>
+          </figure>
+
+          <figure class="featured-item" onclick="showView('edigne')">
+            <img src="uploads/2019/02/Tableau-003.jpg" alt="Tableau 003 — Edigne Parisis" loading="lazy" />
+            <figcaption>
+              <span class="featured-artist">Edigne Parisis</span>
+              <span class="featured-work-title">Tableau 003</span>
+            </figcaption>
+          </figure>
+
+        </div>
+        <p class="featured-studio-line">Créations uniques, signées — disponibles sur demande.</p>
       </div>
     </section>
 
@@ -771,6 +814,21 @@
       <!-- Injecté par JS -->
     </div>
 
+    <!-- À propos Oriabel -->
+    <div id="panel-oriabel-about" class="about-panel">
+      <div class="row">
+        <div class="about-panel-inner">
+          <img class="about-panel-portrait" src="uploads/2019/02/photo-Grosse-julien-originale.jpg" alt="Oriabel — Nice" loading="lazy" />
+          <div class="about-panel-text">
+            <h2>Oriabel</h2>
+            <p class="about-sub">Bijoux · Kintsugi · Peintures · Nice</p>
+            <p>Bijoux faits main, pièces kintsugi, peintures et travaux d'aiguilles — chaque création est unique, signée et livrée avec soin.</p>
+            <p>Créations réalisées à Nice, sur la Côte d'Azur, à partir de matières naturelles : pierres, coquillages, laiton doré, céramiques.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div><!-- /#view-oriabel -->
 
   <!-- ==================== VUE : EDIGNE ==================== -->
@@ -786,46 +844,12 @@
       <div class="row">
         <div class="tabs-bar" id="tabs-edigne" role="tablist"></div>
         <div id="panels-edigne"></div>
+        <!-- About Edigne: injecté dans panels-edigne par JS comme tab-panel -->
       </div>
     </section>
 
   </div><!-- /#view-edigne -->
 
-  <!-- ==================== ABOUT ==================== -->
-  <section id="about" class="section">
-    <div class="row">
-      <div class="about-grid">
-        <div class="about-portrait">
-          <img src="uploads/2019/02/photo-Grosse-julien-originale.jpg" alt="Edigne Parisis & Oriabel — Atelier Nice" loading="lazy" />
-        </div>
-        <div class="about-text">
-          <p class="section-eyebrow">L'atelier</p>
-          <h2 class="section-title" style="color:#fff;">Edigne Parisis &amp; Oriabel</h2>
-          <p class="about-body">
-            <strong style="color:#d4b896;">Edigne Parisis</strong> est peintre, dont l'œuvre oscille entre tradition figurative
-            et expression libre. Ses tableaux naissent en dialogue avec la lumière et l'espace —
-            souvent inspirés par les paysages et la vie sur la Côte d'Azur.
-          </p>
-          <p class="about-body">
-            Sous le nom <strong style="color:#d4b896;">Oriabel · Nice</strong>, le même atelier crée des bijoux faits main,
-            des pièces kintsugi, des peintures et des travaux d'aiguilles. Chaque création est unique,
-            signée et livrée avec soin.
-          </p>
-          <a href="#contact" class="btn btn-primary" style="margin-top:14px;">Prendre contact</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ==================== CONTACT ==================== -->
-  <section class="cta-bar" id="contact">
-    <h2 class="cta-title">Nouvelles œuvres &amp; collections</h2>
-    <p class="cta-sub">Directement de l'atelier à votre boîte mail — bijoux, peintures, expositions.</p>
-    <form class="cta-form" onsubmit="handleFormSubmit(event)">
-      <input type="email" placeholder="Votre adresse e-mail" required aria-label="Adresse e-mail" />
-      <button type="submit">S'inscrire</button>
-    </form>
-  </section>
 
 </main>
 
@@ -892,31 +916,6 @@
 
 <!-- ===================== JAVASCRIPT ===================== -->
 <script>
-  /* =========================================================
-     DONNÉES DIAPORAMA
-  ========================================================= */
-  var SLIDESHOW_IMAGES = [
-    'uploads/2019/02/DSC02328.jpg',
-    'uploads/2019/02/P1070660.jpg',
-    'uploads/2019/02/Tableau-003.jpg',
-    'uploads/2019/02/P1070661.jpg',
-    'uploads/2019/02/plage-de-Nice.jpg',
-    'uploads/2019/02/P1070691.jpg',
-    'uploads/2019/02/Tableau-005.jpg',
-    'uploads/2019/02/P1070699.jpg',
-    'uploads/2019/02/IMG_7011.jpg',
-    'uploads/2019/02/P1070728.jpg',
-    'uploads/2019/02/Tableau-021.jpg',
-    'uploads/2019/02/P1070733.jpg',
-    'uploads/2019/02/Tableau-022.jpg',
-    'uploads/2019/02/P1070675.jpg',
-    'uploads/2019/02/Tableau-025.jpg',
-    'uploads/2019/02/P1070685.jpg',
-    'uploads/2019/02/P1070913.jpg',
-    'uploads/2019/02/Tableau-026.jpg',
-    'uploads/2019/02/P1070934.jpg',
-    'uploads/2019/02/P1080029.jpg'
-  ];
 
   /* =========================================================
      GESTION DES VUES
@@ -975,76 +974,6 @@
     document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
   }, { passive: true });
 
-  /* =========================================================
-     DIAPORAMA
-  ========================================================= */
-  var slideIndex = 0;
-  var slideTimer = null;
-
-  function buildSlideshow() {
-    var track = document.getElementById('slideshow-track');
-    var nav   = document.getElementById('slideshow-nav');
-    if (!track || !nav) return;
-
-    track.innerHTML = '';
-    nav.innerHTML   = '';
-
-    SLIDESHOW_IMAGES.forEach(function(src, i) {
-      var slide = document.createElement('div');
-      slide.className = 'slide' + (i === 0 ? ' active' : '');
-      var img = document.createElement('img');
-      img.src = src;
-      img.alt = 'Oriabel & Edigne — Création ' + (i + 1);
-      img.loading = i === 0 ? 'eager' : 'lazy';
-      slide.appendChild(img);
-      track.appendChild(slide);
-
-      var dot = document.createElement('button');
-      dot.className = 'slide-dot' + (i === 0 ? ' active' : '');
-      dot.setAttribute('aria-label', 'Image ' + (i + 1));
-      dot.addEventListener('click', (function(idx) {
-        return function() { goToSlide(idx); };
-      })(i));
-      nav.appendChild(dot);
-    });
-
-    startSlideshow();
-  }
-
-  function goToSlide(idx) {
-    var slides = document.querySelectorAll('.slide');
-    var dots   = document.querySelectorAll('.slide-dot');
-    if (!slides.length) return;
-
-    slides[slideIndex].classList.remove('active');
-    dots[slideIndex].classList.remove('active');
-
-    slideIndex = (idx + SLIDESHOW_IMAGES.length) % SLIDESHOW_IMAGES.length;
-
-    slides[slideIndex].classList.add('active');
-    dots[slideIndex].classList.add('active');
-  }
-
-  function slideNext() {
-    goToSlide(slideIndex + 1);
-    restartSlideshow();
-  }
-
-  function slidePrev() {
-    goToSlide(slideIndex - 1);
-    restartSlideshow();
-  }
-
-  function startSlideshow() {
-    if (slideTimer) clearInterval(slideTimer);
-    slideTimer = setInterval(function() {
-      goToSlide(slideIndex + 1);
-    }, 4000);
-  }
-
-  function restartSlideshow() {
-    startSlideshow();
-  }
 
   /* =========================================================
      TABS (Edigne + sous-catégories Bijoux)
@@ -1093,17 +1022,6 @@
     if (e.key === 'Escape') closeLightbox();
   });
 
-  /* =========================================================
-     NEWSLETTER
-  ========================================================= */
-  function handleFormSubmit(e) {
-    e.preventDefault();
-    var btn = e.target.querySelector('button');
-    btn.textContent = 'Inscrit ✓';
-    btn.style.background = '#d4b896';
-    e.target.querySelector('input').value = '';
-    setTimeout(function() { btn.textContent = "S'inscrire"; btn.style.background = ''; }, 3000);
-  }
 
   /* =========================================================
      GENERATEUR DE CARTES PRODUITS
@@ -1194,6 +1112,19 @@
         + '<div class="product-grid" id="grid-' + tabId + '"></div></div>';
     });
 
+    /* Tab À propos */
+    tabsEl.innerHTML += '<button class="tab-btn" role="tab" aria-selected="false"'
+      + ' data-tab="panel-edigne-about" onclick="switchTab(this,\'panel-edigne-about\')">À propos</button>';
+    panelsEl.innerHTML += '<div class="tab-panel" id="panel-edigne-about">'
+      + '<div class="about-panel-inner" style="margin-top:40px;margin-bottom:48px;">'
+      + '<img class="about-panel-portrait" src="uploads/2019/02/photo-Grosse-julien-originale.jpg" alt="Edigne Parisis" loading="lazy" />'
+      + '<div class="about-panel-text">'
+      + '<h2>Edigne Parisis</h2>'
+      + '<p class="about-sub">Peintre · Nice · France</p>'
+      + '<p>Peintre dont l\'œuvre oscille entre tradition figurative et expression libre. Ses tableaux naissent en dialogue avec la lumière et l\'espace — souvent inspirés par les paysages et la vie sur la Côte d\'Azur.</p>'
+      + '<p>Huile sur toile, acrylique, technique mixte — chaque tableau est un original, signé et disponible sur demande.</p>'
+      + '</div></div></div>';
+
     /* Remplir grids */
     fuelleGrid('grid-' + alleId, produkte, bildform, tagLabel, katLabel, subLabel);
     kategorien.forEach(function(kat) {
@@ -1230,6 +1161,22 @@
       selector.appendChild(btn);
     });
 
+    /* Bouton À propos */
+    var aboutBtn = document.createElement('button');
+    aboutBtn.className = 'cat-sel-btn';
+    aboutBtn.innerHTML = 'À propos';
+    aboutBtn.addEventListener('click', function() {
+      document.querySelectorAll('.cat-sel-btn').forEach(function(b) { b.classList.remove('active'); });
+      aboutBtn.classList.add('active');
+      /* Masquer grid, afficher panel about */
+      var grid = document.getElementById('oriabel-content');
+      if (grid) grid.style.display = 'none';
+      var about = document.getElementById('panel-oriabel-about');
+      if (about) about.classList.add('active');
+    });
+    selector.appendChild(aboutBtn);
+
+
     /* Afficher la première catégorie par défaut */
     if (oriabelBereiche.length > 0) {
       renderOriabelCat(oriabelBereiche[0]);
@@ -1238,11 +1185,15 @@
   }
 
   function selectOriabelCat(bereich, idx) {
-    /* Mettre à jour les boutons */
     var buttons = document.querySelectorAll('.cat-sel-btn');
     buttons.forEach(function(b, i) {
       b.classList.toggle('active', i === idx);
     });
+    /* Masquer panel À propos, montrer grid */
+    var about = document.getElementById('panel-oriabel-about');
+    if (about) about.classList.remove('active');
+    var grid = document.getElementById('oriabel-content');
+    if (grid) grid.style.display = '';
     currentOriabelCat = idx;
     renderOriabelCat(bereich);
   }
@@ -1352,8 +1303,6 @@
       buildOriabelSelector();
     }
 
-    /* Construire le diaporama */
-    buildSlideshow();
   });
 </script>
 
