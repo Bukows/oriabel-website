@@ -865,10 +865,10 @@
   <div class="row">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>· Nice · France</span></a>
-        <p class="footer-tagline">Bijoux faits main, kintsugi, peintures et travaux d'aiguilles — un atelier sur la Côte d'Azur.</p>
+        <a class="site-logo" id="footer-logo" onclick="showView('home')" href="#">Oriabel <span>· Nice · France</span></a>
+        <p class="footer-tagline" id="footer-tagline">Bijoux faits main, kintsugi, peintures et travaux d'aiguilles — un atelier sur la Côte d'Azur.</p>
       </div>
-      <div class="footer-col">
+      <div class="footer-col" id="footer-col-oriabel">
         <h4>Oriabel</h4>
         <ul>
           <li><button onclick="showView('oriabel')">Bijoux</button></li>
@@ -877,7 +877,7 @@
           <li><button onclick="showView('oriabel')">Travaux d'aiguilles</button></li>
         </ul>
       </div>
-      <div class="footer-col">
+      <div class="footer-col" id="footer-col-edigne">
         <h4>Edigne</h4>
         <ul>
           <li><button onclick="showView('edigne')">Toutes les œuvres</button></li>
@@ -888,7 +888,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Oriabel · Nice · France. Tous droits réservés.</span>
+      <span id="footer-copy">© 2026 Oriabel · Nice · France. Tous droits réservés.</span>
       <span>Chaque création est unique.</span>
     </div>
   </div>
@@ -954,6 +954,32 @@
       } else {
         textEl.innerHTML = 'Nice <span>· France</span>';
       }
+    }
+
+    /* Footer dynamique selon la vue */
+    var fLogo    = document.getElementById('footer-logo');
+    var fTagline = document.getElementById('footer-tagline');
+    var fCopy    = document.getElementById('footer-copy');
+    var fOriabel = document.getElementById('footer-col-oriabel');
+    var fEdigne  = document.getElementById('footer-col-edigne');
+    if (view === 'edigne') {
+      if (fLogo)    fLogo.innerHTML = 'Edigne <span>Parisis</span>';
+      if (fTagline) fTagline.textContent = 'Peintures originales — huile sur toile, acrylique, technique mixte. Côte d\'Azur.';
+      if (fCopy)    fCopy.textContent = '© 2026 Edigne Parisis · Nice · France. Tous droits réservés.';
+      if (fOriabel) fOriabel.style.display = 'none';
+      if (fEdigne)  fEdigne.style.display = '';
+    } else if (view === 'oriabel') {
+      if (fLogo)    fLogo.innerHTML = 'Oriabel <span>· Nice · France</span>';
+      if (fTagline) fTagline.textContent = 'Bijoux faits main, kintsugi, peintures et travaux d\'aiguilles — un atelier sur la Côte d\'Azur.';
+      if (fCopy)    fCopy.textContent = '© 2026 Oriabel · Nice · France. Tous droits réservés.';
+      if (fOriabel) fOriabel.style.display = '';
+      if (fEdigne)  fEdigne.style.display = 'none';
+    } else {
+      if (fLogo)    fLogo.innerHTML = 'Oriabel <span>· Nice · France</span>';
+      if (fTagline) fTagline.textContent = 'Bijoux faits main, kintsugi, peintures et travaux d\'aiguilles — un atelier sur la Côte d\'Azur.';
+      if (fCopy)    fCopy.textContent = '© 2026 Oriabel · Nice · France. Tous droits réservés.';
+      if (fOriabel) fOriabel.style.display = '';
+      if (fEdigne)  fEdigne.style.display = '';
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
