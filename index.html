@@ -548,7 +548,14 @@
     /* =========================================================
        FOOTER
     ========================================================= */
-    #footer { background: #111; color: rgba(255,255,255,0.58); padding: 52px 0 28px; }
+    #footer { background: #111; color: rgba(255,255,255,0.58); padding: 52px 0 28px; transition: background 0.4s; }
+
+    /* Footer adapté à la vue Edigne */
+    body.view-edigne #footer { background: #2e3d31; }
+    body.view-edigne .footer-col a:hover,
+    body.view-edigne .footer-col button:hover { color: #a8cbb0; }
+    body.view-edigne .footer-bottom { border-top-color: rgba(255,255,255,0.14); }
+    body.view-edigne #footer .site-logo span { color: #a8cbb0; }
     .footer-grid {
       display: grid; grid-template-columns: 2fr 1fr 1fr;
       gap: 44px; margin-bottom: 36px;
@@ -881,7 +888,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2024 Oriabel · Nice · France. Tous droits réservés.</span>
+      <span>© 2026 Oriabel · Nice · France. Tous droits réservés.</span>
       <span>Chaque création est unique.</span>
     </div>
   </div>
