@@ -19,6 +19,9 @@
       --color-primary:   #1a1a1a;
       --color-secondary: #686868;
       --color-accent:    #8b6b4a;
+      --color-sage:      #7d9182;
+      --color-sage-dark: #5e7064;
+      --color-gold:      #c8a96e;
       --color-border:    #d1d1d1;
       --color-hover-bg:  #f0ece4;
       --font-serif:      'Playfair Display', Georgia, serif;
@@ -263,6 +266,27 @@
       max-width: 520px; margin: 0 auto;
       font-size: 0.95rem; line-height: 1.65;
     }
+
+    /* Edigne — Sage-Palette */
+    #view-edigne .view-hero {
+      background: var(--color-sage);
+    }
+    #view-edigne .view-hero .eyebrow { color: #d8e8dc; }
+    #view-edigne .view-hero p { color: rgba(255,255,255,0.82); }
+    #view-edigne .section { background: #f7f4ef; }
+    #view-edigne .tab-btn.active {
+      color: var(--color-sage-dark);
+      border-bottom-color: var(--color-sage);
+    }
+    #view-edigne .tag-badge { background: var(--color-sage); }
+
+    /* Oriabel — Logo im Header */
+    .header-logo-img {
+      height: 32px; width: auto; vertical-align: middle;
+      display: none;
+    }
+    body.view-oriabel .header-logo-img { display: inline; }
+    body.view-oriabel .header-logo-text { display: none; }
 
     /* =========================================================
        CATEGORY SELECTOR (Oriabel sub-categories)
@@ -658,7 +682,10 @@
 <!-- ===================== HEADER ===================== -->
 <header id="header">
   <div class="header-wrapper row">
-    <a class="site-logo" onclick="showView('home')" href="#" id="site-logo">Nice <span>· France</span></a>
+    <a class="site-logo" onclick="showView('home')" href="#" id="site-logo">
+      <img src="uploads/2019/01/Oriabel_logo.png" alt="Oriabel" class="header-logo-img" />
+      <span class="header-logo-text">Nice <span>· France</span></span>
+    </a>
 
     <nav class="main-nav" id="main-nav" aria-label="Navigation principale">
       <ul>
@@ -807,7 +834,7 @@
   <div class="row">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>Nice · France</span></a>
+        <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>· Nice · France</span></a>
         <p class="footer-tagline">Bijoux faits main, kintsugi, peintures et travaux d'aiguilles — un atelier sur la Côte d'Azur.</p>
       </div>
       <div class="footer-col">
@@ -911,14 +938,15 @@
     currentView = view;
 
     /* Logo dynamique selon la vue */
-    var logo = document.getElementById('site-logo');
-    if (logo) {
-      if (view === 'oriabel') {
-        logo.innerHTML = 'Oriabel <span>Nice · France</span>';
-      } else if (view === 'edigne') {
-        logo.innerHTML = 'Edigne <span>Parisis</span>';
+    document.body.className = document.body.className
+      .replace(/\bview-\w+\b/g, '').trim();
+    document.body.classList.add('view-' + view);
+    var textEl = document.querySelector('.header-logo-text');
+    if (textEl) {
+      if (view === 'edigne') {
+        textEl.innerHTML = 'Edigne <span>Parisis</span>';
       } else {
-        logo.innerHTML = 'Nice <span>· France</span>';
+        textEl.innerHTML = 'Nice <span>· France</span>';
       }
     }
 
