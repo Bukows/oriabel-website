@@ -658,7 +658,7 @@
 <!-- ===================== HEADER ===================== -->
 <header id="header">
   <div class="header-wrapper row">
-    <a class="site-logo" onclick="showView('home')" href="#">Oriabel <span>Nice · France</span></a>
+    <a class="site-logo" onclick="showView('home')" href="#" id="site-logo">Atelier <span>Nice · France</span></a>
 
     <nav class="main-nav" id="main-nav" aria-label="Navigation principale">
       <ul>
@@ -909,6 +909,19 @@
     });
 
     currentView = view;
+
+    /* Logo dynamique selon la vue */
+    var logo = document.getElementById('site-logo');
+    if (logo) {
+      if (view === 'oriabel') {
+        logo.innerHTML = 'Oriabel <span>Nice · France</span>';
+      } else if (view === 'edigne') {
+        logo.innerHTML = 'Edigne <span>Parisis</span>';
+      } else {
+        logo.innerHTML = 'Atelier <span>Nice · France</span>';
+      }
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     /* Fermer le menu mobile */
