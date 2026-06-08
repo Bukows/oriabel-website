@@ -819,7 +819,7 @@ const T = {
       { name:"Marinette", note:"Trend-Café Vieux Nice · Poke Bowls, Pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% hausgemacht · vegan-freundlich", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
       { name:"Edmond Café", note:"Gemütlich, zentral gelegen", addr:"11 bis Rue du Congrès, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Vieux Nice · Pancakes, Avocado-Toast, ganztägig", addr:"31 Rue Benoit Bunico, Nice", lat:43.6968, lng:7.2763, url:"" }
+      { name:"Maranna", note:"Vieux Nice · Pancakes, Avocado-Toast, ganztägig", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
       { name:"Moon Bar (Rooftop Aston)", note:"360-Grad-Panorama · Pool · Live-Musik Do-Sa", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
@@ -994,7 +994,7 @@ const T = {
       { name:"Marinette", note:"Trendy cafe Old Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% homemade · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
       { name:"Edmond Cafe", note:"Cozy, central location", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Old Nice · pancakes, avocado toast, all day", addr:"31 Rue Benoit Bunico, Nice", lat:43.6968, lng:7.2763, url:"" }
+      { name:"Maranna", note:"Old Nice · pancakes, avocado toast, all day", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
       { name:"Moon Bar (Aston Rooftop)", note:"360 panorama · pool · live music Thu-Sat", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
@@ -1169,7 +1169,7 @@ const T = {
       { name:"Marinette", note:"Cafe branche Vieux Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% fait-maison · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
       { name:"Edmond Cafe", note:"Ambiance chaleureuse, bien situe", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Vieux Nice · pancakes, avocado toast, toute la journee", addr:"31 Rue Benoit Bunico, Nice", lat:43.6968, lng:7.2763, url:"" }
+      { name:"Maranna", note:"Vieux Nice · pancakes, avocado toast, toute la journee", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
       { name:"Moon Bar (Rooftop Aston)", note:"360 panorama · piscine · musique live jeu-sam", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
@@ -2050,14 +2050,18 @@ function highlightToday() {
 const NICE_EVENTS_STAND = "8. Juni 2026";
 const NICE_EVENTS = [
   { from:"2026-06-07", to:"2026-09-27", dateLabel:"So. wöch.", title:"Harmonie de Nice — Sonntagskonzerte", desc:"Jeden So · 17h · Jardins des Arènes de Cimiez oder Jardin Albert 1er · gratis", url:"https://www.nice.fr/agenda/orchestre-dharmonie-de-la-ville-de-nice/", tags:["Gratis","Klassik"] },
-  { from:"2026-06-12", to:"2026-06-13", dateLabel:"12.–13. Jun", title:"Orchestre Philharmonique — Bruch · Brahms", desc:"Opéra de Nice · Violon: Akiko Suwanai · 10–34 €", url:"https://www.opera-nice.org/agenda/", tags:["Klassik","Konzert"] },
-  { from:"2026-06-13", to:"2026-06-14", dateLabel:"13.–14. Jun", title:"WE Music Festival", desc:"Théâtre de Verdure · Fritz Kalkbrenner, Miss Kittin, The Hacker", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Electro","Festival"] },
-  { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse / Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Dauerausstellung", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
-  { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner", url:"https://www.nuitscarrees.com/", tags:["Festival","Musik"] },
+  { from:"2026-06-12", to:"2026-06-13", dateLabel:"12.–13. Jun", title:"Orchestre Philharmonique — Bruch · Brahms", desc:"Opéra de Nice · Violine: Akiko Suwanai · Dirigent: Lionel Bringuier · 10–34 €", url:"https://www.opera-nice.org/fr/calendrier", tags:["Klassik","Konzert"] },
+  { from:"2026-06-13", to:"2026-06-14", dateLabel:"13.–14. Jun", title:"WE Music Festival", desc:"Théâtre de Verdure · Fritz Kalkbrenner, Miss Kittin, The Hacker · Electro/Indie", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Electro","Festival"] },
+  { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN – Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenöss. Tragödien · Bérénice, Les Suppliantes u.a. · ab 10 €", url:"https://www.tnn.fr/fr/calendrier/juin/2026", tags:["Theater"] },
+  { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse & Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Neueröffnung nach Umbau", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
+  { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner", url:"https://www.nuitscarrees.com/", tags:["Festival","Electro"] },
   { from:"2026-06-21", to:"2026-06-21", dateLabel:"21. Jun", title:"Fête de la Musique — Nizza", desc:"Ab 18h · Place Masséna, Vieux Nice, Promenade du Paillon · Alle Stilrichtungen · gratis", url:"https://www.nice.fr/nice-music-live/", tags:["Gratis","Fest"] },
   { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · 21.6. gratis / ab 23.6. 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
-  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Indie, Pop, Electronic · Villefranche-sur-Mer", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Festival","Musik"] },
-  { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN – Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenössische Tragödien unter freiem Himmel · 21h\nBérénice (Racine), Les Suppliantes (Eschyle), Un Jour sans vent u.a. · ab 10 €\nFreie Rahmenprogramme (Lesungen, Konferenzen, Debatten) parallel", url:"https://www.tnn.fr/fr/les-temps-forts/festival-de-tragedie", tags:["Theater","TNN"] },
+  { from:"2026-06-21", to:"2026-08-09", dateLabel:"21. Jun – 9. Aug", title:"Nice Classic Live — Kloster Cimiez", desc:"Kreuzgang Cimiez · Klassik, Zeitgenössisch, Jazz · Junge Talente & etablierte Künstler", url:"https://niceclassiclive.com/concerts", tags:["Klassik","Jazz","Festival"] },
+  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Citadelle Saint-Elme · Yuksek, DJ Pone, Chloé, Papooz, Miki, Bellaire, Anoraak · 7. Auflage", url:"https://www.lacremefestival.com/", tags:["Festival","Electro"] },
+  { from:"2026-07-02", to:"2026-07-05", dateLabel:"2.–5. Jul", title:"La Kermesse Festival — Nice", desc:"Théâtre de Verdure · Pop, R&B, Dance der 90er & 2000er · Larusso, O-Zone, Lou Bega, Cascada, 2BE3 u.v.m.", url:"https://cotedazurfrance.fr/decouvrir/grands-evenements/kermesse-festival-nice-2026/", tags:["Festival","Konzert"] },
+  { from:"2026-07-09", to:"2026-07-18", dateLabel:"9.–18. Jul", title:"Nuits du Sud — Vence", desc:"Vence · 29. Auflage · Véronique Sanson, Danakil, Magic System, Ben L'Oncle Soul · Reggae, Pop, Electro", url:"https://www.nuitsdusud.com/", tags:["Festival","Konzert"] },
+  { from:"2026-07-23", to:"2026-07-26", dateLabel:"23.–26. Jul", title:"Nice Jazz Festival — Place Masséna", desc:"Place Masséna & Théâtre de Verdure · Sting, Busta Rhymes, Biréli Lagrène, Lola Young · 18 Konzerte", url:"https://www.nicejazzfest.fr/fr/", tags:["Jazz","Festival","Konzert"] },
 ];
 
 // Init
