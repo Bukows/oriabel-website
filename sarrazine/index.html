@@ -528,6 +528,16 @@
     .ev-tag { font-size: 0.63rem; padding: 0.08rem 0.4rem; border-radius: 8px; background: #f1f5f9; color: #64748b; border: 1px solid var(--border); }
     .ev-tag.free { background: #dcfce7; color: #166534; border-color: #bbf7d0; }
     .ev-stand { font-size: 0.68rem; color: var(--muted); margin-top: 0.6rem; text-align: right; opacity: 0.65; }
+    .chk-list { padding: 0.6rem 0.75rem 0.75rem; display: flex; flex-direction: column; gap: 0.35rem; }
+    .chk-item { display: flex; align-items: center; gap: 0.65rem; cursor: pointer; padding: 0.45rem 0.5rem; border-radius: 6px; user-select: none; transition: background 0.15s; }
+    .chk-item:hover { background: #f5f7f5; }
+    .chk-box { width: 1.2rem; height: 1.2rem; border: 2px solid var(--sage); border-radius: 4px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background 0.15s; }
+    .chk-item.done .chk-box { background: var(--sage); border-color: var(--sage); }
+    .chk-item.done .chk-box::after { content: "✓"; color: #fff; font-size: 0.78rem; font-weight: 700; line-height: 1; }
+    .chk-item.done .chk-txt { text-decoration: line-through; color: var(--muted); }
+    .chk-txt { font-size: 0.88rem; line-height: 1.35; }
+    .chk-reset { margin: 0.5rem 0.75rem 0.75rem; padding: 0.35rem 0.9rem; font-size: 0.78rem; background: none; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; color: var(--muted); }
+    .chk-reset:hover { background: #f0f0f0; }
   </style>
 </head>
 <body>
@@ -726,6 +736,7 @@ const T = {
         ["Manuell","Lichtschalter zweimal drücken → Alexa trennt sich, manuelle Bedienung möglich"]
       ]},
       { icon:"🫧", label:"Waschmaschine", rows:[
+        ["⚠ Wasser","Unter Umständen ist die Zuleitung für Spülmaschine und Waschmaschine abgesperrt (Hahn im Vorraum)"],
         ["Tür schließen","Gleichmäßig auf unteren Griffteil drücken – Icon geschlossene Tür muss erscheinen, sonst startet Maschine nicht!"],
         ["Programme","Synthétique (1h56) · Rapide (1h01)"],
         ["Trocknen","2 Wäscheständer im Putzschrank (gegenüber Eltern-Bad) oder Trockner (Menü Mix)"]
@@ -735,6 +746,15 @@ const T = {
         ["Restmüll","Kleine Tüten → Müllschlucker im Vorraum zw. Wohnungstür und Aufzug, ODER dunkle Tonne Müllraum (-1)"],
         ["Glas","Container an der Bushaltestelle"]
       ]},
+      { icon:"🚪", label:"Abreise-Checkliste", checklist:true, resetLabel:"Zurücksetzen",
+        items:[
+          "Wasser abstellen (Hähne kalt + warm im Vorraum)",
+          "Fenster schließen",
+          "Rollläden hochziehen",
+          "Markisen einfahren",
+          "Klimaanlagen ausschalten · Strom abstellen (Sicherungskasten)"
+        ]
+      },
       { icon:"🔥", label:"Barbecue", rows:[
         [null,"Theoretisch verboten, aber toleriert – nicht zu oft, kurze Grillzeiten."]
       ]}
@@ -811,9 +831,7 @@ const T = {
       { name:"L'Alchimie (Bib Gourmand)", addr:"14 Rue Maccarani, Nice", lat:43.7011, lng:7.2652, url:"https://en.lalchimie-restaurant.com/" },
       { name:"Pinpin Boire & Manger", addr:"2 Rue Martin Seytour, Nice", lat:43.7018, lng:7.2648, url:"https://pin-pin.fr/", vegan:true },
       { name:"Popotte d'Ondine (NY-café style)", addr:"18 Rue Gioffredo / 2 Rue Blacas, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
-      { name:"Plage des Canailles", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" },
-      { name:"La Reserve de Nice (Michelin)", addr:"62 Bd Franck Pilatte, Nice", lat:43.6920, lng:7.2910, url:"https://www.lareservedenice.fr/en/" },
-      { name:"Dounia Zed (Couscous)", addr:"7 Rue Assalit, Nice", lat:43.7012, lng:7.2692, url:"" }
+      { name:"Plage des Canailles", addr:"197 Promenade des Anglais, Nice", lat:43.6928, lng:7.2440, url:"https://lescanaillesnice.fr/en/home/" }
     ],
     brunches: [
       { name:"Pain & Cie", note:"Cours Saleya · Hausgemachtes, Bio-Eier, Pancakes", addr:"3 Rue Louis Gassin, Nice", lat:43.6951, lng:7.2751, url:"https://www.restaurantpainetcie.fr/", vegan:true },
@@ -821,7 +839,7 @@ const T = {
       { name:"Marinette", note:"Trend-Café Vieux Nice · Poke Bowls, Pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% hausgemacht · vegan-freundlich", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
       { name:"Edmond Café", note:"Gemütlich, zentral gelegen", addr:"11 bis Rue du Congrès, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Vieux Nice · Pancakes, Avocado-Toast, ganztägig", addr:"31 Rue Benoit Bunico, Nice", lat:43.6968, lng:7.2763, url:"" }
+      { name:"Maranna", note:"Vieux Nice · Pancakes, Avocado-Toast, ganztägig", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
       { name:"Moon Bar (Rooftop Aston)", note:"360-Grad-Panorama · Pool · Live-Musik Do-Sa", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
@@ -830,11 +848,6 @@ const T = {
       { name:"High Club", note:"Bekanntester Club der Riviera · VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
       { name:"Wayne's Bar", note:"Live-Musik taeglich · Vieux Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
       { name:"Calade Rooftop (Radisson Blu)", note:"Meerblick-Terrasse an der Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" },
-      { name:"Bella Ciela Bar & Rooftop", note:"Ave Notre Dame · 4,3 Sterne · ganztags ab 10h", addr:"28 Avenue Notre Dame, Nice", lat:43.7001, lng:7.2650, url:"https://www.mercure-nice-centre-notre-dame.fr/", tag:"Rooftop" },
-      { name:"Rooftop Monsigny", note:"Av. Malaussena · 4,3 Sterne · ab 16h · Meerblick", addr:"17 Avenue Malaussena, Nice", lat:43.7046, lng:7.2697, url:"https://www.hotelmonsignynice.com/fr/page/rooftop-hotel-nice-vue-mer-rooftop-nice.11028.html", tag:"Rooftop" },
-      { name:"Farago on the Roof (AC Marriott)", note:"Promenade · 4,1 Sterne · Tapas & Cocktails", addr:"59 Promenade des Anglais, Nice", lat:43.6942, lng:7.2407, url:"http://www.achotelnicerooftop.com/", tag:"Rooftop" },
-      { name:"BClub Rooftop", note:"Bd Victor Hugo · 4,1 Sterne · Restaurant & Bar", addr:"12 Boulevard Victor Hugo, Nice", lat:43.7011, lng:7.2659, url:"https://boscolocollection.com/nice/rooftop-nice-la-terrace/", tag:"Rooftop" },
-      { name:"Le Plongeoir", note:"Meeresrestaurant auf Felsen · 4,3 Sterne · 4000+ Bewertungen · Mediterran", addr:"60 Bd Franck Pilatte, Nice", lat:43.6919, lng:7.2909, url:"https://www.leplongeoir.com/", tag:"Rooftop" },
       { name:"Bulldog Pub Pompei", note:"Kult-Pub seit 1984 · Live-Musik · Vieux Nice", addr:"16 Rue de l'Abbaye, Nice", lat:43.6957, lng:7.2762, url:"https://www.bulldogpompei.com/", tag:"Bar" },
       { name:"Opera Club Nice", note:"Gewolbter Steinsaal · Reggaeton, Electro · tgl. 23:30–5h", addr:"2 Rue de la Prefecture, Nice", lat:43.6961, lng:7.2756, url:"https://operaclubnice.com/", tag:"Club" },
       { name:"Van Diemen's Australian Pub", note:"30 Cours Saleya · Live-Musik 7 Tage · eigenes Bier", addr:"30 Cours Saleya, Nice", lat:43.6954, lng:7.2741, url:"https://www.facebook.com/VanDiemensPub/", tag:"Bar" },
@@ -908,6 +921,7 @@ const T = {
         ["Manual","Press light switch twice → disconnects from Alexa; manual operation possible"]
       ]},
       { icon:"🫧", label:"Washing Machine", rows:[
+        ["⚠ Water supply","The water supply for the dishwasher and washing machine may have been shut off (valve in hallway)"],
         ["Closing door","Press steadily on the bottom of the handle – closed-door icon must appear, otherwise machine won't start!"],
         ["Cycles","Synthetic (1h56) · Quick (1h01)"],
         ["Drying","2 clothes horses in cleaning cupboard (opposite master bathroom) or electric dryer (Mix cycle)"]
@@ -917,6 +931,15 @@ const T = {
         ["Residual waste","Small bags → waste chute in hallway between apt door and lift, OR dark bin in basement (-1)"],
         ["Glass","Container at the bus stop"]
       ]},
+      { icon:"🚪", label:"Departure Checklist", checklist:true, resetLabel:"Reset",
+        items:[
+          "Shut off water (cold + hot taps in hallway)",
+          "Close all windows",
+          "Raise shutters",
+          "Retract awnings",
+          "Switch off air conditioning · turn off at fuse box"
+        ]
+      },
       { icon:"🔥", label:"Barbecue", rows:[
         [null,"Technically prohibited but tolerated – not too often, short sessions."]
       ]}
@@ -1001,7 +1024,7 @@ const T = {
       { name:"Marinette", note:"Trendy cafe Old Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% homemade · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
       { name:"Edmond Cafe", note:"Cozy, central location", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Old Nice · pancakes, avocado toast, all day", addr:"31 Rue Benoit Bunico, Nice", lat:43.6968, lng:7.2763, url:"" }
+      { name:"Maranna", note:"Old Nice · pancakes, avocado toast, all day", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
       { name:"Moon Bar (Aston Rooftop)", note:"360 panorama · pool · live music Thu-Sat", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
@@ -1010,11 +1033,6 @@ const T = {
       { name:"High Club", note:"Most famous club on the Riviera · VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
       { name:"Wayne's Bar", note:"Live music nightly · Old Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
       { name:"Calade Rooftop (Radisson Blu)", note:"Sea-view terrace on the Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" },
-      { name:"Bella Ciela Bar & Rooftop", note:"Ave Notre Dame · 4.3 stars · open from 10am", addr:"28 Avenue Notre Dame, Nice", lat:43.7001, lng:7.2650, url:"https://www.mercure-nice-centre-notre-dame.fr/", tag:"Rooftop" },
-      { name:"Rooftop Monsigny", note:"Av. Malaussena · 4.3 stars · from 4pm · sea views", addr:"17 Avenue Malaussena, Nice", lat:43.7046, lng:7.2697, url:"https://www.hotelmonsignynice.com/fr/page/rooftop-hotel-nice-vue-mer-rooftop-nice.11028.html", tag:"Rooftop" },
-      { name:"Farago on the Roof (AC Marriott)", note:"Promenade · 4.1 stars · tapas & cocktails", addr:"59 Promenade des Anglais, Nice", lat:43.6942, lng:7.2407, url:"http://www.achotelnicerooftop.com/", tag:"Rooftop" },
-      { name:"BClub Rooftop", note:"Bd Victor Hugo · 4.1 stars · restaurant & bar", addr:"12 Boulevard Victor Hugo, Nice", lat:43.7011, lng:7.2659, url:"https://boscolocollection.com/nice/rooftop-nice-la-terrace/", tag:"Rooftop" },
-      { name:"Le Plongeoir", note:"Restaurant on sea rocks · 4.3 stars · 4000+ reviews · Mediterranean", addr:"60 Bd Franck Pilatte, Nice", lat:43.6919, lng:7.2909, url:"https://www.leplongeoir.com/", tag:"Rooftop" },
       { name:"Bulldog Pub Pompei", note:"Legendary pub since 1984 · live music · Old Nice", addr:"16 Rue de l'Abbaye, Nice", lat:43.6957, lng:7.2762, url:"https://www.bulldogpompei.com/", tag:"Bar" },
       { name:"Opera Club Nice", note:"Vaulted stone cellar · reggaeton, electro · daily 11:30pm–5am", addr:"2 Rue de la Prefecture, Nice", lat:43.6961, lng:7.2756, url:"https://operaclubnice.com/", tag:"Club" },
       { name:"Van Diemen's Australian Pub", note:"30 Cours Saleya · live music 7 nights · own-brew beer", addr:"30 Cours Saleya, Nice", lat:43.6954, lng:7.2741, url:"https://www.facebook.com/VanDiemensPub/", tag:"Bar" },
@@ -1088,6 +1106,7 @@ const T = {
         ["Manuel","Appuyer deux fois sur l'interrupteur → déconnexion d'Alexa, commande manuelle possible"]
       ]},
       { icon:"🫧", label:"Machine à laver", rows:[
+        ["⚠ Eau","L'arrivée d'eau du lave-vaisselle et du lave-linge peut être coupée (robinet dans le couloir)"],
         ["Fermeture porte","Appuyer de façon régulière sur la partie basse de la poignée – l'icône porte fermée doit apparaître, sinon la machine ne démarre pas !"],
         ["Programmes","Synthétique (1h56) · Rapide (1h01)"],
         ["Séchage","2 étendoirs dans le placard ménage (en face de la salle de bain parentale) ou sèche-linge électrique (programme Mix)"]
@@ -1097,6 +1116,15 @@ const T = {
         ["Déchets ménagers","Petits sacs → vide-ordures dans le couloir entre la porte et l'ascenseur OU bac sombre cave (-1)"],
         ["Verre","Conteneur à l'arrêt de bus"]
       ]},
+      { icon:"🚪", label:"Liste de départ", checklist:true, resetLabel:"Réinitialiser",
+        items:[
+          "Couper l'eau (robinets froid + chaud dans le couloir)",
+          "Fermer toutes les fenêtres",
+          "Remonter les volets",
+          "Rentrer les stores",
+          "Éteindre les climatiseurs · couper au tableau électrique"
+        ]
+      },
       { icon:"🔥", label:"Barbecue", rows:[
         [null,"Techniquement interdit mais toléré – pas trop souvent et en sessions courtes."]
       ]}
@@ -1181,7 +1209,7 @@ const T = {
       { name:"Marinette", note:"Cafe branche Vieux Nice · poke bowls, pancakes", addr:"13 Rue Colonna d'Istria, Nice", lat:43.7021, lng:7.2697, url:"https://www.restaurantmarinette.fr", vegan:true },
       { name:"La Popote d'Ondine", note:"100% fait-maison · vegan-friendly", addr:"18 Rue Gioffredo, Nice", lat:43.6982, lng:7.2697, url:"https://lapopotedondine.com/", vegan:true },
       { name:"Edmond Cafe", note:"Ambiance chaleureuse, bien situe", addr:"11 bis Rue du Congres, Nice", lat:43.6993, lng:7.2607, url:"" },
-      { name:"Maranna", note:"Vieux Nice · pancakes, avocado toast, toute la journee", addr:"31 Rue Benoit Bunico, Nice", lat:43.6968, lng:7.2763, url:"" }
+      { name:"Maranna", note:"Vieux Nice · pancakes, avocado toast, toute la journee", addr:"Vieux-Nice", lat:43.6965, lng:7.2765, url:"" }
     ],
     bars: [
       { name:"Moon Bar (Rooftop Aston)", note:"360 panorama · piscine · musique live jeu-sam", addr:"12 Ave Felix Faure, Nice", lat:43.6985, lng:7.2621, url:"https://hotel-aston.com/restaurant-rooftop-nice/", tag:"Rooftop" },
@@ -1190,11 +1218,6 @@ const T = {
       { name:"High Club", note:"Le club le plus connu de la Riviera · ambiance VIP", addr:"45 Promenade des Anglais, Nice", lat:43.6927, lng:7.2463, url:"https://highclub.fr", tag:"Club" },
       { name:"Wayne's Bar", note:"Musique live tous les soirs · Vieux Nice", addr:"15 Rue de la Prefecture, Nice", lat:43.6962, lng:7.2757, url:"https://www.waynesbar.com", tag:"Bar" },
       { name:"Calade Rooftop (Radisson Blu)", note:"Terrasse vue mer sur la Promenade", addr:"223 Prom. des Anglais, Nice", lat:43.6938, lng:7.2499, url:"https://www.radissonhotels.com/", tag:"Rooftop" },
-      { name:"Bella Ciela Bar & Rooftop", note:"Ave Notre Dame · 4,3 etoiles · ouvert des 10h", addr:"28 Avenue Notre Dame, Nice", lat:43.7001, lng:7.2650, url:"https://www.mercure-nice-centre-notre-dame.fr/", tag:"Rooftop" },
-      { name:"Rooftop Monsigny", note:"Av. Malaussena · 4,3 etoiles · des 16h · vue mer", addr:"17 Avenue Malaussena, Nice", lat:43.7046, lng:7.2697, url:"https://www.hotelmonsignynice.com/fr/page/rooftop-hotel-nice-vue-mer-rooftop-nice.11028.html", tag:"Rooftop" },
-      { name:"Farago on the Roof (AC Marriott)", note:"Promenade · 4,1 etoiles · tapas & cocktails", addr:"59 Promenade des Anglais, Nice", lat:43.6942, lng:7.2407, url:"http://www.achotelnicerooftop.com/", tag:"Rooftop" },
-      { name:"BClub Rooftop", note:"Bd Victor Hugo · 4,1 etoiles · restaurant & bar", addr:"12 Boulevard Victor Hugo, Nice", lat:43.7011, lng:7.2659, url:"https://boscolocollection.com/nice/rooftop-nice-la-terrace/", tag:"Rooftop" },
-      { name:"Le Plongeoir", note:"Restaurant sur rochers · 4,3 etoiles · 4000+ avis · Mediterraneen", addr:"60 Bd Franck Pilatte, Nice", lat:43.6919, lng:7.2909, url:"https://www.leplongeoir.com/", tag:"Rooftop" },
       { name:"Bulldog Pub Pompei", note:"Pub culte depuis 1984 · musique live · Vieux Nice", addr:"16 Rue de l'Abbaye, Nice", lat:43.6957, lng:7.2762, url:"https://www.bulldogpompei.com/", tag:"Bar" },
       { name:"Opera Club Nice", note:"Cave voutee en pierre · reggaeton, electro · tl 23h30–5h", addr:"2 Rue de la Prefecture, Nice", lat:43.6961, lng:7.2756, url:"https://operaclubnice.com/", tag:"Club" },
       { name:"Van Diemen's Australian Pub", note:"30 Cours Saleya · musique live 7 soirs · biere maison", addr:"30 Cours Saleya, Nice", lat:43.6954, lng:7.2741, url:"https://www.facebook.com/VanDiemensPub/", tag:"Bar" },
@@ -1853,6 +1876,24 @@ function buildCard(item, open) {
       </div>
     </div>`;
   }
+  if (item.checklist) {
+    const listHtml = (item.items || []).map(it =>
+      `<label class="chk-item" onclick="this.classList.toggle('done')">
+        <span class="chk-box"></span>
+        <span class="chk-txt">\${escHtml(it)}</span>
+      </label>`).join('');
+    return `<div class="card\${openClass}">
+      <div class="card-toggle" onclick="toggleCard(this)">
+        <div class="card-icon">\${item.icon}</div>
+        <div class="card-label">\${escHtml(item.label)}</div>
+        <div class="card-chevron">▼</div>
+      </div>
+      <div class="card-body">
+        <div class="chk-list">\${listHtml}</div>
+        <button class="chk-reset" onclick="this.closest('.card-body').querySelectorAll('.chk-item').forEach(el=>el.classList.remove('done'))">\${item.resetLabel||'Reset'}</button>
+      </div>
+    </div>`;
+  }
   return `<div class="card${openClass}">
     <div class="card-toggle" onclick="toggleCard(this)">
       <div class="card-icon">${item.icon}</div>
@@ -2009,31 +2050,15 @@ function setLang(lang) {
   var barsListEl = document.getElementById('bars-list');
   if (barsListEl && t.bars) {
     var tagColors = {Rooftop:'#1a5276', Club:'#8e44ad', Bar:'#c0392b'};
-    var rooftops  = t.bars.filter(function(b) { return b.tag === 'Rooftop'; });
-    var clubsBars = t.bars.filter(function(b) { return b.tag !== 'Rooftop'; });
-    // sort clubs first, then bars
-    clubsBars.sort(function(a,b) { return (a.tag === 'Club' ? 0 : 1) - (b.tag === 'Club' ? 0 : 1); });
-    function barItem(b, i) {
+    barsListEl.innerHTML = t.bars.map(function(b, i) {
       var mapsUrl = 'https://maps.google.com/?q=' + encodeURIComponent(b.addr + ', France');
       var clr = tagColors[b.tag] || '#555';
       var webLink = b.url ? ' <a href="' + b.url + '" class="ext-link" target="_blank" rel="noopener" style="font-size:0.74rem;font-weight:600">Web</a>' : '';
-      return '<div style="display:flex;gap:0.45rem;padding:0.28rem 0;border-bottom:1px solid var(--border);font-size:0.8rem;align-items:flex-start">' +
-        '<span style="background:' + clr + ';color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
-        '<div><strong>' + escHtml(b.name) + '</strong> <span style="font-size:0.66rem;color:' + clr + ';font-weight:600;text-transform:uppercase;letter-spacing:0.04em">' + b.tag + '</span>' + webLink + '<br><span style="font-size:0.73rem;color:var(--muted)">' + escHtml(b.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.72rem">' + escHtml(b.addr) + '</a></div>' +
+      return '<div style="display:flex;gap:0.6rem;padding:0.35rem 0;border-bottom:1px solid var(--border);font-size:0.83rem;align-items:flex-start">' +
+        '<span style="background:' + clr + ';color:#fff;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;margin-top:2px">' + (i+1) + '</span>' +
+        '<div><strong>' + escHtml(b.name) + '</strong> <span style="font-size:0.68rem;color:' + clr + ';font-weight:600;text-transform:uppercase;letter-spacing:0.04em">' + b.tag + '</span>' + webLink + '<br><span style="font-size:0.76rem;color:var(--muted)">' + escHtml(b.note) + '</span><br><a href="' + mapsUrl + '" class="maps-link" target="_blank" style="font-size:0.75rem">' + escHtml(b.addr) + '</a></div>' +
       '</div>';
-    }
-    var ch = 'padding:0.28rem 0.75rem;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);border-bottom:1px solid var(--border)';
-    var cb = 'padding:0.3rem 0.75rem 0.35rem';
-    barsListEl.innerHTML = '<div style="display:flex">' +
-      '<div style="flex:1;border-right:1px solid var(--border)">' +
-        '<div style="' + ch + '">Rooftops</div>' +
-        '<div style="' + cb + '">' + rooftops.map(barItem).join('') + '</div>' +
-      '</div>' +
-      '<div style="flex:1">' +
-        '<div style="' + ch + '">Clubs &amp; Bars</div>' +
-        '<div style="' + cb + '">' + clubsBars.map(barItem).join('') + '</div>' +
-      '</div>' +
-    '</div>';
+    }).join('');
   }
 
   const rl = document.getElementById('resto-list');
@@ -2083,14 +2108,18 @@ function highlightToday() {
 const NICE_EVENTS_STAND = "8. Juni 2026";
 const NICE_EVENTS = [
   { from:"2026-06-07", to:"2026-09-27", dateLabel:"So. wöch.", title:"Harmonie de Nice — Sonntagskonzerte", desc:"Jeden So · 17h · Jardins des Arènes de Cimiez oder Jardin Albert 1er · gratis", url:"https://www.nice.fr/agenda/orchestre-dharmonie-de-la-ville-de-nice/", tags:["Gratis","Klassik"] },
-  { from:"2026-06-12", to:"2026-06-13", dateLabel:"12.–13. Jun", title:"Orchestre Philharmonique — Bruch · Brahms", desc:"Opéra de Nice · Violon: Akiko Suwanai · 10–34 €", url:"https://www.opera-nice.org/agenda/", tags:["Klassik","Konzert"] },
-  { from:"2026-06-13", to:"2026-06-14", dateLabel:"13.–14. Jun", title:"WE Music Festival", desc:"Théâtre de Verdure · Fritz Kalkbrenner, Miss Kittin, The Hacker", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Electro","Festival"] },
-  { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse / Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Dauerausstellung", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
-  { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner", url:"https://www.nuitscarrees.com/", tags:["Festival","Musik"] },
+  { from:"2026-06-12", to:"2026-06-13", dateLabel:"12.–13. Jun", title:"Orchestre Philharmonique — Bruch · Brahms", desc:"Opéra de Nice · Violine: Akiko Suwanai · Dirigent: Lionel Bringuier · 10–34 €", url:"https://www.opera-nice.org/fr/calendrier", tags:["Klassik","Konzert"] },
+  { from:"2026-06-13", to:"2026-06-14", dateLabel:"13.–14. Jun", title:"WE Music Festival", desc:"Théâtre de Verdure · Fritz Kalkbrenner, Miss Kittin, The Hacker · Electro/Indie", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Electro","Festival"] },
+  { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN – Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenöss. Tragödien · Bérénice, Les Suppliantes u.a. · ab 10 €", url:"https://www.tnn.fr/fr/calendrier/juin/2026", tags:["Theater"] },
+  { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse & Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Neueröffnung nach Umbau", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
+  { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner", url:"https://www.nuitscarrees.com/", tags:["Festival","Electro"] },
   { from:"2026-06-21", to:"2026-06-21", dateLabel:"21. Jun", title:"Fête de la Musique — Nizza", desc:"Ab 18h · Place Masséna, Vieux Nice, Promenade du Paillon · Alle Stilrichtungen · gratis", url:"https://www.nice.fr/nice-music-live/", tags:["Gratis","Fest"] },
   { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · 21.6. gratis / ab 23.6. 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
-  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Indie, Pop, Electronic · Villefranche-sur-Mer", url:"https://www.jds.fr/nice/manifestations/festival/", tags:["Festival","Musik"] },
-  { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN – Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenössische Tragödien unter freiem Himmel · 21h\nBérénice (Racine), Les Suppliantes (Eschyle), Un Jour sans vent u.a. · ab 10 €\nFreie Rahmenprogramme (Lesungen, Konferenzen, Debatten) parallel", url:"https://www.tnn.fr/fr/les-temps-forts/festival-de-tragedie", tags:["Theater","TNN"] },
+  { from:"2026-06-21", to:"2026-08-09", dateLabel:"21. Jun – 9. Aug", title:"Nice Classic Live — Kloster Cimiez", desc:"Kreuzgang Cimiez · Klassik, Zeitgenössisch, Jazz · Junge Talente & etablierte Künstler", url:"https://niceclassiclive.com/concerts", tags:["Klassik","Jazz","Festival"] },
+  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Citadelle Saint-Elme · Yuksek, DJ Pone, Chloé, Papooz, Miki, Bellaire, Anoraak · 7. Auflage", url:"https://www.lacremefestival.com/", tags:["Festival","Electro"] },
+  { from:"2026-07-02", to:"2026-07-05", dateLabel:"2.–5. Jul", title:"La Kermesse Festival — Nice", desc:"Théâtre de Verdure · Pop, R&B, Dance der 90er & 2000er · Larusso, O-Zone, Lou Bega, Cascada, 2BE3 u.v.m.", url:"https://cotedazurfrance.fr/decouvrir/grands-evenements/kermesse-festival-nice-2026/", tags:["Festival","Konzert"] },
+  { from:"2026-07-09", to:"2026-07-18", dateLabel:"9.–18. Jul", title:"Nuits du Sud — Vence", desc:"Vence · 29. Auflage · Véronique Sanson, Danakil, Magic System, Ben L'Oncle Soul · Reggae, Pop, Electro", url:"https://www.nuitsdusud.com/", tags:["Festival","Konzert"] },
+  { from:"2026-07-23", to:"2026-07-26", dateLabel:"23.–26. Jul", title:"Nice Jazz Festival — Place Masséna", desc:"Place Masséna & Théâtre de Verdure · Sting, Busta Rhymes, Biréli Lagrène, Lola Young · 18 Konzerte", url:"https://www.nicejazzfest.fr/fr/", tags:["Jazz","Festival","Konzert"] },
 ];
 
 // Init
