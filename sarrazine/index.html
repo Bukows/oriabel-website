@@ -1883,17 +1883,17 @@ function buildCard(item, open) {
     const listHtml = (item.items || []).map(it =>
       `<label class="chk-item" onclick="this.classList.toggle('done')">
         <span class="chk-box"></span>
-        <span class="chk-txt">\${escHtml(it)}</span>
+        <span class="chk-txt">${escHtml(it)}</span>
       </label>`).join('');
-    return `<div class="card\${openClass}">
+    return `<div class="card${openClass}">
       <div class="card-toggle" onclick="toggleCard(this)">
-        <div class="card-icon">\${item.icon}</div>
-        <div class="card-label">\${escHtml(item.label)}</div>
+        <div class="card-icon">${item.icon}</div>
+        <div class="card-label">${escHtml(item.label)}</div>
         <div class="card-chevron">▼</div>
       </div>
       <div class="card-body">
-        <div class="chk-list">\${listHtml}</div>
-        <button class="chk-reset" onclick="this.closest('.card-body').querySelectorAll('.chk-item').forEach(el=>el.classList.remove('done'))">\${item.resetLabel||'Reset'}</button>
+        <div class="chk-list">${listHtml}</div>
+        <button class="chk-reset" onclick="this.closest('.card-body').querySelectorAll('.chk-item').forEach(el=>el.classList.remove('done'))">${item.resetLabel||'Reset'}</button>
       </div>
     </div>`;
   }
