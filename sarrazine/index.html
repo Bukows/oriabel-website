@@ -722,7 +722,7 @@ const T = {
         ["Fenster","Schließen, wenn Klimaanlage läuft"],
         ["Nachts","AC aus, Fenster öffnen (Achtung Zugluft)"],
         ["Heiße Nächte","SCHLAF-Modus (Mond), 25°C"],
-        ["Strom","Sicherungskasten im Durchgang zur Küche · unterste Reihe · Räume beschriftet · Einzeln einschalten falls Thermostat nichts anzeigt"]
+        ["Strom","Sicherungskasten im Durchgang zur Küche · unterste Reihe · Räume beschriftet · Hauptschalter unterste Reihe eingeschaltet? → Räume einzeln einschalten falls Thermostat nichts anzeigt"]
       ]},
       { icon:"☀️", label:"Markisen (Balkone)", rows:[
         ["⚠ Wichtig","Nachts und bei Abwesenheit immer einfahren (plötzliche Winde in Nice!)"],
@@ -912,7 +912,7 @@ const T = {
         ["Windows","Always close when AC is running"],
         ["At night","Switch off AC and open windows (watch out for draughts)"],
         ["Hot nights","SLEEP mode (moon symbol), 25°C"],
-        ["Power","Fuse box in the passage to the kitchen · bottom row · rooms are labelled · Switch on individually if thermostat shows nothing"]
+        ["Power","Fuse box in the passage to the kitchen · bottom row · rooms are labelled · Check main switch for bottom row is on → switch on individually if thermostat shows nothing"]
       ]},
       { icon:"☀️", label:"Awnings (Balconies)", rows:[
         ["⚠ Important","Always retract at night and when away (sudden strong winds in Nice!)"],
@@ -1102,7 +1102,7 @@ const T = {
         ["Fenêtres","Fermer quand la clim est en marche"],
         ["La nuit","Éteindre la clim et ouvrir les fenêtres (attention aux courants d'air)"],
         ["Nuits chaudes","Mode SLEEP (lune), 25°C"],
-        ["Électricité","Tableau électrique dans le couloir vers la cuisine · rangée du bas · pièces étiquetées · Allumer individuellement si le thermostat n'affiche rien"]
+        ["Électricité","Tableau électrique dans le couloir vers la cuisine · rangée du bas · pièces étiquetées · Vérifier que le disjoncteur principal de la rangée du bas est enclenché → allumer individuellement si le thermostat n'affiche rien"]
       ]},
       { icon:"☀️", label:"Stores (Balcons)", rows:[
         ["⚠ Important","Toujours rentrer les stores la nuit et en cas d'absence (vents soudains à Nice !)"],
@@ -2120,23 +2120,20 @@ function highlightToday() {
 
 // ─── NICE EVENTS — static curated data, updated regularly by Claude ────────
 // Stand: 7. Juni 2026
-const NICE_EVENTS_STAND = "29. Juni 2026";
+const NICE_EVENTS_STAND = "15. Juni 2026";
 const NICE_EVENTS = [
-  { from:"2026-06-06", to:"2026-08-21", dateLabel:"6. Jun – 21. Aug", title:"Crossover Festival — Théâtre de Verdure", desc:"Rap, Hip-Hop, Electro & Pop · POPOF, David Rodigan, Julien Granel u.a. · Théâtre de Verdure", url:"https://festival-crossover.com/", tags:["Festival","Electro","Konzert"] },
   { from:"2026-06-07", to:"2026-09-27", dateLabel:"So. wöch.", title:"Harmonie de Nice — Sonntagskonzerte", desc:"Jeden So · 17h · Jardins des Arènes de Cimiez oder Jardin Albert 1er · gratis", url:"https://www.nice.fr/agenda/orchestre-dharmonie-de-la-ville-de-nice/", tags:["Gratis","Klassik"] },
   { from:"2026-06-16", to:"2026-07-04", dateLabel:"16. Jun – 4. Jul", title:"TNN — Festival de Tragédies", desc:"Arènes de Cimiez · Antike & zeitgenöss. Tragödien · Bérénice, Les Suppliantes u.a. · ab 10 €", url:"https://www.tnn.fr/fr/calendrier/juin/2026", tags:["Theater"] },
   { from:"2026-06-17", to:"2026-09-30", dateLabel:"ab 17. Jun", title:"Matisse & Yves Saint Laurent — Musée Matisse", desc:"Cimiez · Dialog zwischen Maler und Couturier · Neueröffnung nach Umbau", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
-  { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · letzte Konzerte · 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
-  { from:"2026-06-21", to:"2026-08-09", dateLabel:"21. Jun – 9. Aug", title:"Nice Classic Live — Kloster Cimiez", desc:"Kreuzgang Cimiez & Musée Matisse · Klassik, Zeitgenössisch, Jazz · Junge Talente & etablierte Künstler", url:"https://niceclassiclive.com/concerts", tags:["Klassik","Jazz","Festival"] },
-  { from:"2026-07-03", to:"2026-07-05", dateLabel:"3.–5. Jul", title:"La Kermesse Festival — Nice", desc:"Théâtre de Verdure · Hits der 90er & 2000er · Larusso, O-Zone, Lou Bega, Cascada u.v.m.", url:"https://cotedazurfrance.fr/decouvrir/grands-evenements/kermesse-festival-nice-2026/", tags:["Festival","Konzert"] },
-  { from:"2026-07-09", to:"2026-07-19", dateLabel:"9.–19. Jul", title:"Jazz à Juan — Antibes Juan-les-Pins", desc:"La Pinède Gould · 65. Auflage · Gratis-Konzerte ab 19h15 (Off-Bühne)", url:"https://www.jazzajuan.com/", tags:["Jazz","Festival"] },
-  { from:"2026-07-09", to:"2026-07-18", dateLabel:"9.–18. Jul", title:"Nuits du Sud — Vence", desc:"Place du Grand Jardin, Vence · Reggae, Pop, Electro & Weltmusik · ab ~30 €", url:"https://www.nuitsdusud.com/", tags:["Festival","Konzert"] },
-  { from:"2026-07-12", to:"2026-07-12", dateLabel:"12. Jul", title:"Pitbull — Allianz Riviera", desc:"Stade Allianz Riviera · Mr. Worldwide live, Special Guest Lil Jon · Tickets ab ~60 €", url:"https://www.allianz-riviera.fr/", tags:["Konzert"] },
-  { from:"2026-07-17", to:"2026-08-31", dateLabel:"ab 17. Jul", title:"Candlelight — Hommage an Hans Zimmer", desc:"Château de Crémat · Streichquartett bei Kerzenschein · Filmmusik · ab ~28 €", url:"https://www.jds.fr/nice/agenda/", tags:["Klassik","Konzert"] },
-  { from:"2026-07-23", to:"2026-07-26", dateLabel:"23.–26. Jul", title:"Nice Jazz Fest — Place Masséna", desc:"Place Masséna & Théâtre de Verdure · 28 Konzerte auf 2 Bühnen · Jazz & aktuelle Musik", url:"https://www.nicejazzfest.fr/fr/", tags:["Jazz","Festival","Konzert"] },
-  { from:"2026-07-25", to:"2026-08-07", dateLabel:"25. Jul – 7. Aug", title:"Festival de Musique de Menton", desc:"Parvis der Basilique Saint-Michel · Kammermusik & Klassik · Concert Off gratis (Les Sablettes)", url:"https://www.menton.fr/", tags:["Klassik","Festival"] },
-  { from:"2026-08-04", to:"2026-08-04", dateLabel:"4. Aug", title:"Raggamuffin Festival — Théâtre de Verdure", desc:"Théâtre de Verdure · Reggae- & Hip-Hop-Abend", url:"https://festival-crossover.com/", tags:["Festival","Konzert"] },
-  { from:"2026-08-15", to:"2026-08-15", dateLabel:"15. Aug", title:"Feu d'artifice & Konzert Cerrone — Menton", desc:"Baie des Sablettes · Gratis-Konzert Cerrone 21h15, Feuerwerk 22h45 · Gratis", url:"https://nicepresse.com/guide-ete-2026-menton-festivites-gratuites/", tags:["Gratis","Fest","Konzert"] },
+  { from:"2026-06-18", to:"2026-06-21", dateLabel:"18.–21. Jun", title:"Nuits Carrées — Antibes (20. Edition)", desc:"Esplanade Pré des Pêcheurs, Antibes · Cassius, Bon Entendeur, Fritz Kalkbrenner · Electro", url:"https://www.nuitscarrees.com/", tags:["Festival","Electro"] },
+  { from:"2026-06-21", to:"2026-06-21", dateLabel:"21. Jun", title:"Fête de la Musique — Nizza", desc:"Ab 18h · Place Masséna, Vieux Nice, Promenade du Paillon · Alle Stilrichtungen · gratis", url:"https://www.nice.fr/nice-music-live/", tags:["Gratis","Fest"] },
+  { from:"2026-06-21", to:"2026-06-30", dateLabel:"21.–30. Jun", title:"Festival de Musique Sacrée", desc:"Cathédrale Sainte-Réparate, Vieux Nice · 21.6. gratis / ab 23.6. 10–20 €", url:"https://www.opera-nice.org/agenda/festival-de-musique-sacree-2026/", tags:["Klassik","Sakral"] },
+  { from:"2026-06-21", to:"2026-08-09", dateLabel:"21. Jun – 9. Aug", title:"Nice Classic Live — Kloster Cimiez", desc:"Kreuzgang Cimiez · Klassik, Zeitgenössisch, Jazz · Junge Talente & etablierte Künstler", url:"https://niceclassiclive.com/concerts", tags:["Klassik","Jazz","Festival"] },
+  { from:"2026-06-26", to:"2026-06-28", dateLabel:"26.–28. Jun", title:"La Crème Festival — Villefranche-sur-Mer", desc:"Citadelle Saint-Elme · Yuksek, DJ Pone, Chloé, Papooz, Miki, Bellaire, Anoraak · 7. Auflage", url:"https://www.lacremefestival.com/", tags:["Festival","Electro"] },
+  { from:"2026-07-03", to:"2026-07-05", dateLabel:"3.–5. Jul", title:"La Kermesse Festival — Nice", desc:"Théâtre de Verdure · Pop, R&B, Dance der 90er & 2000er · Larusso, O-Zone, Lou Bega, Cascada, 2BE3 u.v.m.", url:"https://cotedazurfrance.fr/decouvrir/grands-evenements/kermesse-festival-nice-2026/", tags:["Festival","Konzert"] },
+  { from:"2026-07-09", to:"2026-07-19", dateLabel:"9.–19. Jul", title:"Jazz à Juan — Antibes Juan-les-Pins", desc:"La Pinède Gould · 65. Auflage · Seal, Samara Joy, Tom Jones, Marcus Miller u.a. · Gratis-Konzerte ab 19h15", url:"https://www.jazzajuan.com/", tags:["Jazz","Festival"] },
+  { from:"2026-07-09", to:"2026-07-18", dateLabel:"9.–18. Jul", title:"Nuits du Sud — Vence", desc:"Vence · 29. Auflage · Véronique Sanson, Danakil, Magic System, Ben L'Oncle Soul · Reggae, Pop, Electro", url:"https://www.nuitsdusud.com/", tags:["Festival","Konzert"] },
+  { from:"2026-07-23", to:"2026-07-25", dateLabel:"23.–25. Jul", title:"Nice Jazz Fest — Place Masséna", desc:"Place Masséna & Théâtre de Verdure · Sting, Busta Rhymes, Lola Young, Biréli Lagrène · 18 Konzerte", url:"https://www.nicejazzfest.fr/fr/", tags:["Jazz","Festival","Konzert"] },
 ];
 
 // Init
