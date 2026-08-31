@@ -2120,21 +2120,20 @@ function highlightToday() {
 
 // ─── NICE EVENTS — static curated data, updated regularly by Claude ────────
 // Stand: 7. Juni 2026
-const NICE_EVENTS_STAND = "24. August 2026";
+const NICE_EVENTS_STAND = "31. August 2026";
 const NICE_EVENTS = [
   { from:"2026-06-07", to:"2026-09-27", dateLabel:"So. wöch.", title:"Harmonie de Nice — Sonntagskonzerte", desc:"Jeden So · Jardins des Arènes de Cimiez oder Jardin Albert 1er · gratis", url:"https://www.nice.fr/agenda/orchestre-dharmonie-de-la-ville-de-nice/", tags:["Gratis","Klassik"] },
-  { from:"2026-06-17", to:"2026-09-28", dateLabel:"bis 28. Sep", title:"Matisse im Musée Matisse — zwei Ausstellungen", desc:"Cimiez · Matisse & Yves Saint Laurent + Matisse in Vence (Kreuzweg-Kapelle) · Neueröffnung nach Umbau", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
-  { from:"2026-08-15", to:"2026-08-29", dateLabel:"15.–29. Aug", title:"Guitare Espagnole & Toccata de Bach", desc:"Konzertreihe mit klassischer Gitarre und Orgelmusik · Église Saint-Jacques-le-Majeur, Nizza", url:"https://www.jds.fr/nice/concerts/musique-classique/guitare-espagnole-et-toccata-de-bach-eglise-saint-jacques-le-majeur-nice-1490515_A", tags:["Klassik","Sakral"] },
-  { from:"2026-07-08", to:"2026-08-26", dateLabel:"Mi. wöch.", title:"Open-Air-Kino am Port", desc:"Jeden Mi bei Einbruch der Dunkelheit · Port Lympia · gratis", url:"https://www.nice.fr/agenda/", tags:["Gratis"] },
-  { from:"2026-07-16", to:"2026-08-27", dateLabel:"Do. wöch.", title:"Jazz'Art Lympia — Gratis-Jazz am Port", desc:"Jeden Do abends · Terrassen am Port Lympia · gratis", url:"https://www.explorenicecotedazur.com/", tags:["Jazz","Gratis"] },
+  { from:"2026-06-17", to:"2026-09-28", dateLabel:"bis 28. Sep", title:"Matisse im Musée Matisse — zwei Ausstellungen", desc:"Cimiez · Matisse & Yves Saint Laurent + Matisse in Vence (Kreuzweg-Kapelle)", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
   { from:"2026-08-17", to:"2026-09-20", dateLabel:"17. Aug–20. Sep", title:"Sommerprogramm Villa Kérylos", desc:"Konzerte und Sonderführungen in der antiken griechischen Villa · Beaulieu-sur-Mer", url:"https://www.villakerylos.fr/", tags:["Konzert","Ausstellung"] },
   { from:"2026-08-29", to:"2026-09-26", dateLabel:"29. Aug–26. Sep", title:"Artisa'Vence — Kunsthandwerkermarkt", desc:"Markt für Kunsthandwerk und regionale Produkte · Altstadt Vence", url:"https://www.jds.fr/nice/foires-et-salons/marches/artisa-vence-1679743_A", tags:["Fest"] },
   { from:"2026-09-05", to:"2026-09-05", dateLabel:"5. Sep", title:"Fête de la Sant Bertoumiéu", desc:"Provenzalisches Erntedankfest mit Umzug, Musik und regionalen Produkten · Cours Saleya · gratis", url:"https://www.nice.fr/agenda/", tags:["Fest","Gratis"] },
   { from:"2026-09-05", to:"2026-09-05", dateLabel:"5. Sep", title:"Candlelight: Vivaldis Vier Jahreszeiten", desc:"Streichquartett bei Kerzenschein · Westminster Hotel & Spa, Promenade des Anglais", url:"https://feverup.com/nice", tags:["Klassik","Konzert"] },
   { from:"2026-09-10", to:"2026-09-12", dateLabel:"10.–12. Sep", title:"DroneArt Show: Harry Potter", desc:"Drohnen-Lichtshow über dem Hippodrome Côte d'Azur · Cagnes-sur-Mer", url:"https://www.jds.fr/nice/agenda/", tags:["Fest"] },
   { from:"2026-09-11", to:"2026-09-12", dateLabel:"11.–12. Sep", title:"Sayaka Shoji & Lionel Bringuier — Philharmonique de Nice", desc:"Opéra Nice Côte d'Azur · Violinkonzert · von Brahms bis Schostakowitsch", url:"https://www.opera-nice.org/fr/saison-concerts", tags:["Klassik","Konzert"] },
+  { from:"2026-09-18", to:"2026-09-18", dateLabel:"18. Sep", title:"Klavierrezital Katherine Nikitine", desc:"Opéra Nice Côte d'Azur · anschließend Künstlergespräch", url:"https://www.opera-nice.org/fr/saison-concerts", tags:["Klassik","Konzert"] },
   { from:"2026-09-19", to:"2026-09-20", dateLabel:"19.–20. Sep", title:"Journées Européennes du Patrimoine", desc:"Führungen, Konzerte & sonst geschlossene Orte in ganz Nizza · Themen: Foto-Erbe & bedrohtes Erbe · gratis", url:"https://www.nice.fr/journees-europeennes-du-patrimoine/", tags:["Gratis","Fest"] },
   { from:"2026-09-26", to:"2026-09-26", dateLabel:"26. Sep", title:"Boston Bun & Yaël Naïm — Konzertabend", desc:"Boston Bun (Electro) im Stockfish und Yaël Naïm (Chanson) im Théâtre Lino Ventura", url:"https://www.jds.fr/nice/agenda/", tags:["Konzert","Electro"] },
+  { from:"2026-09-30", to:"2026-10-08", dateLabel:"30. Sep–8. Okt", title:"Phèdre — Théâtre National de Nice", desc:"Mit Charles Berling · Racine-Klassiker im TNN, ehemaliges Franziskanerkloster", url:"https://www.tnn.fr/fr/", tags:["Theater"] },
   { from:"2026-09-30", to:"2026-10-06", dateLabel:"30. Sep–6. Okt", title:"Händel: Orlando — Ensemble Matheus", desc:"Opéra Nice Côte d'Azur · Leitung Jean-Christophe Spinosi", url:"https://www.opera-nice.org/fr/saison-operas", tags:["Oper","Klassik"] },
   { from:"2026-10-03", to:"2026-10-07", dateLabel:"3.–7. Okt", title:"Philip Glass: Satyagraha", desc:"Opéra Nice Côte d'Azur · Oper über das Leben Mahatma Gandhis", url:"https://www.opera-nice.org/fr/saison-operas", tags:["Oper"] },
 ];
