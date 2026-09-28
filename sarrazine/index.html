@@ -2119,24 +2119,24 @@ function highlightToday() {
 }
 
 // ─── NICE EVENTS — static curated data, updated regularly by Claude ────────
-// Stand: 21. September 2026
-const NICE_EVENTS_STAND = "21. September 2026";
+// Stand: 28. September 2026
+const NICE_EVENTS_STAND = "28. September 2026";
 const NICE_EVENTS = [
-  { from:"2026-06-07", to:"2026-09-27", dateLabel:"So. wöch.", title:"Harmonie de Nice — Sonntagskonzerte", desc:"Jeden So · Jardins des Arènes de Cimiez oder Jardin Albert 1er · gratis", url:"https://www.nice.fr/agenda/orchestre-dharmonie-de-la-ville-de-nice/", tags:["Gratis","Klassik"] },
-  { from:"2026-06-17", to:"2026-09-28", dateLabel:"bis 28. Sep", title:"Matisse im Musée Matisse — zwei Ausstellungen", desc:"Cimiez · Matisse & Yves Saint Laurent + Matisse in Vence (Kreuzweg-Kapelle)", url:"https://www.musee-matisse-nice.org/", tags:["Ausstellung"] },
-  { from:"2026-08-29", to:"2026-09-26", dateLabel:"bis 26. Sep", title:"Artisa'Vence — Kunsthandwerkermarkt", desc:"Markt für Kunsthandwerk und regionale Produkte · Altstadt Vence", url:"https://www.jds.fr/nice/foires-et-salons/marches/artisa-vence-1679743_A", tags:["Fest"] },
-  { from:"2026-09-26", to:"2026-09-27", dateLabel:"26.–27. Sep", title:"Festival Japan Aurea", desc:"16. Ausgabe · Manga-Karaoke, Cosplay-Parade, K-Pop, Ghibli-Kinoabend · Vallauris", url:"https://www.jds.fr/nice/agenda/", tags:["Festival"] },
-  { from:"2026-09-26", to:"2026-09-26", dateLabel:"26. Sep", title:"Boston Bun & Yaël Naïm — Konzertabend", desc:"Boston Bun (Electro) im Stockfish und Yaël Naïm (Chanson) im Théâtre Lino Ventura", url:"https://www.jds.fr/nice/agenda/", tags:["Konzert","Electro"] },
+  { from:"2026-09-28", to:"2027-01-11", dateLabel:"ab 28. Sep", title:"Merveilles et curiosités — Palais Lascaris", desc:"Ausstellung zu Wunderkammern und Kuriositäten · Palais Lascaris, Altstadt Nizza", url:"https://www.jds.fr/nice/expos/exposition-merveilles-et-curiosites-au-palais-lascaris-de-nice-1732553_A", tags:["Ausstellung"] },
   { from:"2026-09-30", to:"2026-10-06", dateLabel:"30. Sep–6. Okt", title:"Händel: Orlando — Ensemble Matheus", desc:"Opéra Nice Côte d'Azur · Leitung Jean-Christophe Spinosi", url:"https://www.opera-nice.org/fr/saison-operas", tags:["Oper","Klassik"] },
   { from:"2026-09-30", to:"2026-10-08", dateLabel:"30. Sep–8. Okt", title:"Phèdre — Théâtre National de Nice", desc:"Mit Charles Berling · Racine-Klassiker im TNN, ehemaliges Franziskanerkloster", url:"https://www.tnn.fr/fr/", tags:["Theater"] },
   { from:"2026-10-02", to:"2026-10-12", dateLabel:"2.–12. Okt", title:"Fête de la Science", desc:"Wissenschaftsfestival in den Alpes-Maritimes · Mitmach-Aktionen für alle · gratis", url:"https://www.jds.fr/nice/agenda/", tags:["Gratis","Fest"] },
-  { from:"2026-10-03", to:"2026-10-03", dateLabel:"3. Okt", title:"Djadja & Dinaz — Palais Nikaïa", desc:"Rap/Urban-Konzert · Palais Nikaïa, 20 Uhr", url:"https://www.jds.fr/nice/agenda/", tags:["Konzert"] },
+  { from:"2026-10-03", to:"2026-10-03", dateLabel:"3. Okt", title:"Djadja & Dinaz — Palais Nikaïa", desc:"Rap/Urban-Konzert · Palais Nikaïa, 20 Uhr", url:"https://www.jds.fr/nice/concerts/rap/djadja-et-dinaz-tournee-1082627_A", tags:["Konzert"] },
   { from:"2026-10-03", to:"2026-10-07", dateLabel:"3.–7. Okt", title:"Philip Glass: Satyagraha", desc:"Opéra Nice Côte d'Azur · Oper über das Leben Mahatma Gandhis", url:"https://www.opera-nice.org/fr/saison-operas", tags:["Oper"] },
-  { from:"2026-10-09", to:"2026-10-09", dateLabel:"9. Okt", title:"Fatoumata Diawara & Étinsel Maloya — Afro-Réunion-Abend", desc:"Konzertabend mit afrikanischen und réunionesischen Klängen · Nizza", url:"https://www.jds.fr/nice/agenda/", tags:["Konzert"] },
+  { from:"2026-10-09", to:"2026-10-09", dateLabel:"9. Okt", title:"Fatoumata Diawara & Étinsel Maloya — Afro-Réunion-Abend", desc:"Konzertabend mit afrikanischen und réunionesischen Klängen · Nizza, 20:30 Uhr", url:"https://www.jds.fr/nice/agenda/", tags:["Konzert"] },
+  { from:"2026-10-10", to:"2026-10-10", dateLabel:"10. Okt", title:"La Dame de Pierre — Palais Nikaïa", desc:"Spectacle-Hommage an Notre-Dame de Paris · Palais Nikaïa, 20:45 Uhr", url:"https://www.jds.fr/nice/spectacles/la-dame-de-pierre-tournee-1266214_A", tags:["Theater"] },
   { from:"2026-10-14", to:"2026-10-17", dateLabel:"14.–17. Okt", title:"Tout est calme dans les hauteurs — TNN", desc:"Nach Thomas Bernhard · Théâtre National de Nice", url:"https://www.tnn.fr/fr/", tags:["Theater"] },
-  { from:"2026-10-17", to:"2026-10-17", dateLabel:"17. Okt", title:"Festival CaraïbAzur", desc:"1. Ausgabe · Karibische Musik & Kultur · Théâtre de Verdure, Nizza", url:"https://www.jds.fr/nice/agenda/", tags:["Festival","Konzert"] },
+  { from:"2026-10-16", to:"2026-10-16", dateLabel:"16. Okt", title:"Avishai Cohen — Jazzkonzert", desc:"Der israelische Bassist und Komponist live in Nizza, 20:30 Uhr", url:"https://www.jds.fr/nice/agenda/musique-et-concerts-96_B", tags:["Jazz","Konzert"] },
+  { from:"2026-10-17", to:"2026-10-17", dateLabel:"17. Okt", title:"Festival CaraïbAzur", desc:"1. Ausgabe · Karibische Musik & Kultur · Théâtre de Verdure, Nizza", url:"https://www.jds.fr/nice/manifestations/festival/festival-caraibazur-nice-1696263_A", tags:["Festival","Konzert"] },
+  { from:"2026-10-17", to:"2026-11-02", dateLabel:"17. Okt–2. Nov", title:"La Fête de l'Automne", desc:"Herbstmarkt mit regionalen Produkten und Handwerk · Saint-Paul-de-Vence", url:"https://www.jds.fr/nice/foires-et-salons/marches/la-fete-de-l-automne-1761474_A", tags:["Fest"] },
   { from:"2026-10-23", to:"2026-10-25", dateLabel:"23.–25. Okt", title:"Salon du Chocolat", desc:"80 Chocolatiers, Vorführungen & Verkostungen · Palais des Congrès Acropolis · 14 €", url:"https://www.jds.fr/nice/agenda/", tags:["Fest"] },
-  { from:"2026-10-30", to:"2026-10-30", dateLabel:"30. Okt", title:"Laura Pausini — Io Canto World Tour", desc:"Konzert · Palais Nikaïa", url:"https://www.jds.fr/nice/agenda/", tags:["Konzert"] },
+  { from:"2026-10-27", to:"2026-10-27", dateLabel:"27. Okt", title:"Legend Tour By Trade Republic", desc:"Guillaume Pley · Vom Podcast zur Live-Show · Palais Nikaïa", url:"https://www.jds.fr/nice/spectacles/humour/legend-tour-by-trade-republic-du-podcast-au-show-tournee-1310283_A", tags:["Theater"] },
+  { from:"2026-10-30", to:"2026-10-30", dateLabel:"30. Okt", title:"Laura Pausini — Io Canto World Tour", desc:"Konzert · Palais Nikaïa", url:"https://www.jds.fr/nice/concerts/pop-folk/laura-pausini-io-canto-world-tour-1164314_A", tags:["Konzert"] },
 ];
 
 // Init
