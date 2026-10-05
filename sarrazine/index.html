@@ -2119,26 +2119,25 @@ function highlightToday() {
 }
 
 // ─── NICE EVENTS — static curated data, updated regularly by Claude ────────
-// Stand: 28. September 2026
-const NICE_EVENTS_STAND = "28. September 2026";
+// Stand: 5. Oktober 2026
+const NICE_EVENTS_STAND = "5. Oktober 2026";
 const NICE_EVENTS = [
   { from:"2026-09-28", to:"2027-01-11", dateLabel:"ab 28. Sep", title:"Merveilles et curiosités — Palais Lascaris", desc:"Ausstellung zu Wunderkammern und Kuriositäten · Palais Lascaris, Altstadt Nizza", url:"https://www.jds.fr/nice/expos/exposition-merveilles-et-curiosites-au-palais-lascaris-de-nice-1732553_A", tags:["Ausstellung"] },
   { from:"2026-09-30", to:"2026-10-06", dateLabel:"30. Sep–6. Okt", title:"Händel: Orlando — Ensemble Matheus", desc:"Opéra Nice Côte d'Azur · Leitung Jean-Christophe Spinosi", url:"https://www.opera-nice.org/fr/saison-operas", tags:["Oper","Klassik"] },
   { from:"2026-09-30", to:"2026-10-08", dateLabel:"30. Sep–8. Okt", title:"Phèdre — Théâtre National de Nice", desc:"Mit Charles Berling · Racine-Klassiker im TNN, ehemaliges Franziskanerkloster", url:"https://www.tnn.fr/fr/", tags:["Theater"] },
   { from:"2026-10-02", to:"2026-10-12", dateLabel:"2.–12. Okt", title:"Fête de la Science", desc:"Wissenschaftsfestival in den Alpes-Maritimes · Mitmach-Aktionen für alle · gratis", url:"https://www.jds.fr/nice/agenda/", tags:["Gratis","Fest"] },
-  { from:"2026-10-03", to:"2026-10-03", dateLabel:"3. Okt", title:"Djadja & Dinaz — Palais Nikaïa", desc:"Rap/Urban-Konzert · Palais Nikaïa, 20 Uhr", url:"https://www.jds.fr/nice/concerts/rap/djadja-et-dinaz-tournee-1082627_A", tags:["Konzert"] },
   { from:"2026-10-03", to:"2026-10-07", dateLabel:"3.–7. Okt", title:"Philip Glass: Satyagraha", desc:"Opéra Nice Côte d'Azur · Oper über das Leben Mahatma Gandhis", url:"https://www.opera-nice.org/fr/saison-operas", tags:["Oper"] },
   { from:"2026-10-09", to:"2026-10-09", dateLabel:"9. Okt", title:"Fatoumata Diawara & Étinsel Maloya — Afro-Réunion-Abend", desc:"Konzertabend mit afrikanischen und réunionesischen Klängen · Nizza, 20:30 Uhr", url:"https://www.jds.fr/nice/agenda/", tags:["Konzert"] },
-  { from:"2026-10-10", to:"2026-10-10", dateLabel:"10. Okt", title:"La Dame de Pierre — Palais Nikaïa", desc:"Spectacle-Hommage an Notre-Dame de Paris · Palais Nikaïa, 20:45 Uhr", url:"https://www.jds.fr/nice/spectacles/la-dame-de-pierre-tournee-1266214_A", tags:["Theater"] },
-  { from:"2026-10-14", to:"2026-10-17", dateLabel:"14.–17. Okt", title:"Tout est calme dans les hauteurs — TNN", desc:"Nach Thomas Bernhard · Théâtre National de Nice", url:"https://www.tnn.fr/fr/", tags:["Theater"] },
   { from:"2026-10-16", to:"2026-10-16", dateLabel:"16. Okt", title:"Avishai Cohen — Jazzkonzert", desc:"Der israelische Bassist und Komponist live in Nizza, 20:30 Uhr", url:"https://www.jds.fr/nice/agenda/musique-et-concerts-96_B", tags:["Jazz","Konzert"] },
-  { from:"2026-10-17", to:"2026-10-17", dateLabel:"17. Okt", title:"Festival CaraïbAzur", desc:"1. Ausgabe · Karibische Musik & Kultur · Théâtre de Verdure, Nizza", url:"https://www.jds.fr/nice/manifestations/festival/festival-caraibazur-nice-1696263_A", tags:["Festival","Konzert"] },
-  { from:"2026-10-17", to:"2026-11-02", dateLabel:"17. Okt–2. Nov", title:"La Fête de l'Automne", desc:"Herbstmarkt mit regionalen Produkten und Handwerk · Saint-Paul-de-Vence", url:"https://www.jds.fr/nice/foires-et-salons/marches/la-fete-de-l-automne-1761474_A", tags:["Fest"] },
+  { from:"2026-10-17", to:"2026-10-22", dateLabel:"17.–22. Okt", title:"Ballett: Maillot & Mandafounis", desc:"Ballettabend mit Jean-Christophe Maillot und Ioannis Mandafounis · Opéra Nice Côte d'Azur", url:"https://www.opera-nice.org/fr/saison-concerts", tags:["Theater","Klassik"] },
+  { from:"2026-10-17", to:"2026-10-17", dateLabel:"17. Okt", title:"Festival CaraïbAzur", desc:"1. Ausgabe · Karibische Musik & Kultur · Théâtre de Verdure, Nizza · 14–23 Uhr", url:"https://www.explorenicecotedazur.com/en/event/festival-caraibazur-nice/", tags:["Festival","Konzert"] },
+  { from:"2026-10-17", to:"2026-11-28", dateLabel:"17. Okt–28. Nov", title:"Candlelight: Hommage an Charles Aznavour", desc:"Streichquartett bei Kerzenlicht spielt Aznavours Hits · Nizza", url:"https://06.agendaculturel.fr/concert/nice/", tags:["Konzert","Klassik"] },
   { from:"2026-10-23", to:"2026-10-25", dateLabel:"23.–25. Okt", title:"Salon du Chocolat", desc:"80 Chocolatiers, Vorführungen & Verkostungen · Palais des Congrès Acropolis · 14 €", url:"https://www.jds.fr/nice/agenda/", tags:["Fest"] },
-  { from:"2026-10-27", to:"2026-10-27", dateLabel:"27. Okt", title:"Legend Tour By Trade Republic", desc:"Guillaume Pley · Vom Podcast zur Live-Show · Palais Nikaïa", url:"https://www.jds.fr/nice/spectacles/humour/legend-tour-by-trade-republic-du-podcast-au-show-tournee-1310283_A", tags:["Theater"] },
-  { from:"2026-10-30", to:"2026-10-30", dateLabel:"30. Okt", title:"Laura Pausini — Io Canto World Tour", desc:"Konzert · Palais Nikaïa", url:"https://www.jds.fr/nice/concerts/pop-folk/laura-pausini-io-canto-world-tour-1164314_A", tags:["Konzert"] },
+  { from:"2026-10-30", to:"2026-10-30", dateLabel:"30. Okt", title:"Strauss & Brahms — Orchestre Philharmonique de Nice", desc:"Sinfoniekonzert · Opéra Nice Côte d'Azur · 20 Uhr", url:"https://www.opera-nice.org/fr/saison-concerts", tags:["Klassik","Konzert"] },
+  { from:"2026-11-01", to:"2027-03-31", dateLabel:"ab 1. Nov", title:"Musée Matisse — Wiedereröffnung", desc:"Neue Ausstellung nach Schließung vom 29. Sep bis 20. Okt · Cimiez, Nizza", url:"https://www.musee-matisse-nice.org/en/", tags:["Ausstellung"] },
+  { from:"2026-11-11", to:"2026-11-13", dateLabel:"11.–13. Nov", title:"Lehár: Die lustige Witwe (La Veuve joyeuse)", desc:"Operette · Opéra Nice Côte d'Azur", url:"https://www.opera-nice.org/fr/saison-operas", tags:["Oper"] },
+  { from:"2026-11-20", to:"2026-11-20", dateLabel:"20. Nov", title:"All Stars Live — Bona, Lagrène, Rodriguez, Smith", desc:"Jazz-Improvisationen · Théâtre Lino Ventura, Nizza", url:"https://www.jds.fr/nice/agenda/jazz-184_B", tags:["Jazz","Konzert"] },
 ];
-
 // Init
 setLang('de');
 highlightToday();
